@@ -151,7 +151,6 @@ globalkeys = awful.util.table.join(
     awful.key({ alt }, "p",          function() run_script("pick-color.sh") end),
     awful.key({ alt }, "k",          function() run_or_raise("keepassxc", "keepassxc") end),
     awful.key({ alt }, "s",          function() run_or_raise("emacsclient -c -a=''", "Emacs") end),
-    awful.key({ alt }, "l",          function() run_script("toggle-picom") end),
     awful.key({ alt, ctrl }, "1",    function() run_script("dpitog 1") end),
     awful.key({ alt, ctrl }, "2",    function() run_script("dpitog 2") end),
     awful.key({ alt, ctrl }, "3",    function() run_script("dpitog 3") end),
@@ -184,7 +183,11 @@ globalkeys = awful.util.table.join(
     awful.key({"Ctrl", alt }, "Left",             function() run_script("brightness --") end),
     awful.key({"Ctrl"},  "XF86MonBrightnessDown", function() run_script("brightness 1") end),
     awful.key({"Ctrl", "Shift", alt }, "Left",    function() run_script("brightness 1") end),
-    awful.key({"Ctrl", "Shift" }, "dead_circumflex",    function() run_script("toggle-display") end),
+    awful.key({"Ctrl", "Shift" }, "dead_circumflex", function() run_script("toggle-display") end),
+
+    -- remote control
+    awful.key({ }, "Menu", function() run_script("toggle-display") end),
+    awful.key({ }, "XF86HomePage", function() run_or_raise("kodi", "Kodi") end),
 
     awful.key({},        "XF86AudioRaiseVolume", volume.increase),
     awful.key({"Shift"}, "XF86AudioRaiseVolume", volume.increase_10),
