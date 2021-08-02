@@ -9,7 +9,7 @@ fi
 
 url=$1
 
-host=erx.home
+host=erx
 ssh -t "$host" -- "vbash -ic \"show system image\""
 ssh -t "$host" -- "vbash -ic \"add system image \"$url\"\""
 ssh -t "$host" -- "vbash -ic \"show system image\""

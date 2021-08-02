@@ -4,68 +4,57 @@ Host gitlab.com github.com
 
 ###
 
-Host x1 x1.home
-    HostName x1.home
+Host x1
     User alex
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host srv1 srv1.home
-    HostName srv1.home
+Host srv1
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host srv2 srv2.home
-    HostName srv2.home
+Host srv2
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host srv3 srv3.home
-    HostName srv3.home
+Host srv3
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host pi1 pi1.home
-    HostName pi1.home
+Host pi1
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host erx erx.home
-    HostName erx.home
+Host erx
     User ubnt
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host desk desk.home
-    HostName desk.home
+Host desk
     User alex
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host dell dell.home
-    HostName dell.home
+Host dell
     User alex
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host mox1 mox1.home
-    HostName mox1.home
+Host mox1
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host mox2 mox2.home
-    HostName mox2.home
+Host mox2
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
 
-Host backup backup.home
-    HostName backup.home
+Host backup
     User root
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
@@ -75,3 +64,7 @@ Host remarkable
     User root
     IdentityFile ~/.ssh/id_remarkable
     PubkeyAuthentication yes
+
+Host *
+    User root
+

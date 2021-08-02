@@ -1,5 +1,7 @@
 # start redshift in oneshot DRM mode (works in tty)
-[[ "$commands[redshift]" ]] && redshift -o -m drm
+if [[ "$TTY" != /dev/pts/* ]]; then
+    [[ "$commands[redshift]" ]] && redshift -o -m drm
+fi
 
 if [[ -n "$commands[startx]" ]]; then
     [[ -z "$DISPLAY" && "$XDG_VTNR" == 1 && "$USER" != root ]] && ssh-agent -- startx

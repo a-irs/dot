@@ -183,7 +183,7 @@ globalkeys = awful.util.table.join(
     awful.key({"Ctrl", alt }, "Left",             function() run_script("brightness --") end),
     awful.key({"Ctrl"},  "XF86MonBrightnessDown", function() run_script("brightness 1") end),
     awful.key({"Ctrl", "Shift", alt }, "Left",    function() run_script("brightness 1") end),
-    awful.key({"Ctrl", "Shift" }, "dead_circumflex", function() run_script("toggle-display") end),
+    awful.key({"Ctrl", "Shift" }, "asciicircum", function() run_script("toggle-display") end),
 
     -- remote control
     awful.key({ }, "Menu", function() run_script("toggle-display") end),

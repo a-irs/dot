@@ -52,7 +52,7 @@ if mount "$MOUNT"; then
     rsync $* -av -h --delete --stats \
         --log-file="$TARGET2/borg.log" \
         --backup --backup-dir="$TARGET2/0-archive/borg/$date/" \
-        root@backup.home:/mnt/data/crypt.enc \
+        root@backup:/mnt/data/crypt.enc \
         "$TARGET2"
 
 
