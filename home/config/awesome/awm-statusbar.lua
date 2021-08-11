@@ -127,7 +127,7 @@ musicwidget_wrap = bg_wrap(musicwidget, theme.widget_music_bg, 0, 0)
 
 audiowidget = lain.widget.alsa({
     timeout = 3,
-    cmd = 'amixer -D pulse',
+    cmd = 'amixer -D pipewire',
     settings = function()
         local limit = 100
         if is_mobile then

@@ -165,8 +165,8 @@ globalkeys = awful.util.table.join(
 
     -- screenshots
 
-    awful.key({ },        "Print", function() run("flameshot gui -p " .. os.getenv("HOME")) end),
-    awful.key({ "Ctrl" }, "Print", function() run("flameshot screen -p " .. os.getenv("HOME")) end),
+    awful.key({ "Ctrl" },        "Print", function() run("flameshot gui -p " .. os.getenv("HOME")) end),
+    awful.key({ "Ctrl", "Shift" }, "Print", function() run("flameshot screen -p " .. os.getenv("HOME")) end),
 
     -- media keys
 
