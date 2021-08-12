@@ -1,3 +1,5 @@
+Include config_*
+
 Host gitlab.com github.com
     IdentityFile ~/.ssh/id_ed25519
     PubkeyAuthentication yes
@@ -66,5 +68,13 @@ Host remarkable
     PubkeyAuthentication yes
 
 Host *
+    # privacy defaults
+    # do not leak username
     User root
+    # do not leak fingerprints of not explicitly used keys
+    IdentitiesOnly yes
 
+    # security defaults
+    ForwardAgent no
+    ForwardX11 no
+    GSSAPIDelegateCredentials no

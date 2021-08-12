@@ -78,7 +78,7 @@ case "$extension" in
         preview_htm; exit ;;
     json)
         preview_json; exit ;;
-    padl|plist)
+    padl|plist|mom|strings)
         preview_plist; exit ;;
     csv)
         preview_csv; exit ;;
@@ -96,6 +96,8 @@ case "$mime_type" in
         preview_json; exit ;;
     application/pdf )
         preview_pdf; exit ;;
+    application/zip )
+        preview_zip; exit ;;
     text/* | */xml | application/postscript )
         preview_txt; exit ;;
     video/* | audio/* | image/* )

@@ -47,11 +47,6 @@ clip() {
 
 [[ "$commands[aria2c]" ]] && alias aria2c="aria2c --file-allocation=none --continue true --check-integrity true --max-connection-per-server=8 --disk-cache=512M"
 
-ssh() {
-    # disable forwardings: agent, X, GSSAPI
-    command ssh -a -x -k -o StrictHostKeyChecking=accept-new "$@"
-}
-
 if [[ "$commands[nvim]" ]]; then
     alias vim='nvim'
     vim=nvim
