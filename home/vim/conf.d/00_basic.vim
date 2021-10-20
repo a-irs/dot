@@ -9,7 +9,7 @@ set linebreak  " wrap lines at words
 set smarttab
 set autoread  " auto reload file when unchanged in vim and changed outside vim
 set history=2000  " command history
-set scrolloff=1  " scrolling shows one line extra
+set scrolloff=5  " scrolling shows extra lines
 set hlsearch  " highlight search results
 set incsearch  " search during input
 set fillchars+=vert:│  " prettier split separator
