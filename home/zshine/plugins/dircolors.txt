@@ -223,13 +223,17 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 
 # cert
 .crl 3;30;45
+.csr 3;30;45
 .pem 3;30;45
 .key 3;30;45
 .cert 3;30;45
 .pub 3;30;45
 .gpg 3;30;45
+.pgp 3;30;45
 .asc 3;30;45
 .sig 3;30;45
+.p12 3;30;45
+.der 3;30;45
 
 ###### programming
 .gpx 34

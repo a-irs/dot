@@ -1,3 +1,23 @@
+snippet "arg|args" "argparse" br
+# https://docs.python.org/3/library/argparse.html
+import argparse
+
+def cli_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="desc 123", allow_abbrev=False)
+    p.add_argument('--arg1', '-a', help="help text 1", required=True)
+    p.add_argument('--enable_feature_xyz', help="toggle for %(prog)s", action='store_true', default=False)
+    p.add_argument('--count', help="has to be %(type)s (default: %(default)s)", type=int, default=10)
+    p.add_argument('--verbose', '-v', help="store count of used args", action='count', default=0)
+    p.add_argument('--choose1', choices=["this", "that"])
+    p.add_argument('--choose2', type=int, choices=range(1, 6))
+    p.add_argument('--optarg', nargs='?', help="optional")
+    p.add_argument('--multiarg', nargs='+', help="can be specified multiple times, at least 1")
+    p.add_argument('--multiarg_opt', nargs='*', help="can be specified multiple times, at least 0")
+    p.add_argument('--file_out', type=argparse.FileType('w'), default=sys.stdout)
+    p.add_argument('--file_in', type=argparse.FileType('r'), default=sys.stdin)
+    return p.parse_args()
+endsnippet
+
 snippet "main" "main method" br
 
 def main():

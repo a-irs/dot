@@ -101,6 +101,7 @@ Plug 'w0rp/ale'
 let g:ale_sh_shellcheck_exclusions = 'SC2119,SC2029'
 let g:ale_yaml_yamllint_options='-d "{extends: default, rules: {line-length: disable, document-start: disable}}"'
 let g:ale_nasm_nasm_options='-f elf64'
+let g:ale_python_flake8_options='--config ~/.config/flake8'
 
 " ALE appearance
 let g:ale_sign_warning = "\u26A0"

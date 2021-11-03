@@ -10,6 +10,19 @@ _url() {
     fi
 }
 
+calc() {
+    [[ "$#" == 0 ]] && local args="-i"
+    python3 -B $args -c "from math import *; from statistics import *; print($*)"
+}
+
+json2yaml() {
+    ruby -ryaml -e 'puts(YAML.load(ARGF.read).to_yaml(:indentation => 2, :line_width => 9999))'
+}
+
+yaml2json() {
+    ruby -ryaml -rjson -e 'puts(YAML.load(ARGF.read).to_json)'
+}
+
 urle() { _url 'urllib.parse.quote(line)' "$@"; }
 urld() { _url 'urllib.parse.unquote(line)' "$@"; }
 urlep() { _url 'urllib.parse.quote_plus(line)' "$@"; }
@@ -400,7 +413,7 @@ if [[ "$commands[git]" ]]; then
     alias gp="git push"
     alias gs="git s"
     alias gd="git d"
-    alias ge="git ls-files -mo --exclude-standard -z | fzf --multi --preview='s {}' --exit-0 --read0 --print0 --height=70% --reverse --select-1 | xargs --no-run-if-empty -0 -o $vim -o"
+    alias ge="git ls-files -mo --exclude-standard -z | command fzf --multi --preview='s {}' --exit-0 --read0 --print0 --height=70% --reverse --select-1 | xargs -0 -o $vim -o"
 
     clone() {
         git clone --depth 1 "$1" && cd $(basename ${1//.git/})
