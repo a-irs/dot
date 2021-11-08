@@ -13,7 +13,9 @@ if [[ -z "$epoch" ]]; then
 fi
 
 format='+%Y-%m-%d (%A) %H:%M:%S'
-readable=$(date -d @"$epoch" "$format" 2>/dev/null || date -r "$epoch" "$format" 2>/dev/null)
+while read -r e; do
+    readable="$readable $(date -d @"$e" "$format" 2>/dev/null || date -r "$e" "$format" 2>/dev/null)"
+done <<< "$epoch"
 if [[ -z "$readable" ]]; then
     die "Timestamp '$epoch' could not be parsed."
 fi
