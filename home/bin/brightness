@@ -54,10 +54,10 @@ b_set() {
 notify() { dunstify -t 1500 -r 123 -i "/usr/share/icons/Faba/48x48/notifications/$1" "$2"; }
 
 case $action in
-    +) STEP=2;;
-    ++) STEP=10;;
-    -) STEP=2;;
-    --) STEP=10;;
+    +) STEP=1;;
+    ++) STEP=5;;
+    -) STEP=1;;
+    --) STEP=5;;
 esac
 
 if [[ -z "$action" ]]; then

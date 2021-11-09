@@ -45,9 +45,9 @@ DOOR 35 # door
 BLK 40;33 # block device driver
 CHR 40;33 # character device driver
 ORPHAN 31 # symlink to nonexistent file, or non-stat'able file
-SETUID 37;41 # file that is setuid (u+s)
+SETUID 37;41;01 # file that is setuid (u+s)
 SETGID 30;43 # file that is setgid (g+s)
-CAPABILITY 30;41 # file with capability
+CAPABILITY 30;46;01 # file with capability
 EXEC 00 # do not set specific color (only "*" with ls -F)
 
 ###################### archives
