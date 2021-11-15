@@ -11,8 +11,3 @@ cache
 plug.vim.old
 
 .uuid
-
-# spacemacs
-home/emacs.d/*
-!home/emacs.d/init.el
-home/spacemacs.d/.spacemacs.env
