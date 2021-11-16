@@ -38,15 +38,23 @@ catch
     highlight StatusLine term=bold,reverse ctermfg=11 ctermbg=242 guifg=yellow guibg=DarkGray
 endtry
 
-" clear sidebar backgrounds (git gutter, line numbers)
-highlight clear SignColumn
-highlight clear LineNr
+" clear backgrounds (git gutter, line numbers, ...)
+highlight SignColumn guibg=NONE ctermbg=NONE
+highlight LineNr guibg=NONE ctermbg=NONE
+highlight FoldColumn guibg=NONE ctermbg=NONE
+highlight Folded guibg=NONE ctermbg=NONE
+highlight ALEError guibg=NONE
+highlight ALEErrorSign guibg=NONE ctermbg=NONE
 
 " show invisible chars
 set list
 set listchars=tab:▸\ ,extends:»,precedes:«
 highlight SpecialKey ctermfg=240 guifg=#666666
 highlight NonText ctermfg=240 guifg=#666666
+
+highlight ALEErrorSign guifg=#ba645d
+highlight FoldColumn guifg=#8888aa
+highlight Folded cterm=bold gui=bold
 
 " change VIM background to terminal background
 " highlight NonText guibg=NONE ctermbg=NONE

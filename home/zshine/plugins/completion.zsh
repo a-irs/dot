@@ -50,7 +50,7 @@ zstyle ':completion:*' squeeze-slashes true
 # cdpath=(.)
 
 # use ssh_config for hostname completion
-[[ -r ~/.ssh/config ]] && _ssh_hosts+=($(cat ~/.ssh/config* | sed -ne 's/Host[=\t ]//p'))
+[[ -r ~/.ssh/config ]] && _ssh_hosts+=($(sed -ne 's/Host[=\t ]//p' ~/.ssh/config* | grep -vE '[\*]' | tr ' ' '\n' | sort | uniq))
 zstyle ':completion:*:ssh:*' hosts "$_ssh_hosts[@]"
 
 # Prevent autocompletion of user names

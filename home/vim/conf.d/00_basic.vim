@@ -56,7 +56,10 @@ set viminfo-=<50,s10
 
 " persistent undo
 set undofile
-set undodir=~/.vim/undo
+set undodir=~/.vim/undo/vim
+if has('nvim')
+    set undodir=~/.vim/undo/nvim
+endif
 silent call system('mkdir -p ' . &undodir)
 
 " make system clipboard and VIM default register the same

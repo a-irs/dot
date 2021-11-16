@@ -1,33 +1,39 @@
 call plug#begin()
 
+if has('nvim')
+    " magit clone
+    Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit'
+    nmap <leader>n :Neogit<CR>
+endif
+
 Plug 'lambdalisue/vim-manpager'
 
 " from /usr/share/vim/vim*/plugin/manpager.vim
 " adapted so whichwrap and illuminate plugin works
 command! -nargs=0 MYMANPAGER call s:MyManPager() | delcommand MYMANPAGER
 function! s:MyManPager()
-  " set nocompatible  " disabled, so whichwrap works
-  if exists('+viminfofile')
-    set viminfofile=NONE
-  endif
-  set noswapfile
+    " set nocompatible  " disabled, so whichwrap works
+    if exists('+viminfofile')
+        set viminfofile=NONE
+    endif
+    set noswapfile
 
-  setlocal ft=man
-  runtime ftplugin/man.vim
-  setlocal buftype=nofile bufhidden=hide iskeyword+=: modifiable
+    setlocal ft=man
+    runtime ftplugin/man.vim
+    setlocal buftype=nofile bufhidden=hide iskeyword+=: modifiable
 
-  " Emulate 'col -b'
-  silent keepj keepp %s/\v(.)\b\ze\1?//ge
+    " Emulate 'col -b'
+    silent keepj keepp %s/\v(.)\b\ze\1?//ge
 
-  " Remove empty lines above the header
-  call cursor(1, 1)
-  let n = search(".*(.*)", "c")
-  if n > 1
-    exe "1," . n-1 . "d"
-  endif
-  setlocal nomodified readonly
+    " Remove empty lines above the header
+    call cursor(1, 1)
+    let n = search(".*(.*)", "c")
+    if n > 1
+        exe "1," . n-1 . "d"
+    endif
+    setlocal nomodified readonly
 
-  " syntax on  " disabled, so illuminate plugin works
+    " syntax on  " disabled, so illuminate plugin works
 endfunction
 
 
@@ -110,8 +116,6 @@ let g:ale_sign_error = "\u2717"
 let g:ale_sign_style_error = "\u2717"
 let g:ale_echo_msg_format = '[%linter%] %severity%% code%: %s'
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
-highlight ALEWarningSign guibg=NONE guifg=yellow
-highlight ALEErrorSign guibg=NONE guifg=red
 
 Plug 'davidoc/taskpaper.vim', { 'for': 'taskpaper' }
 let g:task_paper_styles={ 'crit': 'guibg=#dd5010' }
@@ -194,6 +198,14 @@ let g:Illuminate_ftHighlightGroups = {
       \ 'markdown.pandoc:blacklist': ['markdownListMarker']
       \ }
 Plug 'RRethy/vim-illuminate'
+
+" folding
+Plug 'thalesmello/tabfold'
+Plug 'tmhedberg/SimpylFold'  " python folding
+set foldnestmax=3 " max levels of folding
+set foldlevel=99  " start unfolded
+set foldmethod=indent
+let g:markdown_folding=1
 
 " color schemes
 " Plug 'morhetz/gruvbox'
