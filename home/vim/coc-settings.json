@@ -1,4 +1,19 @@
 {
-  "python.linting.enabled": false,
-  "coc.source.around.enable": false
+    "diagnostic.errorSign": "▪",
+    "diagnostic.warningSign": "▪",
+    "diagnostic.hintSign": "▪",
+
+    // whole line insteaf of just broken chars
+    "diagnostic.checkCurrentLine": true,
+
+    "markdownlint.config": {
+      "default": true,
+      "line_length": false,
+      "header-style": false,
+      "no-multiple-blanks": false,
+      "ul-indent": false
+    },
+
+    "python.pythonPath": "python3",
+    "python.linting.enabled": true
 }

@@ -43,8 +43,10 @@ highlight SignColumn guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
 highlight FoldColumn guibg=NONE ctermbg=NONE
 highlight Folded guibg=NONE ctermbg=NONE
-highlight ALEError guibg=NONE
+highlight ALEError guibg=NONE ctermbg=NONE
 highlight ALEErrorSign guibg=NONE ctermbg=NONE
+highlight ALEWarningSign guibg=NONE ctermbg=NONE
+highlight ALEInfoSign guibg=NONE ctermbg=NONE
 
 " show invisible chars
 set list
@@ -52,9 +54,27 @@ set listchars=tab:▸\ ,extends:»,precedes:«
 highlight SpecialKey ctermfg=240 guifg=#666666
 highlight NonText ctermfg=240 guifg=#666666
 
-highlight ALEErrorSign guifg=#ba645d
+" folding
 highlight FoldColumn guifg=#8888aa
 highlight Folded cterm=bold gui=bold
+
+highlight clear ALEError
+highlight clear ALEWarning
+highlight clear ALEInfo
+highlight ALEError term=underline gui=underline
+highlight ALEWarning term=underline gui=underline
+highlight ALEInfo term=underline gui=underline
+
+" set coc and ale colors
+highlight! link CocErrorSign GitGutterDelete
+highlight! link CocErrorFloat GitGutterDelete
+highlight! link CocWarningSign GitGutterChange
+highlight! link CocWarningFloat GitGutterChange
+highlight! link CocHintSign GitGutterChange
+highlight! link CocHintFloat GitGutterChange
+highlight! link ALEErrorSign GitGutterDelete
+highlight! link ALEWarningSign GitGutterChange
+highlight! link ALEInfoSign GitGutterChange
 
 " change VIM background to terminal background
 " highlight NonText guibg=NONE ctermbg=NONE

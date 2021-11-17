@@ -90,7 +90,7 @@ let g:colorizer_colornames = 0  "do not colorize simple 'red', 'yellow', ...
 Plug 'tpope/vim-commentary'
 nmap <leader># :Commentary<CR>
 vmap <leader># :Commentary<CR>
-autocmd FileType markdown,markdown.pandoc setlocal commentstring=<!--\ %s\ -->
+autocmd FileType markdown setlocal commentstring=<!--\ %s\ -->
 autocmd FileType nasm setlocal commentstring=;\ %s
 
 Plug 'airblade/vim-gitgutter'
@@ -109,11 +109,14 @@ let g:ale_yaml_yamllint_options='-d "{extends: default, rules: {line-length: dis
 let g:ale_nasm_nasm_options='-f elf64'
 let g:ale_python_flake8_options='--config ~/.config/flake8'
 
-" ALE appearance
-let g:ale_sign_warning = "\u26A0"
-let g:ale_sign_style_warning = "\u26A0"
-let g:ale_sign_error = "\u2717"
-let g:ale_sign_style_error = "\u2717"
+" disable python linters - done with coc
+let g:ale_linters_ignore = ["flake8", "mypy"]
+
+" ALE appearance  ▸▪
+let g:ale_sign_warning = "▪"
+let g:ale_sign_style_warning = "▪"
+let g:ale_sign_error = "▪"
+let g:ale_sign_style_error = "▪"
 let g:ale_echo_msg_format = '[%linter%] %severity%% code%: %s'
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
@@ -150,7 +153,7 @@ let python_highlight_all = 1
 if hostname() =~ 'srv.'
 else
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-json', 'coc-css', 'coc-jedi', 'coc-yaml', 'coc-vimlsp', 'coc-sh', 'coc-html', 'coc-pairs']
+let g:coc_global_extensions = ['coc-json', 'coc-css', 'coc-pyright', 'coc-yaml', 'coc-vimlsp', 'coc-sh', 'coc-html', 'coc-pairs', 'coc-markdownlint']
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
@@ -195,7 +198,7 @@ let g:committia_use_singlecolumn = 'always'
 let g:Illuminate_delay = 100  " default: 0
 let g:Illuminate_ftblacklist = ['gitcommit']
 let g:Illuminate_ftHighlightGroups = {
-      \ 'markdown.pandoc:blacklist': ['markdownListMarker']
+      \ 'markdown:blacklist': ['markdownListMarker']
       \ }
 Plug 'RRethy/vim-illuminate'
 
