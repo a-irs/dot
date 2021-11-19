@@ -40,6 +40,9 @@ endtry
 
 " clear backgrounds (git gutter, line numbers, ...)
 highlight SignColumn guibg=NONE ctermbg=NONE
+highlight SignifySignAdd guibg=NONE ctermbg=NONE
+highlight SignifySignChange guibg=NONE ctermbg=NONE
+highlight SignifySignDelete guibg=NONE ctermbg=NONE
 highlight LineNr guibg=NONE ctermbg=NONE
 highlight FoldColumn guibg=NONE ctermbg=NONE
 highlight Folded guibg=NONE ctermbg=NONE

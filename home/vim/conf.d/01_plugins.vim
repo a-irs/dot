@@ -93,12 +93,22 @@ vmap <leader># :Commentary<CR>
 autocmd FileType markdown setlocal commentstring=<!--\ %s\ -->
 autocmd FileType nasm setlocal commentstring=;\ %s
 
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 " set background to same as SignColumn
-let g:gitgutter_set_sign_backgrounds = 1
-let g:gitgutter_map_keys = 0
-nmap <leader>< <Plug>(GitGutterNextHunk)
-nmap <leader>> <Plug>(GitGutterPrevHunk)
+" let g:gitgutter_set_sign_backgrounds = 1
+" let g:gitgutter_map_keys = 0
+" nmap <leader>< <Plug>(GitGutterNextHunk)
+" nmap <leader>> <Plug>(GitGutterPrevHunk)
+
+" git gutter
+Plug 'mhinz/vim-signify'
+let g:signify_sign_add = '+'
+let g:signify_sign_delete = '_'
+let g:signify_sign_delete_first_line = '‾'
+let g:signify_sign_change = '~'
+let g:signify_sign_change_delete = '~_'
+nmap <leader>< <plug>(signify-next-hunk)
+nmap <leader>> <plug>(signify-prev-hunk)
 
 " ALE async linter
 Plug 'w0rp/ale'
@@ -209,6 +219,15 @@ set foldnestmax=3 " max levels of folding
 set foldlevel=99  " start unfolded
 set foldmethod=indent
 let g:markdown_folding=1
+
+" remember folding per file
+augroup remember_folds
+  autocmd!
+  autocmd BufWinLeave * silent! mkview
+  autocmd BufWinEnter * silent! loadview
+augroup END
+set viewoptions=folds,cursor
+
 
 " color schemes
 " Plug 'morhetz/gruvbox'
