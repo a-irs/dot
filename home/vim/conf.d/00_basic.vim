@@ -140,20 +140,20 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 nnoremap <silent> <C-n> :set number!<CR>
 
 " buffer on <Leader>1-9/left/right
-nnoremap <leader><left> :bprev<CR>
-nnoremap <leader><right> :bnext<CR>
-nnoremap <leader>1 :buffer 1<CR>
-nnoremap <leader>2 :buffer 2<CR>
-nnoremap <leader>3 :buffer 3<CR>
-nnoremap <leader>4 :buffer 4<CR>
-nnoremap <leader>5 :buffer 5<CR>
-nnoremap <leader>6 :buffer 6<CR>
-nnoremap <leader>7 :buffer 7<CR>
-nnoremap <leader>8 :buffer 8<CR>
-nnoremap <leader>9 :buffer 9<CR>
+nnoremap <silent> <leader><left> :bprev<CR>
+nnoremap <silent> <leader><right> :bnext<CR>
+nnoremap <silent> <leader>1 :buffer 1<CR>
+nnoremap <silent> <leader>2 :buffer 2<CR>
+nnoremap <silent> <leader>3 :buffer 3<CR>
+nnoremap <silent> <leader>4 :buffer 4<CR>
+nnoremap <silent> <leader>5 :buffer 5<CR>
+nnoremap <silent> <leader>6 :buffer 6<CR>
+nnoremap <silent> <leader>7 :buffer 7<CR>
+nnoremap <silent> <leader>8 :buffer 8<CR>
+nnoremap <silent> <leader>9 :buffer 9<CR>
 
-noremap <Leader>x :bd<CR>
-noremap <Leader>y "+y
+noremap <silent> <Leader>x :bd<CR>
+noremap <silent> <Leader>y "+y
 
 " toggle markdown checkboxes
 nnoremap <silent> <Leader>, :execute 's/^\(\s*[-+*]\?\s*\)\[ \]/\1[x]/'<cr>

@@ -165,7 +165,6 @@ else
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 let g:coc_global_extensions = ['coc-json', 'coc-css', 'coc-pyright', 'coc-yaml', 'coc-vimlsp', 'coc-sh', 'coc-html', 'coc-pairs', 'coc-markdownlint']
 
-nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -176,6 +175,8 @@ function! s:show_documentation()
   endif
 endfunction
 
+nmap <silent> K         :call <SID>show_documentation()<CR>
+nmap <silent> <leader>k :call <SID>show_documentation()<CR>
 nmap <leader>cr <Plug>(coc-rename)
 xmap <leader>cf <Plug>(coc-format-selected)
 nmap <leader>cf <Plug>(coc-format-selected)

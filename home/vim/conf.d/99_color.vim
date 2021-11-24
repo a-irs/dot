@@ -51,6 +51,9 @@ highlight ALEErrorSign guibg=NONE ctermbg=NONE
 highlight ALEWarningSign guibg=NONE ctermbg=NONE
 highlight ALEInfoSign guibg=NONE ctermbg=NONE
 
+highlight CursorLineNr guibg=NONE ctermbg=NONE
+highlight! link CursorLineNr LineNr
+
 " show invisible chars
 set list
 set listchars=tab:▸\ ,extends:»,precedes:«
@@ -59,7 +62,7 @@ highlight NonText ctermfg=240 guifg=#666666
 
 " folding
 highlight FoldColumn guifg=#8888aa
-highlight Folded cterm=bold gui=bold
+highlight Folded cterm=bold gui=bold guibg=#3a4b5c
 
 highlight clear ALEError
 highlight clear ALEWarning
@@ -69,15 +72,15 @@ highlight ALEWarning term=underline gui=underline
 highlight ALEInfo term=underline gui=underline
 
 " set coc and ale colors
-highlight! link CocErrorSign GitGutterDelete
-highlight! link CocErrorFloat GitGutterDelete
-highlight! link CocWarningSign GitGutterChange
-highlight! link CocWarningFloat GitGutterChange
-highlight! link CocHintSign GitGutterChange
-highlight! link CocHintFloat GitGutterChange
-highlight! link ALEErrorSign GitGutterDelete
-highlight! link ALEWarningSign GitGutterChange
-highlight! link ALEInfoSign GitGutterChange
+highlight! link CocErrorSign diffRemoved
+highlight! link CocErrorFloat diffRemoved
+highlight! link CocWarningSign diffFile
+highlight! link CocWarningFloat diffFile
+highlight! link CocHintSign diffFile
+highlight! link CocHintFloat diffFile
+highlight! link ALEErrorSign diffRemoved
+highlight! link ALEWarningSign diffFile
+highlight! link ALEInfoSign diffFile
 
 " change VIM background to terminal background
 " highlight NonText guibg=NONE ctermbg=NONE
