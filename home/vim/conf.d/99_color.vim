@@ -57,8 +57,8 @@ highlight! link CursorLineNr LineNr
 " show invisible chars
 set list
 set listchars=tab:▸\ ,extends:»,precedes:«
-highlight SpecialKey ctermfg=240 guifg=#666666
-highlight NonText ctermfg=240 guifg=#666666
+highlight! link NonText LineNr
+highlight! link SpecialKey LineNr
 
 " folding
 highlight FoldColumn guifg=#8888aa

@@ -18,7 +18,33 @@ trim() { head -n "$height"; }
 remove_blank() { sed '/./,$!d'; } # remove blank lines at top of file
 remove_double_blank() { cat -s; } # remove multiple blank lines
 highlight_dirs() { GREP_COLOR='1;33' grep -E --color=always '(.)*/|$'; } # TODO: not working in ranger
-cleanup_openssl() { perl -pe 's/\S+([0-9a-z][0-9a-z]:){14}$/XXXXXXXXXX/g' | grep -v 'XXXXXXXXXX$'; }
+cleanup_openssl() {
+    local reset=$(tput sgr0)
+    local bold=$(tput bold)
+    local blue=$(tput setaf 4)
+    local cyan=$(tput setaf 6)
+    local red=$(tput setaf 1)
+    # `# also show serial number as decimal, not only hex` \
+    # | python3 -c 'import re, sys; s = sys.stdin.read(); i = int(re.search(r"Serial Number:.\s+([0-9a-zA-Z:]+)", s, flags=re.S)[1].replace(":", ""), 16); print(re.sub(r"Serial Number:(.\s+)", rf"Serial Number: \1DEC: {i}\1HEX: ", s, flags=re.S))' \
+    perl \
+    `# truncate long fingerprints` \
+        -0pe 's/((\s+)(([a-zA-Z0-9][a-zA-Z0-9]:){15,})\n)+\s*/\n\2\..:/gm;' \
+    | perl \
+        `# colorize everything with a colon at the end - level 0` \
+        -pe "s/(^\S(\w|\s)+:(\s|$))/${bold}${cyan}\1${reset}/g;" \
+        `# colorize everything with a colon at the end - level 1` \
+        -pe "s/(^\s{4}\w(\w|\s)+:(\s|$))/${bold}${blue}\1${reset}/g;" \
+        `# special coloring for X509/OID attributes` \
+        -pe "s/(\s+(X509|(\d+\.){4,}).*:)/${cyan}\1${reset}/g;" \
+        `# colorize everything with a colon at the end` \
+        -pe "s/(^.+:(\s|$))/${blue}\1${reset}/g;" \
+        `# fix for missing colon after "Validity"` \
+        -pe "s/^(\s+Validity)$/${blue}\1${reset}/g;" \
+        `# special coloring for CA attributes` \
+        -pe "s/(CA:TRUE|1024 bit|2048 bit|sha1|SHA1)/${red}\1${reset}/g;" \
+        `# skip empty lines` \
+    | awk NF
+}
 
 preview_elf() { readelf -sh --wide "$path" | trim | wrap; }
 preview_binary() { zcat "$path" 2> /dev/null || cat "$path" | xxd -autoskip | trim | wrap; }
@@ -35,7 +61,7 @@ preview_sshkey() { file -Lb -- "$path"; ssh-keygen -l -f "$path"; echo ""; cat "
 preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; cat "$temp" | trim | wrap; rm -f "$temp"; }
 preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl | trim | wrap; }
 preview_pkcs() { keytool -v -list -keystore "$path" -storepass '' | trim | wrap; }
-# preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl | trim | wrap; }
+preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl | trim | wrap; }
 preview_csr() { openssl req -in "$path" -noout -text | cleanup_openssl | trim | wrap; }
 preview_csv() { column -t -s\;, "$path" | trim | wrap; }
 preview_rrd() { rrdinfo "$path" | trim | wrap; }
@@ -82,7 +108,7 @@ case "$extension" in
         preview_plist; exit ;;
     csv)
         preview_csv; exit ;;
-    p12|pfx)
+    p12|pfx|pkcs12)
         preview_pkcs; exit ;;
     pkg)
         preview_pkg; exit ;;
