@@ -473,6 +473,7 @@ if [[ "$commands[pacman]" ]]; then
     alias pqk='sudo pacman -Qk > /dev/null'
     alias pqo='pacman -Qo'
     function pql() { pacman -Qlq "$1" | xargs ls --color -dlh; }
+    function pqlb() { pacman -Qlq "$1" | xargs ls -dlh | grep '/bin/' | grep -Ev '/usr/bin/$'; }
     alias psl='pkgfile -l'
     alias pu='sudo pacman -U'
     alias pacorph='sudo pacman -Rns $(pacman -Qttdq)'
