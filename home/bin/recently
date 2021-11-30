@@ -11,6 +11,7 @@ main() {
     cat << EOF > "$TMP"
 .DS_Store
 .Xresources.d/dpi
+.kodi/userdata/Thumbnails
 .config/VirtualBox/*.log*
 .config/parcellite/parcelliterc
 .config/pulse/

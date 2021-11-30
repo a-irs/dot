@@ -1,12 +1,12 @@
 configuration {
 	show-icons: true;
-	font: "InputMonoCondensed 12";
+	font: "InputMonoCondensed 16";
 	modi: "drun,run";
 	width: -50;
 	lines: 5;
 	terminal: "alacritty";
-	scroll-method: 1;
-	theme: "android_notification";
+	scroll-method: 0;
 	cache-dir: ".local/share/rofi";
 	display-drun: "run";
 }
+@theme "android_notification"

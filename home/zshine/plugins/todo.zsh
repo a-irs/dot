@@ -16,11 +16,17 @@ todo() {
 }
 
 _show_todos() {
+    local args=$@
+
     for file in "${todo_files[@]}"; do
         [[ -s "$file" ]] || continue
         content=$(grep -v '@done' "$file" | sed 's/- /• /')
-        echo "$content" | grep --color -E '@.*|$'
+        if [[ ${args[(ie)--random]} -le ${#args} ]]; then
+            echo "$content" | grep --color -E '@.*|$' | shuf -n 1
+        else
+            echo "$content" | grep --color -E '@.*|$'
+        fi
     done
     unset file
 }
-_show_todos
+_show_todos --random

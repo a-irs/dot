@@ -3,16 +3,21 @@
 set -euo pipefail
 
 disk=$1
-version=2020.11.01
 
 ###
 
-iso=https://mirror.rackspace.com/archlinux/iso/$version/archlinux-$version-x86_64.iso
+echo
+latest=$(curl -sfL 'https://archlinux.org/download/' | grep 'Current Release' | grep -oP '20\d\d\.\d{1,2}\.\d{1,2}')
+echo "Release: $latest"
+iso=https://mirror.rackspace.com/archlinux/iso/$latest/archlinux-$latest-x86_64.iso
+echo "URL:     $iso"
+sha1_expected=$(curl -sfL 'https://archlinux.org/download/' | grep -P 'SHA1:' | sed 's/.*SHA1:.* \(\w*\).*/\1/')
+echo "SHA1:    $sha1_expected"
+echo
 
 size=$(curl -sI "$iso" | grep -i Content-Length | awk '{print $2}' | tr -d '\r')
 curl -sL "$iso" -o - | pv -W -s "$size" -cN write | dd of="$disk" bs=4M status=none oflag=sync
 
-sha1_expected=$(curl -s https://www.archlinux.org/download/ | grep -P 'SHA1:' | sed 's/.*SHA1:.* \(\w*\).*/\1/')
 sha1=$(dd if="$disk" iflag=count_bytes count="$size" status=none | pv -s "$size" -cN sha1sum | sha1sum | cut -d ' ' -f 1)
 if [[ "$sha1" != "$sha1_expected" ]]; then
     echo "ERROR, DO NOT USE!"
