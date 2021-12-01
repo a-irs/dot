@@ -38,6 +38,11 @@ class ${1:Point}:
 
 endsnippet
 
+snippet "raise|throw|exc" "exception" br
+# https://docs.python.org/3/library/exceptions.html#base-classes
+raise ValueError('Error message')
+endsnippet
+
 snippet "tmp|temp" "temporary" br
 import tempfile
 
@@ -54,7 +59,10 @@ endsnippet
 
 snippet "b|br|break" "breakpoint" br
 breakpoint()
+endsnippet
 
+snippet "b2|br2|break2" "breakpoint old" br
+import pdb; pdb.set_trace()
 endsnippet
 
 snippet "fori" "enumerate" br
