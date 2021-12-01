@@ -115,7 +115,7 @@ _prompt_git() {
 }
 
 _prompt_ssh() {
-    [[ ! "$SSH_CLIENT" && ! "$SSH_TTY" ]] && return
+    [[ "$SSH_TTY" ]] || return
     ZSHINE_USER=1
     prompt_segment $ZSHINE_SSH_BG $ZSHINE_SSH_FG "SSH"
 }

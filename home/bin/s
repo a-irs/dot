@@ -67,6 +67,7 @@ preview_csv() { column -t -s\;, "$path" | trim | wrap; }
 preview_rrd() { rrdinfo "$path" | trim | wrap; }
 preview_pkg() { pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort | trim | wrap; }
 preview_pgp() { gpg --keyid-format long --list-options show-keyring "$path" 2>/dev/null; }
+preview_pgp_sig() { pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"; }
 
 file_type=$(file -Lb -- "$path")
 
@@ -112,6 +113,8 @@ case "$extension" in
         preview_pkcs; exit ;;
     pkg)
         preview_pkg; exit ;;
+    sig|sign)
+        preview_pgp_sig; exit ;;
 esac
 
 mime_type=$(file --mime-type -Lb -- "$path")
