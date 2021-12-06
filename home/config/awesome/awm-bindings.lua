@@ -151,12 +151,12 @@ globalkeys = awful.util.table.join(
     awful.key({ alt }, "p",          function() run_script("pick-color.sh") end),
     awful.key({ alt }, "k",          function() run_or_raise("keepassxc", "keepassxc") end),
     awful.key({ alt }, "s",          function() run_or_raise("emacsclient -c -a=''", "Emacs") end),
-    awful.key({ alt, ctrl }, "1",    function() run_script("dpitog 1") end),
-    awful.key({ alt, ctrl }, "2",    function() run_script("dpitog 2") end),
-    awful.key({ alt, ctrl }, "3",    function() run_script("dpitog 3") end),
-    awful.key({ alt, ctrl }, "4",    function() run_script("dpitog 4") end),
-    awful.key({ alt, ctrl }, "5",    function() run_script("dpitog 5") end),
-    awful.key({ alt, ctrl }, "6",    function() run_script("dpitog 6") end),
+    awful.key({ alt, ctrl }, "1",    function() run_script("dpitog 1 apply") end),
+    awful.key({ alt, ctrl }, "2",    function() run_script("dpitog 2 apply") end),
+    awful.key({ alt, ctrl }, "3",    function() run_script("dpitog 3 apply") end),
+    awful.key({ alt, ctrl }, "4",    function() run_script("dpitog 4 apply") end),
+    awful.key({ alt, ctrl }, "5",    function() run_script("dpitog 5 apply") end),
+    awful.key({ alt, ctrl }, "6",    function() run_script("dpitog 6 apply") end),
     awful.key({ alt }, "o",          function() run_gui_script("mpv-clipboard.sh") end),
 
     -- displays

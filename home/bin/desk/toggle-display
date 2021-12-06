@@ -18,7 +18,7 @@ CONFIG = {
             "killall -9 kodi-x11 kodi kodi.bin 2>/dev/null"
         ],
         "post": [
-            "~/.bin/dpitog 2",
+            "~/.bin/dpitog 2 apply",
             "nitrogen --restore 2>/dev/null",
         ]
     },
@@ -32,7 +32,7 @@ CONFIG = {
             "gamma": '1.0:1.0:1.0'
         },
         "post": [
-            "~/.bin/dpitog 3",
+            "~/.bin/dpitog 3 apply",
             "nitrogen --restore 2>/dev/null",
             "pidof kodi-x11 || exo-open '/usr/share/applications/kodi.desktop'",
             "xdotool set_desktop_for_window \"$(xdotool search --limit 1 --sync --class kodi)\" 6",

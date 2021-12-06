@@ -6,55 +6,56 @@ import os
 import time
 import math
 import sys
+import argparse
+import logging
 
 DPI_FACTORS = {
     "desk": [1.0, 1.25, 1.5, 2.0, 3.0],
     "x1": [1.5, 1.75, 2.0]
 }
-DPIS = DPI_FACTORS.get(os.uname()[1], [])
 
-if len(sys.argv) == 2:
-    DPIS = [DPIS[int(sys.argv[1]) - 1]]
+def exec(cmd: str) -> None:
+    logging.warning(f"exec: {cmd}")
+    os.system(cmd)
 
-
-def set_dpi(dpi: int) -> None:
+def set_dpi(dpi: int, apply=False) -> None:
     factor = round(dpi / 96, 2)
 
     # prepare
-    os.system("cp -f /usr/share/applications/spotify.desktop ~/.local/share/applications/")
-    os.system("cp -f /usr/share/applications/steam.desktop ~/.local/share/applications/")
+    exec("cp -f /usr/share/applications/spotify.desktop ~/.local/share/applications/")
+    exec("cp -f /usr/share/applications/steam.desktop ~/.local/share/applications/")
 
-    os.system(f"echo 'Xft.dpi: {dpi}\n*.dpi: {dpi}' > ~/.Xresources.d/dpi")
-    os.system(f"sed -i 's|Exec=spotify .*|Exec=spotify --force-device-scale-factor={factor} %U|' ~/.local/share/applications/spotify.desktop")
+    exec(f"echo 'Xft.dpi: {dpi}\n*.dpi: {dpi}' > ~/.Xresources.d/dpi")
+    exec(f"sed -i 's|Exec=spotify .*|Exec=spotify --force-device-scale-factor={factor} %U|' ~/.local/share/applications/spotify.desktop")
     # steam does only support whole integers, so round up
-    os.system(f"sed -i 's|Exec=/usr/bin/steam-runtime .*|Exec=env GDK_SCALE={math.ceil(factor)} /usr/bin/steam-runtime %U|' ~/.local/share/applications/steam.desktop")
+    exec(f"sed -i 's|Exec=/usr/bin/steam-runtime .*|Exec=env GDK_SCALE={math.ceil(factor)} /usr/bin/steam-runtime %U|' ~/.local/share/applications/steam.desktop")
 
-    # apply changes
-    os.system("xrdb -merge ~/.Xresources")
-    os.system("killall thunar 2>/dev/null")
-    os.system("echo 'awesome.restart()' | awesome-client")
-    time.sleep(0.2)
-    os.system(f"notify-send dpitog 'switched to DPI = {dpi} (x{factor})'")
+    if apply:
+        # apply changes
+        exec("xrdb -merge ~/.Xresources")
+        exec("killall thunar 2>/dev/null")
+        exec("echo 'awesome.restart()' | awesome-client")
+        time.sleep(0.2)
+        exec(f"notify-send dpitog 'switched to DPI = {dpi} (x{factor})'")
 
-
-def get_current_dpi() -> int:
-    try:
-        with open(Path.home() / ".Xresources.d/dpi", 'r') as f:
-            match = re.findall(r'^.*.dpi:\s+(\d+)$', f.read(), re.MULTILINE)
-            return int(match[0]) if len(match) > 0 else 0
-    except FileNotFoundError:
-        return 0
-
+# def get_current_dpi() -> int:
+#     try:
+#         with open(Path.home() / ".Xresources.d/dpi", 'r') as f:
+#             match = re.findall(r'^.*.dpi:\s+(\d+)$', f.read(), re.MULTILINE)
+#             return int(match[0]) if len(match) > 0 else 0
+#     except FileNotFoundError:
+#         return 0
 
 def main() -> None:
-    current_dpi = get_current_dpi()
+    DPIS = DPI_FACTORS.get(os.uname()[1], [])
+    DPIS = [DPIS[int(sys.argv[1]) - 1]]
+
+    apply = False
+    if len(sys.argv) >= 3:
+        apply = True
 
     dpis = [int(i * 96) for i in DPIS]
-    for dpi in sorted(dpis):
-        if dpi > current_dpi:
-            set_dpi(dpi)
-            return
-    set_dpi(dpis[0])
+    set_dpi(dpis[0], apply=apply)
 
 
 if __name__ == "__main__":
