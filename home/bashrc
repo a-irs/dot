@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# don't do anything if not running interactively
+[ -z "$PS1" ] && return
+
 HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
 HISTSIZE=100000
 HISTFILESIZE=100000
@@ -30,13 +33,28 @@ _prompt() {
     local yellow='\[\e[1;33m\]'
     local blue='\[\e[1;34m\]'
     local magenta='\[\e[1;35m\]'
+    local cyan='\[\e[1;36m\]'
 
-    [[ -n "$SSH_CONNECTION" ]] && local PREFIX="${magenta}[SSH] ${reset}"
+    local git_branch git_dirty is_git
+    git_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    is_git=$?
+    if [[ "$is_git" -eq 0 ]]; then
+        git diff --quiet 2>/dev/null || git_dirty="*"
+    else
+        git_dirty=
+    fi
 
-    user_color=$blue
+    # mark SSH sessions
+    [[ -n "$SSH_CONNECTION" ]] && local prefix="${magenta}[SSH] ${reset}"
+
+    # show "user@host pwd" (and emphasize root)
+    local user_color=$blue
     [ $UID = 0 ] && user_color=$red
-    PS1="\n${reset}${PREFIX}${user_color}\u${green}@\h ${yellow}\w "
+    PS1="\n${reset}${prefix}${user_color}\u${green}@\h ${yellow}\w "
+    [[ -n "$git_dirty" ]] && PS1="$PS1${red}$git_dirty "
+    [[ -n "$git_branch" ]] && PS1="$PS1${cyan}$git_branch "
 
+    # show return code of last command if !=0
     if [ $EXIT != 0 ]; then
         PS1+="${red}$EXIT ${reset}\$ "
     else
