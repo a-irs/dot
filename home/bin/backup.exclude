@@ -68,12 +68,6 @@ R /
 - /home/*/thumbnails/*
 - /home/*/.cargo/registry
 - /home/*/.opam
-- /home/*/.vim/plugged/
-- /home/*/.zcompdump
-- /home/*/.zsh_recent-dirs
-- /root/.vim/plugged/
-- /root/.zcompdump
-- /root/.zsh_recent-dirs
 - /home/*/Dropbox/media/wallpapers
 - /home/*/vm/**/*.raw
 - /home/*/vm/**/*.qcow2
@@ -93,9 +87,6 @@ R /
 # exclude steam, except proton (save) data
 + /home/*/.local/share/Steam/steamapps/compatdata/
 - /home/*/.local/share/Steam/*
-
-- /etc/ld.so.cache
-- /etc/udev/hwdb.bin
 
 - /srv/docker/grafana/sessions
 - /srv/docker/nzbget/drop
