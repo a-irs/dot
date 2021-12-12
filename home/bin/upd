@@ -41,6 +41,11 @@ check_kernel() {
             version_running=${version_running%-zen}
             version_running=${version_running/-zen/.zen}
             ;;
+        *-hardened)
+            package=linux-hardened
+            version_running=${version_running%-hardened}
+            version_running=${version_running/-hardened/.hardened}
+            ;;
         *)
             package=linux
             version_running=${version_running/-arch/.arch}

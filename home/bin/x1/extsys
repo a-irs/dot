@@ -43,7 +43,7 @@ def prepare(conf)
   cmd("partprobe #{conf.dest.device}; sleep 2")
 
   # create partitions
-  cmd("sgdisk -n 1:0:+#{conf.dest.sizes.boot} -c 1:\"EFI System Partition\" -t 1:ef00 #{conf.dest.device}")
+  cmd("sgdisk -n 1:0:+#{conf.dest.sizes.boot} -c 1:\"EFI system partition\" -t 1:ef00 #{conf.dest.device}")
   cmd("sgdisk -n 2:0:+#{conf.dest.sizes.luks} -c 2:\"Linux LUKS\" -t 2:8309 #{conf.dest.device}")
   cmd("sgdisk -n 3:0:+0 -c 3:USB_DATA -t 3:0700 #{conf.dest.device}")  # rest: unencrypted data
 
