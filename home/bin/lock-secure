@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+killall keepassxc 2> /dev/null
+ssh-add -D 2> /dev/null
+
+if [[ "$1" != soft ]]; then
+    # https://github.com/google/xsecurelock
+    env \
+        XSECURELOCK_SHOW_HOSTNAME=0 \
+        XSECURELOCK_SHOW_USERNAME=0 \
+        XSECURELOCK_PASSWORD_PROMPT=cursor \
+        XSECURELOCK_FONT="Input Mono:style=Bold" \
+        XSECURELOCK_SHOW_DATETIME=1 \
+        XSECURELOCK_DATETIME_FORMAT="%Y-%m-%d %H:%M:%S" \
+    xsecurelock || kill -9 -1
+fi

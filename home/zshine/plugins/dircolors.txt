@@ -311,3 +311,4 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .nsp 31
 .pak 31
 .dat 31
+.efi 31
