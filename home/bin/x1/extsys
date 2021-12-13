@@ -132,19 +132,20 @@ def write_initramfs(conf, mount)
   Dir.mktmpdir do |tmp|
     # note: systemd hooks do not work here (they do not run latehooks apparently), so use the default arch linux busybox hooks here
     File.write("#{tmp}/mkinitcpio.conf", %{
-    HOOKS=(base consolefont udev keyboard modconf block keymap encrypt lvm2 filesystems)
-    #HOOKS=(base systemd sd-vconsole keyboard autodetect block sd-encrypt lvm2 filesystems fsck)
-    COMPRESSION="zstd"
+    HOOKS=(base systemd sd-vconsole keyboard autodetect block sd-encrypt lvm2 filesystems)
     })
 
     uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")
     File.write("#{tmp}/cmdline", %{
-    rw cryptdevice=UUID=#{uuid}:EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS
+    rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
     })
 
     # build UEFI executable / unified kernel image (fallback version, with all modules included)
     cmd("mkdir -p #{mount}/efi/EFI/BOOT")
     cmd("mkinitcpio -S autodetect -c #{tmp}/mkinitcpio.conf --cmdline #{tmp}/cmdline -U #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+
+    # sign with own keys for UEFI secure boot
+    cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
   end
 end
 
@@ -153,7 +154,7 @@ def main()
   conf.dest.device = Dir.glob(conf.dest.device)[0]
 
   if ARGV[0] == "boot" then
-    cmd("qemu-system-x86_64 --bios /usr/share/ovmf/x64/OVMF.fd -m 2G -enable-kvm -cpu host -usb -device usb-tablet -display sdl -vga virtio -hdb '#{conf.dest.device}'", interactive: true)
+    cmd("qemu-system-x86_64 -drive file=/usr/share/ovmf/x64/OVMF.fd,if=pflash,format=raw,unit=0,readonly=on -net none -m 2G -enable-kvm -cpu host -usb -device usb-tablet -display sdl -vga virtio -drive format=raw,index=0,media=disk,file=#{conf.dest.device}", interactive: true)
     exit
   end
 
