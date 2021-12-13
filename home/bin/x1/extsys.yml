@@ -1,6 +1,5 @@
 dest:
   device: /dev/disk/by-id/usb-SanDisk_Ultra_Fit_*-0:0
-  overlayfs: false
   filesystem:
     name: btrfs
     options: noatime,compress=zstd
@@ -8,10 +7,6 @@ dest:
     boot: 256MB
     luks: 16GB
     # rest of device is filled with an unencrypted exFAT partition
-
-kernel:
-  filename: vmlinuz-linux-zen
-  params: ipv6.disable=1
 
 postcommands:
   # disable dropbox autostart
@@ -32,9 +27,10 @@ exclude:
   - "**/.cache/*"
   - /home/**/nintendo-switch-hacking/sd
   - /home/**/nintendo-switch-hacking/tmp
-  - /home/*/.cache/*
   - /home/*/.dropbox
+  - /home/*/.cargo
   - /home/*/.local/share/Steam
+  - /home/*/.local/share/yay
   - /home/*/.local/share/Trash/*
   - /home/*/.local/share/thumbnails/*
   - /home/*/Dropbox/media

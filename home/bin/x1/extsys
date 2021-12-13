@@ -43,9 +43,9 @@ def prepare(conf)
   cmd("partprobe #{conf.dest.device}; sleep 2")
 
   # create partitions
-  cmd("sgdisk -n 1:0:+#{conf.dest.sizes.boot} -c 1:\"EFI system partition\" -t 1:ef00 #{conf.dest.device}")
-  cmd("sgdisk -n 2:0:+#{conf.dest.sizes.luks} -c 2:\"Linux LUKS\" -t 2:8309 #{conf.dest.device}")
-  cmd("sgdisk -n 3:0:+0 -c 3:USB_DATA -t 3:0700 #{conf.dest.device}")  # rest: unencrypted data
+  cmd("sgdisk -n 1:0:+#{conf.dest.sizes.boot} -t 1:ef00 #{conf.dest.device}")
+  cmd("sgdisk -n 2:0:+#{conf.dest.sizes.luks} -t 2:8309 #{conf.dest.device}")
+  cmd("sgdisk -n 3:0:+0 -c 3:EXTSYS_DATA -t 3:0700 #{conf.dest.device}")  # rest: unencrypted data
 
   cmd("partprobe #{conf.dest.device}; sleep 2")
 
@@ -59,9 +59,9 @@ def prepare(conf)
   cmd("lvcreate -l 100%FREE vg_extsys -n lv_extsys")
 
   # format file systems
-  cmd("mkfs.fat -F32 -n EXTSYS_BOOT #{conf.dest.device}-part1")
+  cmd("mkfs.fat -F32 -n EXTSYS_EFI #{conf.dest.device}-part1")
   cmd("mkfs.#{conf.dest.filesystem.name} -L EXTSYS /dev/vg_extsys/lv_extsys")
-  cmd("mkexfatfs -n USB_DATA #{conf.dest.device}-part3")
+  cmd("mkexfatfs -n EXTSYS_DATA #{conf.dest.device}-part3")
 
   cmd("partprobe #{conf.dest.device}; sleep 2")
 end
@@ -77,7 +77,7 @@ def rsync(conf, mount)
     rsync_command = rsync_command + " --exclude '#{exclude}'"
   end
   # implicit excludes
-  rsync_command = "#{rsync_command} --exclude /dev --exclude /proc --exclude /run --exclude /sys --exclude /tmp --exclude /.snapshots --exclude '/lost+found' --exclude '/*/lost+found' --exclude /mnt --exclude /media --exclude /boot"
+  rsync_command = "#{rsync_command} --exclude /dev --exclude /proc --exclude /run --exclude /sys --exclude /tmp --exclude /.snapshots --exclude '/lost+found' --exclude '/*/lost+found' --exclude /mnt --exclude /media --exclude /efi --exclude /boot"
 
   rsync_command = "#{rsync_command} / #{mount}"
 
@@ -91,11 +91,12 @@ def mount(conf, mount)
 
   cmd("cryptsetup open #{conf.dest.device}-part2 EXTSYS_CRYPTO", interactive: true)
   cmd("partprobe #{conf.dest.device}; sleep 2")
+  cmd("lvchange -a y /dev/vg_extsys/lv_extsys")
 
   cmd("mount /dev/disk/by-label/EXTSYS -o #{conf.dest.filesystem.options} #{mount}")
-  cmd("mkdir -p #{mount}/boot")
-  cmd("mount /dev/disk/by-label/EXTSYS_BOOT #{mount}/boot")
-  cmd("sleep 2")  # FIXME
+  cmd("mkdir -p #{mount}/efi")
+  cmd("mount /dev/disk/by-label/EXTSYS_EFI #{mount}/efi")
+  cmd("sleep 2")
 end
 
 def umount(conf, mount)
@@ -103,7 +104,7 @@ def umount(conf, mount)
   # unmounts and closes everything
   #
 
-  cmd("umount -l #{mount}/boot || true")
+  cmd("umount -l #{mount}/efi || true")
   cmd("umount -l #{mount} || true")
   cmd("vgchange -a n vg_extsys || true")
   cmd("cryptsetup close EXTSYS_CRYPTO || true")
@@ -116,8 +117,8 @@ def write_fstab(conf, mount)
   #
 
   s = %{
-LABEL=EXTSYS / #{conf.dest.filesystem.name} defaults,#{conf.dest.filesystem.options} 0 0
-LABEL=EXTSYS_BOOT /boot vfat defaults#{',ro' if conf.dest.overlayfs} 0 0
+LABEL=EXTSYS / #{conf.dest.filesystem.name} #{conf.dest.filesystem.options} 0 0
+LABEL=EXTSYS_EFI /efi vfat defaults 0 0
 }
   File.write("#{mount}/etc/fstab", s)
 end
@@ -127,116 +128,25 @@ def write_hostname(conf, mount)
   File.write("#{mount}/etc/hostname", "EXTSYS-#{timestamp}")
 end
 
-def write_kernel(conf, mount)
-  #
-  # copies kernel to /boot in mount
-  #
-
-  cmd("rsync -aHAX -v /boot/#{conf.kernel.filename} #{mount}/boot/")
-end
-
-
-def write_boot(conf, mount)
-  #
-  # installs grub bootloader (EFI removable, so it's basically just an EFI executable in /boot/EFI/BOOT/BOOTX64.EFI) and writes config
-  #
-
-  cmd("grub-install --target=x86_64-efi --recheck --removable --efi-directory=#{mount}/boot --boot-directory=#{mount}/boot --themes='' --locales=''")
-
-  cmd("sleep 1")
-
-  uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")
-  timestamp = cmd("date +%F")
-  s = %{
-  insmod part_gpt
-  insmod part_msdos
-  insmod all_video
-
-  set gfxmode=auto
-  load_video
-  insmod gfxterm
-
-  set timeout=1
-
-  menuentry 'EXTSYS-#{timestamp}' {
-    set gfxpayload=keep
-    insmod gzio
-    insmod part_gpt
-    set root='hd0,gpt1'
-    search --no-floppy --label --set=root EXTSYS_BOOT
-    linux /#{conf.kernel.filename} #{conf.dest.overlayfs ? 'ro' : 'rw'} cryptdevice=UUID=#{uuid}:EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS #{conf.kernel.params}
-    initrd /initramfs.img
-  }
-}
-  File.write("#{mount}/boot/grub/grub.cfg", s)
-end
-
-
 def write_initramfs(conf, mount)
-  #
-  # create a initramfs that mounts the root with overlayfs (r/o filesystem with data written to tmpfs)
-  #
-
   Dir.mktmpdir do |tmp|
-
-    # inspired by https://github.com/nils-werner/raspi-overlayroot
-    s_install = %{
-#!/bin/bash
-
-build() {
-    add_module "overlay"
-    add_runscript
-}
-}
-
-    s_hook = %{
-#!/usr/bin/bash
-
-run_hook() {
-  # Create overlay tree in RAM
-  mkdir /overlay
-  mount -t tmpfs overlayroot /overlay
-  mkdir /overlay/lower /overlay/upper /overlay/work
-
-  # Remove /new_root directory and replace it with symlink
-  # After run_hook, mount_handler will mount our rootfs into here /new_root
-  rmdir /new_root
-  ln -s /overlay/lower /new_root
-}
-
-run_latehook() {
-    # Remove /new_root symlink, rootfs is now mounted into /new_root, and replace it with empty directory
-    rm /new_root
-    mkdir /new_root
-
-    # Build overlay FS and mount it to /new_root
-    mount -t overlay overlay -o lowerdir=/overlay/lower,upperdir=/overlay/upper,workdir=/overlay/work /new_root
-
-    # Link overlay mount into new_root, so we can work on it while the machine is running
-    mkdir -p /new_root/overlay
-    mount -n -o rbind /overlay /new_root/overlay
-}
-}
-    Dir.mkdir("#{tmp}/install")
-    File.write("#{tmp}/install/overlayfs", s_install)
-
-    Dir.mkdir("#{tmp}/hooks")
-    File.write("#{tmp}/hooks/overlayfs", s_hook)
-
     # note: systemd hooks do not work here (they do not run latehooks apparently), so use the default arch linux busybox hooks here
     File.write("#{tmp}/mkinitcpio.conf", %{
     HOOKS=(base consolefont udev keyboard modconf block keymap encrypt lvm2 filesystems)
+    #HOOKS=(base systemd sd-vconsole keyboard autodetect block sd-encrypt lvm2 filesystems fsck)
     COMPRESSION="zstd"
     })
 
-    if conf.dest.overlayfs then
-      cmd("mkinitcpio -g #{mount}/boot/initramfs.img -c #{tmp}/mkinitcpio.conf -D /usr/lib/initcpio -D #{tmp} -A overlayfs")
-    else
-      cmd("mkinitcpio -g #{mount}/boot/initramfs.img -c #{tmp}/mkinitcpio.conf -D /usr/lib/initcpio")
-    end
+    uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")
+    File.write("#{tmp}/cmdline", %{
+    rw cryptdevice=UUID=#{uuid}:EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS
+    })
+
+    # build UEFI executable / unified kernel image (fallback version, with all modules included)
+    cmd("mkdir -p #{mount}/efi/EFI/BOOT")
+    cmd("mkinitcpio -S autodetect -c #{tmp}/mkinitcpio.conf --cmdline #{tmp}/cmdline -U #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
   end
 end
-
 
 def main()
   conf = JSON.parse(YAML::load(File.open(__dir__ + '/extsys.yml')).to_json, object_class: OpenStruct)
@@ -259,8 +169,6 @@ def main()
       write_fstab(conf, mount)
       write_hostname(conf, mount)
       write_initramfs(conf, mount)
-      write_kernel(conf, mount)
-      write_boot(conf, mount)
 
       conf.postcommands.each do |postcommand|
         cmd(postcommand.gsub(/\$MOUNT\$/, mount))
