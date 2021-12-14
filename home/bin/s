@@ -121,6 +121,8 @@ mime_type=$(file --mime-type -Lb -- "$path")
 case "$mime_type" in
     application/x-sqlite* )
         preview_sqlite; exit ;;
+    application/vnd.sqlite* )
+        preview_sqlite; exit ;;
     application/json )
         preview_json; exit ;;
     application/pdf )
