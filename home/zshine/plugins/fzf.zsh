@@ -31,7 +31,7 @@ export FZF_CTRL_T_OPTS='--preview="s {}" --preview-window "~2"'
 export FZF_COMPLETION_TRIGGER='#'
 export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2"'
 
-fzf() { fzf-tmux -u 66% "$@"; }
+fzf() { fzf-tmux -p 70% "$@"; }
 
 c() {
     dir=$(while read -r line; do
