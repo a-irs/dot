@@ -163,7 +163,7 @@ let python_highlight_all = 1
 if hostname() =~ 'srv.'
 else
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-json', 'coc-css', 'coc-pyright', 'coc-yaml', 'coc-vimlsp', 'coc-sh', 'coc-html', 'coc-pairs', 'coc-markdownlint']
+let g:coc_global_extensions = ['coc-json', 'coc-css', 'coc-pyright', 'coc-yaml', 'coc-vimlsp', 'coc-sh', 'coc-html', 'coc-pairs']
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)

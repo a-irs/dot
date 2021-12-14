@@ -10,6 +10,15 @@ _url() {
     fi
 }
 
+dig() {
+    command dig +nocmd +nocomments "$@" | awk '
+    !/^;/    { print "\033[1;32m"$0 }
+    /^;[^;]/ { print "\033[1;35m"$0 }
+    /^;;/    { print "\033[1;36m"$0 }
+    END      { print "\033[0m" }
+  '
+}
+
 calc() {
     [[ "$#" == 0 ]] && local args="-i"
     python3 -B $args -c "from math import *; from statistics import *; print($*)"

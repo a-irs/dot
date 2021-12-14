@@ -2,6 +2,10 @@
 
 # don't do anything if not running interactively
 [ -z "$PS1" ] && return
+case $- in
+    *i*) ;;
+      *) return;;
+esac
 
 HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
 HISTSIZE=100000

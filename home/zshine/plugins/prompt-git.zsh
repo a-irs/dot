@@ -20,9 +20,9 @@ git_get_dirt() {
     local git_out=$1
     if [[ "$git_out" == gitstatus ]]; then
         s=""
-        (( VCS_STATUS_NUM_STAGED )) && s+=" $ZSHINE_GIT_SYMBOL_ADDED${VCS_STATUS_NUM_STAGED}"
-        (( VCS_STATUS_NUM_UNSTAGED )) && s+=" $ZSHINE_GIT_SYMBOL_MODIFIED${VCS_STATUS_NUM_UNSTAGED}"
-        (( VCS_STATUS_NUM_UNTRACKED )) && s+=" $ZSHINE_GIT_SYMBOL_UNTRACKED${VCS_STATUS_NUM_UNTRACKED}"
+        (( VCS_STATUS_NUM_STAGED )) && s+="$ZSHINE_GIT_SYMBOL_ADDED${VCS_STATUS_NUM_STAGED}"
+        (( VCS_STATUS_NUM_UNSTAGED )) && s+="$ZSHINE_GIT_SYMBOL_MODIFIED${VCS_STATUS_NUM_UNSTAGED}"
+        (( VCS_STATUS_NUM_UNTRACKED )) && s+="$ZSHINE_GIT_SYMBOL_UNTRACKED${VCS_STATUS_NUM_UNTRACKED}"
         printf '%s' "$s"
         return
     fi
@@ -95,12 +95,12 @@ git_get_remote() {
     if [[ "$git_out" == gitstatus ]]; then
         s=""
         # ⇣42 if behind the remote.
-        (( VCS_STATUS_COMMITS_BEHIND )) && s+=" ⇣${VCS_STATUS_COMMITS_BEHIND}"
+        (( VCS_STATUS_COMMITS_BEHIND )) && s+="⇣${VCS_STATUS_COMMITS_BEHIND}"
         # ⇡42 if ahead of the remote; no leading space if also behind the remote: ⇣42⇡42.
         (( VCS_STATUS_COMMITS_AHEAD && !VCS_STATUS_COMMITS_BEHIND )) && p+=" "
         (( VCS_STATUS_COMMITS_AHEAD  )) && s+="⇡${VCS_STATUS_COMMITS_AHEAD}"
         # ⇠42 if behind the push remote.
-        (( VCS_STATUS_PUSH_COMMITS_BEHIND )) && s+=" ⇠${VCS_STATUS_PUSH_COMMITS_BEHIND}"
+        (( VCS_STATUS_PUSH_COMMITS_BEHIND )) && s+="⇠${VCS_STATUS_PUSH_COMMITS_BEHIND}"
         (( VCS_STATUS_PUSH_COMMITS_AHEAD && !VCS_STATUS_PUSH_COMMITS_BEHIND )) && s+=" "
         # ⇢42 if ahead of the push remote; no leading space if also behind: ⇠42⇢42.
         (( VCS_STATUS_PUSH_COMMITS_AHEAD  )) && s+="⇢${VCS_STATUS_PUSH_COMMITS_AHEAD}"
@@ -166,7 +166,7 @@ git_prompt_info() {
     [[ "$?" -eq 0 ]] || return
 
     git_get_repo "$git_out"
-    prompt_segment "$ZSHINE_GIT_COMMIT_BG" "$ZSHINE_GIT_COMMIT_FG" "$(git_get_commit "$git_out")"
+    # prompt_segment "$ZSHINE_GIT_COMMIT_BG" "$ZSHINE_GIT_COMMIT_FG" "$(git_get_commit "$git_out")"
     prompt_segment "$ZSHINE_GIT_BRANCH_BG" "$ZSHINE_GIT_BRANCH_FG" "$(git_get_branch "$git_out")"
     prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$(git_get_remote "$git_out")"
     prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$(git_get_dirt "$git_out")"
