@@ -10,13 +10,39 @@ _url() {
     fi
 }
 
+_color_dig() {
+    local esc=$(printf '\033')
+    grep -vE \
+        '(^;; Got answer|^;; flags:|^;; MSG SIZE|^;; WHEN|^;; OPT PSEUDO|^; EDNS:)' \
+    | awk \
+        '
+        !/^;/    { print "\033[0m"$0 }
+        /^;[^;]/ { print "\033[1;35m"$0 }
+        /^;;/    { print "\033[1;30m"$0 }
+        END      { print "\033[0m" }
+        ' \
+    | sed -E "s/(NXDOMAIN)/$esc\[31m\1$esc\[0m$esc\[1;30m/g"
+}
+
 dig() {
-    command dig +nocmd +nocomments "$@" | awk '
-    !/^;/    { print "\033[1;32m"$0 }
-    /^;[^;]/ { print "\033[1;35m"$0 }
-    /^;;/    { print "\033[1;36m"$0 }
-    END      { print "\033[0m" }
-  '
+    local result=$(command dig +short "$@")
+
+    # empty or error result
+    if [[ -z "$result" ]]; then
+        local err_code=$(command dig +noall +comments +stats "$@" | grep -E '(^;;.*status:|^;; SERVER|^;; Query time)' | sed -E 's/.*status: ([^,]+).*/\1/g')
+        echo "$err_code" | _color_dig
+        return
+    fi
+
+    local dig_full=$(command dig +noclass +nocomments +nocmd "$@")
+    local dig_content=$(echo "$dig_full" | grep -vE '^;')
+    local dig_comment=$(echo "$dig_full" | grep -E '^;')
+    echo "$dig_content" | column -ts $'\t'
+    echo "$dig_comment" | _color_dig
+}
+
+digt() {
+    command dig +trace +nodnssec "$@" | _color_dig
 }
 
 calc() {

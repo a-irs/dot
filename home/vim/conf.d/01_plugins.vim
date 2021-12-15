@@ -110,7 +110,7 @@ let g:signify_sign_change_delete = '~_'
 nmap <leader>< <plug>(signify-next-hunk)
 nmap <leader>> <plug>(signify-prev-hunk)
 
-" ALE async linter
+" ALE async linter https://github.com/dense-analysis/ale/tree/master/ale_linters
 Plug 'w0rp/ale'
 " https://github.com/koalaman/shellcheck/wiki/SC2119
 " https://github.com/koalaman/shellcheck/wiki/SC2029
@@ -163,7 +163,13 @@ let python_highlight_all = 1
 if hostname() =~ 'srv.'
 else
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-json', 'coc-css', 'coc-pyright', 'coc-yaml', 'coc-vimlsp', 'coc-sh', 'coc-html', 'coc-pairs']
+let g:coc_global_extensions = [
+    \ 'coc-json',
+    \ 'coc-pyright',
+    \ 'coc-yaml',
+    \ 'coc-vimlsp',
+    \ 'coc-sh'
+    \ ]
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
