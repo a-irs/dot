@@ -181,6 +181,8 @@ function! s:show_documentation()
   endif
 endfunction
 
+inoremap <silent> <C-p> <C-\><C-O>:call CocActionAsync('showSignatureHelp')<cr>
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 nmap <silent> K         :call <SID>show_documentation()<CR>
 nmap <silent> <leader>k :call <SID>show_documentation()<CR>
 nmap <leader>cr <Plug>(coc-rename)

@@ -27,13 +27,13 @@ ln -sf ~/.config/mimeapps.list ~/.local/share/applications/defaults.list
 
 # applications
 window_manager=awesome
+opensnitch-ui &
 nitrogen --restore &
 lxpolkit &
 picom &
 redshift &
 dunst &
 ~/.bin/workstats &
-start-pulseaudio-x11 &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
 # parcellite simple mode: do not do anything except keep clipboard of closed applications (no history etc.)

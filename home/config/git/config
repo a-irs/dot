@@ -26,6 +26,7 @@
     ca = !git add --intent-to-add -A && git add --patch && git commit --amend
     discard = !git stash push --include-untracked -m "discard-$(date +%F_%T)"
 
+    stashpull = pull --rebase --autostash
     sync = !git checkout master && git pull && git checkout - && git merge master
 
 [merge]
