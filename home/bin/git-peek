@@ -6,7 +6,7 @@ URL=$1
 NS=$(echo "$URL" | rev | cut -d '/' -f 2 | rev)
 REPO=$(echo "$URL" | rev | cut -d '/' -f 1 | rev | sed -E 's/\.git$//')
 
-dest=$TMPDIR/git-peek/$NS/$REPO
+dest=${TMPDIR:-$(mktemp -d)}/git-peek/$NS/$REPO
 
 if [[ "$URL" == clean ]]; then
     rm -rf "$TMPDIR/git-peek"
@@ -22,5 +22,6 @@ if [[ ! -d "$dest/.git" ]]; then
 fi
 cd "$dest"
 echo ""
-ls -F
-zsh
+ls -F --color
+echo ""
+exec zsh
