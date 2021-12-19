@@ -29,12 +29,12 @@ do_lock() {
     i3lock \
         -i "$screenshot" --show-failed-attempts --ignore-empty-password \
         --pass-media-keys \
-        --insidecolor=$color_trans --ringcolor=$color_white --line-uses-inside \
-        --keyhlcolor=$color_red --bshlcolor=$color_red \
-        --insidevercolor=$color_trans --insidewrongcolor=$color_red \
-        --ringvercolor=$color_white --ringwrongcolor=$color_white --indpos='w/2:h/2+7' \
+        --inside-color=$color_trans --ring-color=$color_white --line-uses-inside \
+        --keyhl-color=$color_red --bshl-color=$color_red \
+        --insidever-color=$color_trans --insidewrong-color=$color_red \
+        --ringver-color=$color_white --ringwrong-color=$color_white --ind-pos='w/2:h/2+7' \
         --radius=60 --ring-width=5 \
-        --verifcolor="$color_white" \
+        --verif-color="$color_white" \
         --layout-font="$font" --verif-font="$font" --wrong-font="$font"
 
     do_sound

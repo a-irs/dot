@@ -18,7 +18,7 @@ function! s:MyManPager()
     endif
     set noswapfile
 
-    setlocal ft=man
+    setlocal filetype=man
     runtime ftplugin/man.vim
     setlocal buftype=nofile bufhidden=hide iskeyword+=: modifiable
 
@@ -27,9 +27,9 @@ function! s:MyManPager()
 
     " Remove empty lines above the header
     call cursor(1, 1)
-    let n = search(".*(.*)", "c")
+    let n = search('.*(.*)', 'c')
     if n > 1
-        exe "1," . n-1 . "d"
+        exe '1,' . n-1 . 'd'
     endif
     setlocal nomodified readonly
 
@@ -236,6 +236,8 @@ augroup remember_folds
   autocmd BufWinEnter * silent! loadview
 augroup END
 set viewoptions=folds,cursor
+
+Plug 'zah/nim.vim'
 
 
 " color schemes

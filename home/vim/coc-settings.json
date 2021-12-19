@@ -15,5 +15,12 @@
     },
 
     "python.pythonPath": "python3",
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+
+    "languageserver": {
+      "nim": {
+        "command": "nimlsp",
+        "filetypes": ["nim"]
+      }
+    }
 }
