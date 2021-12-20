@@ -15,6 +15,7 @@ ZSHINE_PLUGINS=(
   zshmarks # set bookmarks
   explain # explain command switches
   python # python dev stuff
+  nim # python dev stuff
   aliases # provides some aliases and functions for daily work
   auto-ls # launch "ls" when entering directory
   nix # nixos, nix package manager
