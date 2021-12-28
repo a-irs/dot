@@ -260,6 +260,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 *Rakefile 36
 *Dockerfile 36
 .py 36
+.nim 36
 .pl 36
 .ps1 36
 .icc 36

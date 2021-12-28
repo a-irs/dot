@@ -74,9 +74,9 @@ Plug 'arzg/vim-sh', { 'for': 'sh' }
 " increase/decrease/toggle everything with ctrl+a/ctrl+x
 Plug 'Konfekt/vim-CtrlXA'
 
-Plug 'jaxbot/semantic-highlight.vim', { 'for': 'python,lua,css' }
+Plug 'jaxbot/semantic-highlight.vim'
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css'}
+let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim'}
 " re-highlight on save
 augroup SemanticHL
     autocmd FileType python,lua
@@ -238,7 +238,6 @@ augroup END
 set viewoptions=folds,cursor
 
 Plug 'zah/nim.vim'
-
 
 " color schemes
 " Plug 'morhetz/gruvbox'
