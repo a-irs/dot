@@ -101,4 +101,19 @@ EOF
 
 fi
 
-exec "$window_manager"
+
+cat << 'EOF' | bash &
+TRIES=0
+while true; do
+    let TRIES++
+    if ((TRIES > 30)); then
+        exit 0
+    else
+        setxkbmap -option caps:escape  # remap caps to escape
+        xset r rate 200 30  # faster keyboard repeat
+    fi
+    sleep 0.5
+done
+EOF
+
+exec awesome
