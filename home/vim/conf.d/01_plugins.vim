@@ -124,10 +124,10 @@ let g:ale_python_flake8_options='--config ~/.config/flake8'
 let g:ale_linters_ignore = ["flake8", "mypy"]
 
 " ALE appearance  ▸▪
-let g:ale_sign_warning = "▪"
-let g:ale_sign_style_warning = "▪"
-let g:ale_sign_error = "▪"
-let g:ale_sign_style_error = "▪"
+let g:ale_sign_warning = '▪'
+let g:ale_sign_style_warning = '▪'
+let g:ale_sign_error = '▪'
+let g:ale_sign_style_error = '▪'
 let g:ale_echo_msg_format = '[%linter%] %severity%% code%: %s'
 let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 
@@ -161,7 +161,7 @@ let python_highlight_all = 1
 
 " COC
 
-if hostname() =~ 'srv.'
+if hostname() =~# 'srv.'
 else
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 let g:coc_global_extensions = [
