@@ -10,9 +10,9 @@ die() {
 
 open() {
     if [[ "$OSTYPE" == darwin* ]]; then
-        command open "$1"
+        command open "$1" &> /dev/null
     else
-        xdg-open "$1"
+        xdg-open "$1" &> /dev/null &
     fi
 }
 

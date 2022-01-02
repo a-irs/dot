@@ -19,7 +19,7 @@ case $type in
         action() {
             local url=$1
             [[ "$url" == "http"* ]] || url=http://"$url"
-            open "$url" 2>/dev/null || xdg-open "$url" 2>/dev/null
+            open "$url" >/dev/null 2>&1 || xdg-open "$url" >/dev/null 2>&1
         }
         ;;
     default)

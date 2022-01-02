@@ -84,7 +84,7 @@ augroup SemanticHL
 augroup END
 
 Plug 'chrisbra/Colorizer'
-let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini'
+let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini,vim'
 let g:colorizer_colornames = 0  "do not colorize simple 'red', 'yellow', ...
 
 Plug 'tpope/vim-commentary'
@@ -106,7 +106,8 @@ let g:signify_sign_add = '+'
 let g:signify_sign_delete = '_'
 let g:signify_sign_delete_first_line = '‾'
 let g:signify_sign_change = '~'
-let g:signify_sign_change_delete = '~_'
+let g:signify_sign_show_count = 0
+let g:signify_sign_change_delete = g:signify_sign_change . g:signify_sign_delete_first_line
 nmap <leader>< <plug>(signify-next-hunk)
 nmap <leader>> <plug>(signify-prev-hunk)
 
@@ -240,11 +241,10 @@ set viewoptions=folds,cursor
 Plug 'zah/nim.vim'
 
 " color schemes
-" Plug 'morhetz/gruvbox'
-" Plug 'sjl/badwolf'
+Plug 'morhetz/gruvbox'
+Plug 'sjl/badwolf'
 Plug 'rhysd/vim-color-spring-night'
-" Plug 'sainnhe/gruvbox-material'
-" Plug 'ayu-theme/ayu-vim'
+Plug 'sainnhe/gruvbox-material'
 
 call plug#end()
 
