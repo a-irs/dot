@@ -90,7 +90,7 @@ autoload -Uz compinit
 () {
   if [[ $# -gt 0 ]]; then
     # -u skips "compinit: insecure directories and files, run compaudit for list"
-    compinit -u
+    compinit
   else
     compinit -C
   fi
