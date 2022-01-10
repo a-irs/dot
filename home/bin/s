@@ -74,7 +74,6 @@ file_type=$(file -Lb -- "$path")
 tput bold; tput setaf 5
 len=$(printf '%s' "$file_type" | wc -c)
 printf '%s\n' "$file_type" | wrap
-printf '=%.0s' $(seq 1 "$len") | wrap
 printf '\n'
 tput sgr0
 

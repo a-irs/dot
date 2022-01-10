@@ -27,6 +27,7 @@
     discard = !git stash push --include-untracked -m "discard-$(date +%F_%T)"
 
     stashpull = pull --rebase --autostash
+    sp = stashpull
     sync = !git checkout master && git pull && git checkout - && git merge master
 
 [merge]

@@ -1,0 +1,20 @@
+snippet "head|shebang" "header" br
+#!nim r
+
+import std/[strutils, sequtils, sugar, algorithm, math, strformat]
+endsnippet
+
+snippet "proc" "procedure" br
+proc ${1:my_func}(${2:i}: int, x: var string): seq[int] =
+  return result
+endsnippet
+
+snippet "type|class" "type" br
+type ${1:MyType} = object
+  ${2:name}: ${3:string}
+endsnippet
+
+snippet "main" "main method" br
+when isMainModule:
+  $1
+endsnippet
