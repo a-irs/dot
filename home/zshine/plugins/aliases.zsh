@@ -351,6 +351,8 @@ fi
 [[ "$commands[youtube-dl]" ]] && alias yt='noglob youtube-dl --write-sub --sub-lang en,de --embed-subs --prefer-free-formats --write-info-json -f bestvideo+bestaudio'
 [[ "$commands[journalctl]" ]] && alias j='sudo journalctl'
 
+[[ "$commands[ncdu]" ]] && alias ncdu='NO_COLOR=1 ncdu'
+
 if [[ "$commands[xdg-open]" ]]; then
     os() {
         [[ -z "$1" || ! -e "$1" ]] && return 1
