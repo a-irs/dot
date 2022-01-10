@@ -88,7 +88,7 @@ def make_link(src: Path, dest: Path) -> None:
     if dest.is_symlink():
         rel_src = os.path.relpath(src, dest.parent)
         # symlink -> repoint symlink if different
-        if dest.resolve() != src:
+        if dest.resolve() != src.resolve():
             old_src = dest.resolve()
             dest.unlink()
             dest.symlink_to(rel_src)
