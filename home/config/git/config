@@ -26,9 +26,11 @@
     ca = !git add --intent-to-add -A && git add --patch && git commit --amend
     discard = !git stash push --include-untracked -m "discard-$(date +%F_%T)"
 
-    stashpull = pull --rebase --autostash
-    sp = stashpull
-    sync = !git checkout master && git pull && git checkout - && git merge master
+    stash-pull = pull --rebase --autostash
+    sp = stash-pull
+    sync-master = !git checkout master && git pull && git checkout - && git merge master
+    sm = sync-master
+    changelog = !git log --pretty=$'format:- %s\n%b' master.. | sed '/^$/d' | perl -p0e 's/\n([^-])/: \\1/g' | tac
 
 [merge]
     tool = vimdiff
