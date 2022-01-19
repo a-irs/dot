@@ -1,80 +1,45 @@
 Include config_*
 
-Host gitlab.com github.com
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
-
 ###
 
 Host x1
     User alex
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host srv1
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host srv2
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host srv3
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host pi1
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host erx
     User ubnt
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host desk
     User alex
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host dell
     User alex
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host mox1
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host mox2
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host backup
     User root
-    IdentityFile ~/.ssh/id_ed25519
-    PubkeyAuthentication yes
 
 Host remarkable
     HostName 10.11.99.1
     User root
     IdentityFile ~/.ssh/id_remarkable
-    PubkeyAuthentication yes
 
 Host *
-    # privacy defaults
     # do not leak username
     User root
-    # do not leak fingerprints of not explicitly used keys
-    IdentitiesOnly yes
-
-    # security defaults
-    ForwardAgent no
-    ForwardX11 no
-    GSSAPIDelegateCredentials no
