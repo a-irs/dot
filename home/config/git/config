@@ -28,9 +28,10 @@
 
     stash-pull = pull --rebase --autostash
     sp = stash-pull
-    sync-master = !git checkout master && git pull && git checkout - && git merge master
     sm = sync-master
-    changelog = !git log --pretty=$'format:- %s\n%b' master.. | sed '/^$/d' | perl -p0e 's/\n([^-])/: \\1/g' | tac
+    nb = new-branch
+    back-to-master = !git checkout master && git pull
+    btm = back-to-master
 
 [merge]
     tool = vimdiff
