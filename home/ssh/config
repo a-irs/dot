@@ -45,5 +45,5 @@ Host remarkable
     IdentityFile ~/.ssh/id_remarkable
 
 Host *
-    # do not leak username
+    # privacy defaults - do not leak username
     User root
