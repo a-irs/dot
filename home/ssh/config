@@ -1,5 +1,9 @@
 Include config_*
 
+Host gitlab.com github.com
+    PKCS11Provider /usr/lib/pkcs11/libtpm2_pkcs11.so
+    PubkeyAuthentication yes
+
 ###
 
 Host x1
