@@ -8,7 +8,7 @@ Host gitlab.com github.com
 
 ###
 
-Host x1 desk dell
+Host x1 desk
     IdentityFile ~/.ssh/id_me
     User alex
 

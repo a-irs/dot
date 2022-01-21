@@ -14,7 +14,7 @@ local beautiful  = require 'beautiful'
 awful.spawn("nitrogen --restore", false)
 
 hostname        = awesome.hostname
-is_mobile       = hostname == "dell" or hostname == "x1"
+is_mobile       = hostname == "x1"
 
 function dpi(value)
     return math.floor(xresources.apply_dpi(value) + 0.5)

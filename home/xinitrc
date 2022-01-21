@@ -51,7 +51,7 @@ restore_empty=true
 EOF
 parcellite --no-icon &
 
-if [[ $HOSTNAME == x1 || $HOSTNAME == dell ]]; then
+if [[ $HOSTNAME == x1 ]]; then
     # dim after 3min, lock 15s later
     xset s 180 15
     xss-lock -l -n ~/.bin/dim -- ~/.bin/lock-secure &
