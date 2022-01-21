@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-[[ $1 == help ]] && { echo "$(basename "$0") sh|start|mount|list|check|info"; exit 2; }
+[[ $# -gt 0 && $1 == help ]] && { echo "$(basename "$0") sh|start|mount|list|check|info"; exit 2; }
 [[ $EUID != 0 ]] && { exec sudo "$0" "$@"; }
 
-set -eo pipefail
+set -u
 
 MAIN_DIR=/mnt/data/crypt/borg
 USER_HOST=root@backup
@@ -17,18 +17,22 @@ if ! ssh -i "$SSH_KEY" $USER_HOST test -d "$MAIN_DIR"; then
     exit 1
 fi
 
-
 export BORG_RSH="ssh -i $SSH_KEY"
 export BORG_CACHE_DIR=/var/cache/borg
 
-case $1 in
-    mount|mnt) borg mount :: "$2" -o allow_other,ro; exit ;;
-    check) borg check --verbose --info; exit ;;
-    list|ls) borg list --verbose; exit ;;
-    info) borg info; exit ;;
-    sh) bash -c "env | grep ^BORG; bash"; exit ;;
-    *) ;;  # continue
-esac
+## commands
+
+if [[ $# -gt 0 ]]; then
+    case $1 in
+        mount|mnt) borg mount :: "$2" -o allow_other,ro; exit ;;
+        check) borg check --verbose --info; exit ;;
+        list|ls) borg list --verbose; exit ;;
+        info) borg info; exit ;;
+        sh) bash -c "env | grep ^BORG; bash"; exit ;;
+    esac
+fi
+
+## backup
 
 if ! ssh -i "$SSH_KEY" $USER_HOST test -f "$MAIN_DIR/$HOSTNAME/README"; then
     borg init --verbose --encryption none
