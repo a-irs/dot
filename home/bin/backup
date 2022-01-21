@@ -9,11 +9,7 @@ MAIN_DIR=/mnt/data/crypt/borg
 USER_HOST=root@backup
 export BORG_REPO=$USER_HOST:$MAIN_DIR/$HOSTNAME
 
-if [[ -e /home/alex/.ssh/id_ed25519 ]]; then
-    SSH_KEY=/home/alex/.ssh/id_ed25519
-else
-    SSH_KEY=/root/.ssh/id_ed25519
-fi
+SSH_KEY=/root/.ssh/id_backup
 
 if ! ssh -i "$SSH_KEY" $USER_HOST test -d "$MAIN_DIR"; then
     echo "$USER_HOST:$MAIN_DIR does not exist"

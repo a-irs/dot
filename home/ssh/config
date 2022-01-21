@@ -1,39 +1,24 @@
 Include config_*
 
+# automatically add used keys to ssh-agent
+AddKeysToAgent yes
+
+Host gitlab.com github.com
+    IdentityFile ~/.ssh/id_me
+
 ###
 
-Host x1
+Host x1 desk dell
+    IdentityFile ~/.ssh/id_me
     User alex
 
-Host srv1
-    User root
-
-Host srv2
-    User root
-
-Host srv3
-    User root
-
-Host pi1
+Host srv1 srv2 srv3 pi1 mox1 mox2 backup
+    IdentityFile ~/.ssh/id_me
     User root
 
 Host erx
+    IdentityFile ~/.ssh/id_me
     User ubnt
-
-Host desk
-    User alex
-
-Host dell
-    User alex
-
-Host mox1
-    User root
-
-Host mox2
-    User root
-
-Host backup
-    User root
 
 Host remarkable
     HostName 10.11.99.1
@@ -41,5 +26,8 @@ Host remarkable
     IdentityFile ~/.ssh/id_remarkable
 
 Host *
-    # privacy defaults - do not leak username
+    # privacy defaults:
+    # do not leak username
     User root
+    # do not leak SSH fingerprints - only use identities explicitly given instead of all in agent plus id_rsa/id_ed25519
+    IdentitiesOnly yes
