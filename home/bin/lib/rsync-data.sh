@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# backup data from /media/data and backup:/mnt/data/crypt.enc to USB disk
 
 set -e
 

@@ -102,6 +102,7 @@ class Parser():
         normalize = {
             r'\.German\.DL\.': "EN,DE",
             r'\.German\.(DTS|AC3)(D|HD)?\.DL\.': "EN,DE",
+            r'\.German\..*\.Dubbed\.DL\.': "EN,DE",
             r'\.German\.': "DE",
         }
         for key, val in normalize.items():
@@ -123,26 +124,46 @@ class TvParser(Parser):
         self.episode = self.set(self.get_episode)
 
     def get_title(self, s: str) -> Optional[str]:
-        rex = r'^(.+?)((\.|\s)(20|19)[0-9][0-9])?\.S[0-9][0-9]E[0-9][0-9]'
+        rex = r'^(.+?)((\.|\s)(20|19)[0-9][0-9])?\.S[0-9][0-9]\.?E[0-9][0-9]'
         m = re.search(rex, s)
         if m:
             return m.group(1).replace('.', ' ')
         return None
 
     def get_season(self, s: str) -> Optional[str]:
-        rex = r'\.(S[0-9][0-9])(E[0-9][0-9]|\.)'
+        rex = r'\.(S[0-9][0-9])\.?(E[0-9][0-9]|\.)'
         m = re.search(rex, s)
         if m:
             return m.group(1)
         return None
 
     def get_episode(self, s: str) -> Optional[str]:
-        rex = r'\.S[0-9][0-9]((E[0-9][0-9])+)\.'
+        rex = r'\.S[0-9][0-9]\.?((E[0-9][0-9])+)\.'
         m = re.search(rex, s)
         if m:
             return m.group(1)
         return None
 
+    # get year from existing directories in media dir
+    def get_year(self, s: str) -> Optional[str]:
+        result = super().get_year(s)
+        if result:
+            return result
+
+        base = "/media/data/videos/tv"
+        candidates = [d.name for d in pathlib.Path(base).glob(self.title + "*/")]
+        if len(candidates) > 1:
+            print(f"ERROR: Found more than one candidate for '{self.title}' in {base}: {', '.join(candidates)}")
+            sys.exit(1)
+        elif len(candidates) == 0:
+            print(f"ERROR: Found no candidate for '{self.title}' in {base}")
+            # sys.exit(1)
+        else:
+            m = re.match(r".* \((\d\d\d\d)\)", candidates[0])
+            if m:
+                return m[1]
+
+        return super().get_year(s)
 
 class Mover():
 
@@ -156,8 +177,8 @@ class Mover():
     def move(self) -> None:
         print(f'{C_BLUE}{self.dest}/{C_RESET}')
         self.remove_unneeded([
-            "proof", "Proof", "*-proof.*", "*-Proof.*", "proof.???", "*.proof.???"
-            "sample", "Sample", "*-sample.*", "*-Sample.*", "sample.???",
+            "proof", "Proof", "*-proof.*", "*-Proof.*", "proof.???", "*.proof.???",
+            "sample", "Sample", "*-sample.*", "*-Sample.*", "sample.???", "*.sample.???", "*_sample.*", "*_Sample.*",
             "*.nzb", "*.url", "*.srr", "*.srs", "*.txt"
         ])
         self.move_video(["*.mkv", "*.mp4", "*.avi", "*.m4v"])
@@ -181,12 +202,18 @@ class Mover():
     def remove_unneeded(self, mask: List[str]) -> None:
         files = self._get_glob(mask)
         for f in files:
-            # print(f'{C_RED}{f}{C_RESET} deleted.')
-            if self.run:
-                if pathlib.Path(f).is_dir():
-                    shutil.rmtree(f)
-                else:
+            print(f'{C_RED}{f}{C_RESET} deleted.')
+            if not self.run:
+                return
+
+            if pathlib.Path(f).is_dir():
+                shutil.rmtree(f)
+            else:
+                try:
                     os.unlink(f)
+                except FileNotFoundError:
+                    # e.g. if file has been deleted already during loop
+                    pass
 
     def move_nfo(self, mask: List[str]) -> None:
         files = self._get_glob(mask)
@@ -242,6 +269,11 @@ CONFIG = {
             'dest': '/media/data/videos/tv/{title} ({year})/{season} [{langs}] [{video_size} {source}]',
             'title': '{season}{episode}'
         },
+        'anime': {
+            'parser_class': TvParser,
+            'dest': '/media/data/videos/tv_anime/{title} ({year})/{season} [{langs}] [{video_size} {source}]',
+            'title': '{season}{episode}'
+        },
         'documentary_tv': {
             'parser_class': TvParser,
             'dest': '/media/data/videos/documentaries_tv/{title} ({year})/{season} [{langs}] [{video_size} {source}]',
@@ -274,6 +306,7 @@ def main():
     parser.add_argument('dirs', type=str, nargs=argparse.ONE_OR_MORE)
     parser.add_argument('--year', type=int)
     parser.add_argument('--title', type=str)
+    parser.add_argument('--season', type=int)
     parser.add_argument('--source', type=str)
     parser.add_argument('--video_size', type=str)
     parser.add_argument('--run', default=False, action='store_true')
@@ -283,6 +316,7 @@ def main():
         'title': args.title,
         'year': args.year,
         'source': args.source,
+        'season': args.season,
         'video_size': args.video_size
     }
 
