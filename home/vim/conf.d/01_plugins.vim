@@ -6,8 +6,13 @@ if has('nvim')
     nmap <leader>n :Neogit<CR>
 endif
 
-Plug 'lambdalisue/vim-manpager'
+Plug 'jreybert/vimagit'
+let g:magit_default_fold_level=2  " unfold all
+autocmd User VimagitEnterCommit startinsert  " go directly to insert mode for commit message
+let g:magit_jump_next_hunk = '<Leader><'
+let g:magit_jump_prev_hunk = '<Leader>>'
 
+Plug 'lambdalisue/vim-manpager'
 " from /usr/share/vim/vim*/plugin/manpager.vim
 " adapted so whichwrap and illuminate plugin works
 command! -nargs=0 MYMANPAGER call s:MyManPager() | delcommand MYMANPAGER
