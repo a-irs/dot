@@ -3,6 +3,9 @@
 # default: stored in current directory
 export MYPY_CACHE_DIR=~/.cache/mypy
 
+# do not prefix shell prompt with venv name
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
 # requirement: python-ipdb
 [[ "$commands[ipdb]" ]] && export PYTHONBREAKPOINT=ipdb.set_trace
 [[ "$commands[pudb3]" ]] && export PYTHONBREAKPOINT=pudb.set_trace

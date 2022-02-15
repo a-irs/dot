@@ -1,3 +1,21 @@
+snippet "run|subprocess|shell|exec" "subprocess" br
+import subprocess
+
+try:
+    process = subprocess.run(["ls", "-l"], capture_output=True, check=True, text=True)
+    print([
+        process.stdout,
+        process.stderr,
+        process.returncode
+    ])
+
+# throws subprocess.CalledProcessError if process.returncode != 0
+# throws FileNotFoundError if command is not in PATH
+except subprocess.CalledProcessError as e:
+    print(e.output, e.stderr, e.returncode)
+endsnippet
+
+
 snippet "arg|args" "argparse" br
 # https://docs.python.org/3/library/argparse.html
 import argparse
@@ -18,11 +36,10 @@ def cli_args() -> argparse.Namespace:
     return p.parse_args()
 endsnippet
 
-snippet "main" "main method" br
 
+snippet "main" "main method" br
 def main():
     ${1:${VISUAL}}
-
 
 if __name__ == "__main__":
     main()
@@ -35,7 +52,6 @@ from dataclasses import dataclass
 class ${1:Point}:
     x: int
     y: int
-
 endsnippet
 
 snippet "raise|throw|exc" "exception" br
