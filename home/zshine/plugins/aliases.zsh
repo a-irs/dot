@@ -508,10 +508,15 @@ if [[ "$commands[pacman]" ]]; then
     alias psi='pacman -Si'
     alias pqi='pacman -Qi'
     alias pqk='sudo pacman -Qk > /dev/null'
-    alias pqo='pacman -Qo'
-    function pql() { pacman -Qlq "$1" | xargs ls --color -dlh; }
-    function pqlb() { pacman -Qlq "$1" | xargs ls -dlh | grep '/bin/' | grep -Ev '/usr/bin/$'; }
-    alias psl='pkgfile -l'
+    pqo() {
+        echo ":: pacman local"
+        pacman -Qo "$1"
+        echo ""
+        echo ":: pkgfile"
+        pkgfile -v -s "$1"
+    }
+    function pql() { pacman -Qlq "$1" | xargs ls --color -dlh || pkgfile -l "$1"; }
+    function pqlb() { pacman -Qlq "$1" | xargs ls -dlh | grep '/bin/' | grep -Ev '/usr/bin/$' || pkgfile -l "$1" -b; }
     alias pu='sudo pacman -U'
     alias pacorph='sudo pacman -Rns $(pacman -Qttdq)'
     alias pacdiff='sudo pacdiff'
