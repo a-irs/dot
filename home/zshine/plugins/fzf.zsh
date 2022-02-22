@@ -31,7 +31,11 @@ export FZF_CTRL_T_OPTS='--preview="s {}" --preview-window "~2"'
 export FZF_COMPLETION_TRIGGER='#'
 export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2"'
 
-fzf() { fzf-tmux -p 70% "$@"; }
+if [[ "$(tmux -V)" == "tmux 3.0a" ]]; then
+    fzf() { fzf-tmux -d 70% "$@"; }
+else
+    fzf() { fzf-tmux -p 70% "$@"; }
+fi
 
 c() {
     dir=$(while read -r line; do
