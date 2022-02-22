@@ -414,6 +414,7 @@ extract() {
             (*.xz) unxz "$1" ;;
             (*.lzma) unlzma "$1" ;;
             (*.Z) uncompress "$1" ;;
+            (*.pax) mkdir -p "$extract_dir" && cd "$extract_dir" && pax -rf ../"$1" && cd -;;
             (*.zip|*.war|*.jar|*.sublime-package|*.ipsw|*.xpi|*.apk) unzip "$1" -d $extract_dir ;;
             (*.rar) unrar x -ad "$1" ;;
             (*.7z) 7za x "$1" ;;

@@ -29,10 +29,7 @@ ZSHINE_PLUGINS=(
   vault  # hashicorp vault
 )
 
-if [[ "$os" == darwin* ]]; then
-    ZSHINE_PLUGINS+=asdf
-else
-    # ZSHINE_PLUGINS+=ssh-agent  # autostart ssh-agent
+if [[ "$os" != darwin* ]]; then
     ZSHINE_PLUGINS+=todo  # show ~/.todo on start
 fi
 
