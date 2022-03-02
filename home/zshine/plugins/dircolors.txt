@@ -267,7 +267,6 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .icm 36
 .cat 36
 .inf 36
-*config 36
 .rb 36
 .epp 36
 .pp 36

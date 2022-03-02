@@ -32,6 +32,7 @@
     nb = new-branch
     back-to-master = !git checkout master && git pull
     btm = back-to-master
+    b2m = back-to-master
 
 [merge]
     tool = vimdiff
