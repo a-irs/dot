@@ -1,11 +1,6 @@
 [[ -z "$LANG" ]] && export LANG=en_US.UTF-8
 [[ -z "$LC_ALL" ]] && export LC_ALL=en_US.UTF-8
 
-# from /etc/zprofile (macOS)
-if [[ -x /usr/libexec/path_helper ]]; then
-    eval $(/usr/libexec/path_helper -s)
-fi
-
 # autostart tmux if available
 if [[ "$commands[tmux]" && -z "$VIM" && -z "$EMACS" && -z "$INSIDE_EMACS" && -z "$TMUX" ]]; then
     exec tmux -u new-session

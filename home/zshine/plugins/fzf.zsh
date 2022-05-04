@@ -13,7 +13,7 @@ fi
 # note: 'rg --files --hidden --no-ignore' is equally fast (benchmarked with hyperfine)
 
 for x in \
-    /usr/local/opt/fzf/shell/{key-bindings,completion}.zsh \
+    /opt/homebrew/opt/fzf/shell/{key-bindings,completion}.zsh \
     /usr/share/fzf/{key-bindings,completion}.zsh \
     /usr/share/doc/fzf/examples/key-bindings.zsh \
     /usr/share/zsh/vendor-completions/_fzf \
