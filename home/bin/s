@@ -49,7 +49,12 @@ cleanup_openssl() {
 preview_elf() { readelf -sh --wide "$path" | trim | wrap; }
 preview_binary() { zcat "$path" 2> /dev/null || cat "$path" | xxd -autoskip | trim | wrap; }
 
-preview_sqlite() { sqlite3 "$path" .dump | trim | wrap; }
+preview_sqlite() {
+    local t
+    for t in $(sqlite3 "$path" .tables); do
+        sqlite3 "$path" < <(echo -e ".mode json\nSELECT '$t' AS 'TABLE', * FROM $t")
+    done | jq --color-output | trim | wrap
+}
 preview_tar() { tar tf "$path" | trim | highlight_dirs | wrap; }
 preview_zip() { zipinfo -2tz "$path" | trim | highlight_dirs | wrap; }
 preview_htm() { elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank | trim | wrap; }
@@ -57,6 +62,7 @@ preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_do
 preview_txt() { cat "$path" | remove_blank | remove_double_blank | trim | wrap; }
 preview_media() { mediainfo "$path" | remove_blank | remove_double_blank | trim | sed 's/  \+:/ --/;' | wrap; }
 preview_json() { jsn "$path" | trim | wrap; }
+preview_markdown() { bat --force-colorization --style=snip --no-pager --theme=ansi "$path"; }
 preview_sshkey() { file -Lb -- "$path"; ssh-keygen -l -f "$path"; echo ""; cat "$path" | trim; }
 preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; cat "$temp" | trim | wrap; rm -f "$temp"; }
 preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl | trim | wrap; }
@@ -100,6 +106,10 @@ case "$extension" in
         preview_tar; exit ;;
     zip)
         preview_zip; exit ;;
+    md)
+        preview_markdown; exit ;;
+    gpg)
+        preview_pgp; exit ;;
     rrd)
         preview_rrd; exit ;;
     html|xhtml)

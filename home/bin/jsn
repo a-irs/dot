@@ -16,6 +16,23 @@ def flat(data, prefix=''):
     else:
         yield (prefix, data)
 
+def load_json(stream):
+    try:
+        data = json.load(stream)
+        is_ndjson = False
+
+    # parse newline-delimited JSON as ndjson
+    except json.decoder.JSONDecodeError:
+        data = []
+        is_ndjson = True
+
+        # need to seek back to beginning of stream again because we tried to parse the file already
+        stream.seek(0)
+
+        for line in stream.readlines():
+            data.append(json.loads(line))
+
+    return (data, is_ndjson)
 
 color_palette = {
     "black": '\033[90m',
@@ -40,9 +57,9 @@ colors = {
 def main():
     if len(sys.argv) > 1:
         with open(sys.argv[1]) as f:
-            data = json.load(f)
+            data, is_ndjson = load_json(f)
     else:
-        data = json.load(sys.stdin)
+        data, is_ndjson = load_json(sys.stdin)
 
     for name, value in flat(data):
         color = colors.get(type(value), colors.get(None))
@@ -51,6 +68,10 @@ def main():
             return f"{color}{s}{color_palette['reset']}"
 
         print(dye(name, colors['prefix']) + ": " + dye(json.dumps(value), color))
+
+    if is_ndjson:
+        print(file=sys.stderr)
+        print("WARNING: file was implicitly parsed as NDJSON (newline-delimited JSON) and shown as a list.", file=sys.stderr)
 
 
 if __name__ == "__main__":

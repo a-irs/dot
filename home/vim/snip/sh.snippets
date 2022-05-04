@@ -99,7 +99,7 @@ done
 endsnippet
 
 snippet "this|dir|thisdir|scriptdir" "location of script" br
-`!p snip.rv = 'THIS_DIR=$(dirname "$(readlink -f "$0")")\n'`
+`!p snip.rv = 'SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)\n'`
 endsnippet
 
 snippet "fn|func|function|f" "function" br

@@ -32,9 +32,9 @@ export FZF_COMPLETION_TRIGGER='#'
 export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2"'
 
 if [[ "$(tmux -V)" == "tmux 3.0a" ]]; then
-    fzf() { fzf-tmux -d 70% "$@"; }
+    fzf() { fzf-tmux -d 90% "$@"; }
 else
-    fzf() { fzf-tmux -p 70% "$@"; }
+    fzf() { fzf-tmux -p 90% "$@"; }
 fi
 
 c() {
