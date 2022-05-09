@@ -25,12 +25,13 @@
     c = !git add --intent-to-add -A && git add --patch && git commit
     ca = !git add --intent-to-add -A && git add --patch && git commit --amend
     discard = !git stash push --include-untracked -m "discard-$(date +%F_%T)"
+    sw = switch
 
     stash-pull = pull --rebase --autostash
     sp = stash-pull
     sm = sync-master
     nb = new-branch
-    back-to-master = !git checkout master && git pull
+    back-to-master = !git checkout master && git pull && git cleanup
     btm = back-to-master
     b2m = back-to-master
 
