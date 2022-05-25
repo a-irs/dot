@@ -90,7 +90,7 @@ if [[ -d "$path" ]]; then
 fi
 
 case "$file_type" in
-    "Certificate, Version=3") preview_cert -inform der; exit ;;
+    "Certificate, Version=3"*) preview_cert -inform der; exit ;;
     "PGP public "*) preview_pgp; exit ;;
     *" private key") preview_sshkey; exit ;;
     *" public key") preview_sshkey; exit ;;

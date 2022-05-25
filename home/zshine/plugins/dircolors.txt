@@ -193,7 +193,6 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .m3u             34
 .markdown		 34
 .txt             34
-.csv             34
 .log             34
 .asciidoc 34
 .commonmark 34
@@ -248,6 +247,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .ini 36
 .gitignore 36
 .json 36
+.csv 36
 .js 36
 .html 36
 .css 36

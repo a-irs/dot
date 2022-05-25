@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+
+import sys
+import json
+from pathlib import Path
+import subprocess
+import itertools
+import string
+
+OUT_FILE = Path.home() / ".O"
+
+class Color(object):
+    RESET = '\033[' + str(0) + 'm'
+    BOLD = '\033[' + str(1) + 'm'
+    DIM = '\033[' + str(2) + 'm'
+    MAGENTA = '\033[' + str(35) + 'm'
+    CYAN = '\033[' + str(36) + 'm'
+    BLUE = '\033[' + str(34) + 'm'
+    GREEN = '\033[' + str(32) + 'm'
+    YELLOW = '\033[' + str(33) + 'm'
+    RED = '\033[' + str(31) + 'm'
+    WHITE = '\033[' + str(37) + 'm'
+    BLACK = '\033[' + str(30) + 'm'
+
+
+def run_rg(args: "list[str]") -> subprocess.CompletedProcess:
+    base_args = ["rg", "--case-sensitive", "--with-filename", "--line-number", "--heading", "--json", "--sort=path"]
+    return subprocess.run(base_args + args, capture_output=True, text=True)
+
+
+def truncate(s: str, limit=1000) -> str:
+    if len(s) > limit:
+        s = s[0:limit] + Color.MAGENTA + " ... [truncated]" + Color.RESET
+    return s
+
+
+def main():
+
+    process = run_rg(sys.argv[1:])
+    lines = [l for l in process.stdout.split("\n") if l]
+
+    if lines:
+        # empty out the file
+        open(OUT_FILE, "w").close()
+
+    matches = []
+    line_width = 0
+
+    i = 0
+    hints = list(itertools.product("dfghjertzuicvbasklqwopyxnm", repeat=1)) + list(itertools.product("dfghjertzuicvbasklqwopyxnm", repeat=2))
+
+    for line in lines:
+        try:
+            j = json.loads(line)
+        except json.decoder.JSONDecodeError:
+            print(line)
+            continue
+
+        if j.get("type") == "begin":
+            s = "{}{}{}".format(Color.BOLD + Color.BLUE, j["data"]["path"]["text"], Color.RESET)
+            print(s)
+
+            # reset state values
+            matches = []
+            line_width = 0
+
+        elif j.get("type") == "match":
+            i += 1
+            d = j["data"]
+            text = d["lines"]["text"]
+
+            # replace going back to front (so start/end positions do not change while inserting ANSI codes)
+            for submatch in sorted(d["submatches"], key=lambda d: d["end"], reverse=True):
+                text = "{}{}{}{}{}".format(
+                        text[0:submatch["start"]],
+                        Color.GREEN,
+                        submatch["match"]["text"],
+                        Color.RESET,
+                        text[submatch["end"]:]
+                )
+            line_width = max(len(str(d["line_number"])), line_width)
+
+            matches.append(("".join(hints[i]), d["line_number"], truncate(text), d["path"]["text"]))
+
+        elif j.get("type") == "context":
+            matches.append((i, j["data"]["line_number"], truncate(j["data"]["lines"]["text"]), None))
+
+        elif j.get("type") == "end":
+            with open(OUT_FILE, "a") as fd:
+                for m in matches:
+                    if m[3]:
+                        # show normal match
+                        fd.write("{}:{}:{}\n".format(
+                            m[0], m[1], Path(m[3]).absolute()
+                        ))
+                        print("{}{}{} {}{}{} {}".format(
+                            Color.YELLOW,
+                            ("" + str(m[0]) + ""),
+                            Color.RESET,
+                            Color.DIM,
+                            str(m[1]).ljust(line_width),
+                            Color.RESET,
+                            m[2].rstrip())
+                        )
+                    else:
+                        # context match - do not show "i"
+                        print("{} {}{}{} {}".format(
+                            " " * len(str(m[0])),
+                            Color.DIM,
+                            str(m[1]).ljust(line_width),
+                            Color.RESET,
+                            m[2].rstrip())
+                        )
+            print()
+
+
+
+    if process.stderr:
+        print()
+        print("{}{}{}".format(
+            Color.RED,
+            process.stderr,
+            Color.RESET
+        ))
+
+    sys.exit(process.returncode)
+
+
+if __name__ == "__main__":
+    main()
