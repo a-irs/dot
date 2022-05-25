@@ -51,7 +51,8 @@ from dataclasses import dataclass
 @dataclass
 class ${1:Point}:
     x: int
-    y: int
+    y: int = 0
+    description: str = ""
 endsnippet
 
 snippet "raise|throw|exc" "exception" br

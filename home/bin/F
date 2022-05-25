@@ -5,7 +5,8 @@ import json
 from pathlib import Path
 import subprocess
 import itertools
-import string
+from dataclasses import dataclass
+
 
 OUT_FILE = Path.home() / ".O"
 
@@ -33,6 +34,12 @@ def truncate(s: str, limit=1000) -> str:
         s = s[0:limit] + Color.MAGENTA + " ... [truncated]" + Color.RESET
     return s
 
+@dataclass
+class SearchMatch:
+    line_nr: int
+    text: str
+    file_name: str
+    hint: str = ""
 
 def main():
 
@@ -80,36 +87,45 @@ def main():
                 )
             line_width = max(len(str(d["line_number"])), line_width)
 
-            matches.append(("".join(hints[i]), d["line_number"], truncate(text), d["path"]["text"]))
+            matches.append(SearchMatch(
+                hint="".join(hints[i]),
+                line_nr=d["line_number"],
+                text=truncate(text),
+                file_name=d["path"]["text"]
+            ))
 
         elif j.get("type") == "context":
-            matches.append((i, j["data"]["line_number"], truncate(j["data"]["lines"]["text"]), None))
+            matches.append(SearchMatch(
+                line_nr=j["data"]["line_number"],
+                text=truncate(j["data"]["lines"]["text"]),
+                file_name=""
+            ))
 
         elif j.get("type") == "end":
             with open(OUT_FILE, "a") as fd:
                 for m in matches:
-                    if m[3]:
+                    if m.hint:
                         # show normal match
                         fd.write("{}:{}:{}\n".format(
-                            m[0], m[1], Path(m[3]).absolute()
+                            m.hint, m.line_nr, Path(m.file_name).absolute()
                         ))
                         print("{}{}{} {}{}{} {}".format(
                             Color.YELLOW,
-                            ("" + str(m[0]) + ""),
+                            m.hint,
                             Color.RESET,
                             Color.DIM,
-                            str(m[1]).ljust(line_width),
+                            str(m.line_nr).ljust(line_width),
                             Color.RESET,
-                            m[2].rstrip())
+                            m.text.rstrip())
                         )
                     else:
                         # context match - do not show "i"
                         print("{} {}{}{} {}".format(
-                            " " * len(str(m[0])),
+                            " " * len(str(m.hint)),
                             Color.DIM,
-                            str(m[1]).ljust(line_width),
+                            str(m.line_nr).ljust(line_width),
                             Color.RESET,
-                            m[2].rstrip())
+                            m.text.rstrip())
                         )
             print()
 
