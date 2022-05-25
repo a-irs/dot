@@ -64,6 +64,8 @@ def main():
             continue
 
         if j.get("type") == "begin":
+            if i != 0:
+                print()
             s = "{}{}{}".format(Color.BOLD + Color.BLUE, j["data"]["path"]["text"], Color.RESET)
             print(s)
 
@@ -127,7 +129,6 @@ def main():
                             Color.RESET,
                             m.text.rstrip())
                         )
-            print()
 
 
 
