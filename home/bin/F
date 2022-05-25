@@ -72,7 +72,6 @@ def main():
             line_width = 0
 
         elif j.get("type") == "match":
-            i += 1
             d = j["data"]
             text = d["lines"]["text"]
 
@@ -93,6 +92,7 @@ def main():
                 text=truncate(text),
                 file_name=d["path"]["text"]
             ))
+            i += 1
 
         elif j.get("type") == "context":
             matches.append(SearchMatch(
