@@ -1,5 +1,11 @@
 #!/usr/bin/env zsh
 
+set-git() {
+    git config --local user.name  "a-irs"
+    git config --local user.email "a-irs@users.noreply.github.com"
+    git config --local commit.gpgsign false
+}
+
 _url() {
     local func=$1; shift
     local args=$@
