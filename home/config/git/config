@@ -2,8 +2,8 @@
     sshCommand = ssh -o StrictHostKeyChecking=ask
 
 [user]
-    email = alexirsi@gmail.com
     name = a-irs
+    email = a-irs@users.noreply.github.com
 
 [color]
     ui = 1
