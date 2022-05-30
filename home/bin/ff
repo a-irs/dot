@@ -40,8 +40,28 @@ def truncate(s: str, limit=1000) -> str:
 class SearchMatch:
     line_nr: int
     text: str
+    hint: str
     file_name: str
-    hint: str = ""
+    is_context: bool = False
+
+    def as_text(self, lineno_width) -> str:
+        if self.is_context:
+            # context match - do not show "i"
+            return "{} {}{}{} {}".format(
+                " " * len(str(self.hint)),
+                Color.DIM,
+                str(self.line_nr).ljust(lineno_width),
+                Color.RESET,
+                self.text.rstrip())
+        else:
+            return "{}{}{} {}{}{} {}".format(
+                Color.YELLOW,
+                self.hint,
+                Color.RESET,
+                Color.DIM,
+                str(self.line_nr).ljust(lineno_width),
+                Color.RESET,
+                self.text.rstrip())
 
 def main():
 
@@ -100,38 +120,21 @@ def main():
 
         elif j.get("type") == "context":
             matches.append(SearchMatch(
+                hint="".join(hints[i]),
                 line_nr=j["data"]["line_number"],
                 text=truncate(j["data"]["lines"]["text"]),
-                file_name=""
+                file_name=j["data"]["path"]["text"],
+                is_context=True,
             ))
 
         elif j.get("type") == "end":
             with open(OUT_FILE, "a") as fd:
                 for m in matches:
-                    if m.hint:
-                        # show normal match
+                    if not m.is_context:
                         fd.write("{}:{}:{}\n".format(
                             m.hint, m.line_nr, Path(m.file_name).absolute()
                         ))
-                        print("{}{}{} {}{}{} {}".format(
-                            Color.YELLOW,
-                            m.hint,
-                            Color.RESET,
-                            Color.DIM,
-                            str(m.line_nr).ljust(line_width),
-                            Color.RESET,
-                            m.text.rstrip())
-                        )
-                    else:
-                        # context match - do not show "i"
-                        print("{} {}{}{} {}".format(
-                            " " * len(str(m.hint)),
-                            Color.DIM,
-                            str(m.line_nr).ljust(line_width),
-                            Color.RESET,
-                            m.text.rstrip())
-                        )
-
+                    print(m.as_text(line_width))
 
 
     if process.stderr:

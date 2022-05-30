@@ -5,7 +5,7 @@ set -euo pipefail
 
 out=$(ff "$@")
 if [[ -n "$out" ]]; then
-    selected=$(echo "$out" | fzf --multi --reverse)
+    selected=$(fzf --multi --reverse <<< "$out")
     IFS=$'\n' selected=($selected)
 else
     exit
