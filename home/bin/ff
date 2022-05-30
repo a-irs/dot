@@ -69,7 +69,7 @@ class SearchMatch:
                 Color.RESET,
                 self.text.rstrip())
 
-def main():
+def main() -> None:
 
     # without command line arguments: print result of last run
     if len(sys.argv) <= 1:
