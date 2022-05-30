@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# spawn ff and open selections with oo
+
+set -euo pipefail
+
+out=$(ff "$@")
+if [[ -n "$out" ]]; then
+    selected=$(echo "$out" | fzf --multi --reverse)
+    IFS=$'\n' selected=($selected)
+else
+    exit
+fi
+
+args=()
+if (( ${#selected[@]} )); then
+    for f in "${selected[@]}"; do
+        [[ -e "$f" ]] && continue
+        args+=("${f// *}")
+    done
+fi
+
+(( ${#args[@]} )) && oo ${args[@]}

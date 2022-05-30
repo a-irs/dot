@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+f=~/."$(basename "$0")"
+
+args=()
+for n in "$@"; do
+    line=$(grep -E "^$n:" -m 1 "$f")
+    lineno=$(printf '%s' "$line" | cut -d: -f 2)
+    file_name=$(printf '%s' "$line" | cut -d: -f 3)
+    if [[ -n "$line" ]]; then
+        args+=(":e $file_name|:$lineno")
+    fi
+done
+
+(( ${#args[@]} )) && ${EDITOR:-vim} -c "$(IFS="|" ; echo "${args[*]}")"
