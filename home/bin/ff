@@ -8,9 +8,11 @@ from pathlib import Path
 import subprocess
 import itertools
 from dataclasses import dataclass
+import typing
 
 
 OUT_FILE = Path.home() / ".oo"
+OUT_FILE_2 = Path.home() / ".oo-output"
 
 class Color(object):
     RESET = '\033[' + str(0) + 'm'
@@ -35,6 +37,10 @@ def truncate(s: str, limit=1000) -> str:
     if len(s) > limit:
         s = s[0:limit] + Color.MAGENTA + " ... [truncated]" + Color.RESET
     return s
+
+def out(s: str, fd: typing.IO) -> None:
+    for x in [sys.stdout, fd]:
+        x.write("{}\n".format(s))
 
 @dataclass
 class SearchMatch:
@@ -65,76 +71,86 @@ class SearchMatch:
 
 def main():
 
+    # without command line arguments: print result of last run
+    if len(sys.argv) <= 1:
+        with open(OUT_FILE_2, "r") as fd:
+            print(fd.read().rstrip())
+        sys.exit()
+
+
     process = run_rg(sys.argv[1:])
     lines = [l for l in process.stdout.split("\n") if l]
 
     if lines:
         # empty out the file
         open(OUT_FILE, "w").close()
+        open(OUT_FILE_2, "w").close()
 
     matches = []
     line_width = 0
 
     i = 0
-    hints = list(itertools.product("dfghjertzuicvbasklqwopyxnm", repeat=1)) + list(itertools.product("dfghjertzuicvbasklqwopyxnm", repeat=2))
+    alphabet = "dfghjertzuicvbasklqwopyxnm"
+    hints = list(itertools.product(alphabet, repeat=1)) + list(itertools.product(alphabet, repeat=2))
 
-    for line in lines:
-        try:
-            j = json.loads(line)
-        except json.decoder.JSONDecodeError:
-            print(line)
-            continue
+    with open(OUT_FILE_2, "a") as log:
+        for line in lines:
+            try:
+                j = json.loads(line)
+            except json.decoder.JSONDecodeError:
+                print(line)
+                continue
 
-        if j.get("type") == "begin":
-            if i != 0:
-                print()
-            s = "{}{}{}".format(Color.BOLD + Color.BLUE, j["data"]["path"]["text"], Color.RESET)
-            print(s)
+            if j.get("type") == "begin":
+                if i != 0:
+                    out("", log)
+                s = "{}{}{}".format(Color.BOLD + Color.BLUE, j["data"]["path"]["text"], Color.RESET)
+                out(s, log)
 
-            # reset state values
-            matches = []
-            line_width = 0
+                # reset state values
+                matches = []
+                line_width = 0
 
-        elif j.get("type") == "match":
-            d = j["data"]
-            text = d["lines"]["text"]
+            elif j.get("type") == "match":
+                d = j["data"]
+                text = d["lines"]["text"]
 
-            # replace going back to front (so start/end positions do not change while inserting ANSI codes)
-            for submatch in sorted(d["submatches"], key=lambda d: d["end"], reverse=True):
-                text = "{}{}{}{}{}".format(
-                        text[0:submatch["start"]],
-                        Color.GREEN,
-                        submatch["match"]["text"],
-                        Color.RESET,
-                        text[submatch["end"]:]
-                )
-            line_width = max(len(str(d["line_number"])), line_width)
+                # replace going back to front (so start/end positions do not change while inserting ANSI codes)
+                for submatch in sorted(d["submatches"], key=lambda d: d["end"], reverse=True):
+                    text = "{}{}{}{}{}".format(
+                            text[0:submatch["start"]],
+                            Color.GREEN,
+                            submatch["match"]["text"],
+                            Color.RESET,
+                            text[submatch["end"]:]
+                    )
+                line_width = max(len(str(d["line_number"])), line_width)
 
-            matches.append(SearchMatch(
-                hint="".join(hints[i]),
-                line_nr=d["line_number"],
-                text=truncate(text),
-                file_name=d["path"]["text"]
-            ))
-            i += 1
+                matches.append(SearchMatch(
+                    hint="".join(hints[i]),
+                    line_nr=d["line_number"],
+                    text=truncate(text),
+                    file_name=d["path"]["text"]
+                ))
+                i += 1
 
-        elif j.get("type") == "context":
-            matches.append(SearchMatch(
-                hint="".join(hints[i]),
-                line_nr=j["data"]["line_number"],
-                text=truncate(j["data"]["lines"]["text"]),
-                file_name=j["data"]["path"]["text"],
-                is_context=True,
-            ))
+            elif j.get("type") == "context":
+                matches.append(SearchMatch(
+                    hint="".join(hints[i]),
+                    line_nr=j["data"]["line_number"],
+                    text=truncate(j["data"]["lines"]["text"]),
+                    file_name=j["data"]["path"]["text"],
+                    is_context=True,
+                ))
 
-        elif j.get("type") == "end":
-            with open(OUT_FILE, "a") as fd:
-                for m in matches:
-                    if not m.is_context:
-                        fd.write("{}:{}:{}\n".format(
-                            m.hint, m.line_nr, Path(m.file_name).absolute()
-                        ))
-                    print(m.as_text(line_width))
+            elif j.get("type") == "end":
+                with open(OUT_FILE, "a") as fd:
+                    for m in matches:
+                        if not m.is_context:
+                            fd.write("{}:{}:{}\n".format(
+                                m.hint, m.line_nr, Path(m.file_name).absolute()
+                            ))
+                        out(m.as_text(line_width), log)
 
 
     if process.stderr:
