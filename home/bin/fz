@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
-# spawn ff and open selections with oo
+# spawn ff with bat-preview and open selections with oo
 
 set -euo pipefail
 
 out=$(ff "$@")
 if [[ -n "$out" ]]; then
-    selected=$(fzf --multi --reverse <<< "$out")
+    selected=$(fzf --reverse --multi --preview \
+        '
+        FILE="$(echo {-1})"
+        LINE="$(echo {2})"
+        LINES_BEGIN="$((LINE - LINES/2 + 1))"; (( LINES_BEGIN < 0 )) && LINES_BEGIN=0
+        LINES_END="$((LINE + LINES/2 - 1))"
+        bat --style=plain --force-colorization --theme=Nord --highlight-line "$LINE" --line-range "$LINES_BEGIN:$LINES_END" "$FILE" 2>/dev/null \
+        ' <<< "$out")
     IFS=$'\n' selected=($selected)
 else
     exit

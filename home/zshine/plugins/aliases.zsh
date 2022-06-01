@@ -55,6 +55,7 @@ calc() {
     [[ "$#" == 0 ]] && local args="-i"
     python3 -B $args -c "from math import *; from statistics import *; print($*)"
 }
+alias calc="noglob calc"
 
 json2yaml() {
     ruby -ryaml -e 'puts(YAML.load(ARGF.read).to_yaml(:indentation => 2, :line_width => 9999))'

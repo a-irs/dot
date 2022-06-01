@@ -53,21 +53,29 @@ class SearchMatch:
     def as_text(self, lineno_width) -> str:
         if self.is_context:
             # context match - do not show "i"
-            return "{} {}{}{} {}".format(
+            return "{} {}{}{} {} {}{}{}".format(
                 " " * len(str(self.hint)),
                 Color.DIM,
                 str(self.line_nr).ljust(lineno_width),
                 Color.RESET,
-                self.text.rstrip())
+                self.text.rstrip(),
+                Color.DIM,
+                self.file_name,
+                Color.RESET,
+            )
         else:
-            return "{}{}{} {}{}{} {}".format(
+            return "{}{}{} {}{}{} {}  {}{}{}".format(
                 Color.YELLOW,
                 self.hint,
                 Color.RESET,
                 Color.DIM,
                 str(self.line_nr).ljust(lineno_width),
                 Color.RESET,
-                self.text.rstrip())
+                self.text.rstrip(),
+                Color.DIM,
+                self.file_name,
+                Color.RESET,
+            )
 
 def main() -> None:
 
