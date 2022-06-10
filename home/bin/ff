@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
-# TODO: if run without args: simply show last results again
-
-import sys
-import json
-from pathlib import Path
-import subprocess
-import itertools
 from dataclasses import dataclass
+from pathlib import Path
+import itertools
+import json
+import subprocess
+import sys
 import typing
+import base64
 
 
 OUT_FILE = Path.home() / ".oo"
@@ -99,12 +98,20 @@ def main() -> None:
 
     i = 0
     alphabet = "dfghjertzuicvbasklqwopyxnm"
-    hints = list(itertools.product(alphabet, repeat=1)) + list(itertools.product(alphabet, repeat=2))
+    hints_i = 1
+    hints = list(itertools.product(alphabet, repeat=1))
 
     with open(OUT_FILE_2, "a") as log:
         for line in lines:
+
+            # if we can't get a character from the hints list, increase the hints list
+            if len(hints) <= i:
+                hints_i += 1
+                hints += list(itertools.product(alphabet, repeat=hints_i))
+
             try:
                 j = json.loads(line)
+            # if output is not a valid json (e.g. an error message), just print it
             except json.decoder.JSONDecodeError:
                 print(line)
                 continue
@@ -121,17 +128,20 @@ def main() -> None:
 
             elif j.get("type") == "match":
                 d = j["data"]
-                text = d["lines"]["text"]
+                if "text" in d["lines"]:
+                    text = d["lines"]["text"]
 
-                # replace going back to front (so start/end positions do not change while inserting ANSI codes)
-                for submatch in sorted(d["submatches"], key=lambda d: d["end"], reverse=True):
-                    text = "{}{}{}{}{}".format(
-                            text[0:submatch["start"]],
-                            Color.GREEN,
-                            submatch["match"]["text"],
-                            Color.RESET,
-                            text[submatch["end"]:]
-                    )
+                    # replace going back to front (so start/end positions do not change while inserting ANSI codes)
+                    for submatch in sorted(d["submatches"], key=lambda d: d["end"], reverse=True):
+                        text = "{}{}{}{}{}".format(
+                                text[0:submatch["start"]],
+                                Color.GREEN,
+                                submatch["match"]["text"],
+                                Color.RESET,
+                                text[submatch["end"]:]
+                        )
+                else:
+                    text = str(base64.b64decode(d["lines"]["bytes"]))
                 line_width = max(len(str(d["line_number"])), line_width)
 
                 matches.append(SearchMatch(
@@ -143,10 +153,15 @@ def main() -> None:
                 i += 1
 
             elif j.get("type") == "context":
+                if "text" in j["data"]["lines"]:
+                    text = j["data"]["lines"]["text"]
+                else:
+                    text = str(base64.b64decode(j["data"]["lines"]["bytes"]))
+
                 matches.append(SearchMatch(
                     hint="".join(hints[i]),
                     line_nr=j["data"]["line_number"],
-                    text=truncate(j["data"]["lines"]["text"]),
+                    text=truncate(text),
                     file_name=j["data"]["path"]["text"],
                     is_context=True,
                 ))
