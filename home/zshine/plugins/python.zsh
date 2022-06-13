@@ -6,14 +6,11 @@ export MYPY_CACHE_DIR=~/.cache/mypy
 # do not prefix shell prompt with venv name
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-# requirement: python-ipdb
+[[ "$commands[ipython]" ]] && export PYTHONBREAKPOINT=IPython.core.debugger.set_trace
 [[ "$commands[ipdb]" ]] && export PYTHONBREAKPOINT=ipdb.set_trace
-[[ "$commands[pudb3]" ]] && export PYTHONBREAKPOINT=pudb.set_trace
+[[ "$commands[pudb]" ]] && export PYTHONBREAKPOINT=pudb.set_trace
 
-# requirement: ipython
-[[ "$commands[ipython3]" ]] && export PYTHONBREAKPOINT=IPython.core.debugger.set_trace
-
-alias i=ipython3
+alias i=ipython
 
 venv() {
     [[ -n "$VIRTUAL_ENV" ]] && { deactivate; return; }
