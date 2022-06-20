@@ -551,9 +551,7 @@ fonttest() {
     echo "🥯 🦆 🦉 🥓 🦄 🦀 🖕 🍣 🍤 🍥 🍡 🥃 🥞 🤯 🤪 🤬 🤮 🤫 🤭 🧐 🐕 🦖"
 }
 
-if [[ "$commands[vim]" ]]; then
-    export MANPAGER="vim -M +MYMANPAGER --not-a-term -"
-elif [[ "$commands[man]" ]]; then
+if [[ "$commands[man]" ]]; then
     man() {
         env LESS_TERMCAP_mb=$'\E[01;31m' \
         LESS_TERMCAP_md=$'\E[1;94m' \

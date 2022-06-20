@@ -12,36 +12,6 @@ autocmd User VimagitEnterCommit startinsert  " go directly to insert mode for co
 let g:magit_jump_next_hunk = '<Leader><'
 let g:magit_jump_prev_hunk = '<Leader>>'
 
-Plug 'lambdalisue/vim-manpager'
-" from /usr/share/vim/vim*/plugin/manpager.vim
-" adapted so whichwrap and illuminate plugin works
-command! -nargs=0 MYMANPAGER call s:MyManPager() | delcommand MYMANPAGER
-function! s:MyManPager()
-    " set nocompatible  " disabled, so whichwrap works
-    if exists('+viminfofile')
-        set viminfofile=NONE
-    endif
-    set noswapfile
-
-    setlocal filetype=man
-    runtime ftplugin/man.vim
-    setlocal buftype=nofile bufhidden=hide iskeyword+=: modifiable
-
-    " Emulate 'col -b'
-    silent keepj keepp %s/\v(.)\b\ze\1?//ge
-
-    " Remove empty lines above the header
-    call cursor(1, 1)
-    let n = search('.*(.*)', 'c')
-    if n > 1
-        exe '1,' . n-1 . 'd'
-    endif
-    setlocal nomodified readonly
-
-    " syntax on  " disabled, so illuminate plugin works
-endfunction
-
-
 Plug 'tolecnal/icinga2-vim', { 'for': 'icinga2' }
 autocmd BufNewFile,BufFilePre,BufRead */icinga/*/*.conf set filetype=icinga2
 
@@ -208,7 +178,6 @@ let g:SuperTabDefaultCompletionType = '<c-n>'
 Plug 'sirver/ultisnips'
 let g:UltiSnipsSnippetDirectories = ['snip']
 
-
 Plug 'cespare/vim-toml', { 'for': 'toml' }
 
 Plug 'pearofducks/ansible-vim'
@@ -229,22 +198,6 @@ let g:Illuminate_ftHighlightGroups = {
       \ 'markdown:blacklist': ['markdownListMarker']
       \ }
 Plug 'RRethy/vim-illuminate'
-
-" folding
-Plug 'thalesmello/tabfold'
-Plug 'tmhedberg/SimpylFold'  " python folding
-set foldnestmax=3 " max levels of folding
-set foldlevel=99  " start unfolded
-set foldmethod=indent
-let g:markdown_folding=1
-
-" remember folding per file
-augroup remember_folds
-  autocmd!
-  autocmd BufWinLeave * silent! mkview
-  autocmd BufWinEnter * silent! loadview
-augroup END
-set viewoptions=folds,cursor
 
 Plug 'zah/nim.vim'
 

@@ -36,6 +36,9 @@ set statusline+=%{&fileencoding?&fileencoding:&encoding}
 set statusline+=\ %{&ff}
 set statusline+=\ %{&bomb?'BOM':''}
 
+" show e.g. "[2/16]" for search results
+set shortmess-=S
+
 " no delay on entering normal mode
 set ttimeoutlen=0
 

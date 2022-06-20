@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git log --pretty=$'format:- %s\n%b' master.. \
+git log --no-show-signature --pretty=$'format:- %s\n%b' master.. \
     | sed '/^$/d' \
     | perl -p0e 's/\n([^-])/: \1/g' \
     | tac
