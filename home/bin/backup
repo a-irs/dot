@@ -9,15 +9,15 @@ MAIN_DIR=/mnt/data/crypt/borg
 USER_HOST=root@backup
 export BORG_REPO=$USER_HOST:$MAIN_DIR/$HOSTNAME
 
-SSH_KEY=/root/.ssh/id_backup
+SSH_KEY=(/home/*/.ssh/id_me)
 
-if ! ssh -i "$SSH_KEY" $USER_HOST test -d "$MAIN_DIR"; then
+if ! ssh -i "${SSH_KEY[0]}" $USER_HOST test -d "$MAIN_DIR"; then
     echo "$USER_HOST:$MAIN_DIR does not exist"
     /home/alex/.bin/pushover bash "ERROR: backup disk not mounted"
     exit 1
 fi
 
-export BORG_RSH="ssh -i $SSH_KEY"
+export BORG_RSH="ssh -i ${SSH_KEY[0]}"
 export BORG_CACHE_DIR=/var/cache/borg
 
 ## commands
@@ -60,6 +60,7 @@ borg create \
     --patterns-from="$0.exclude" --one-file-system \
     --compression auto,zstd \
     --checkpoint-interval 60 \
+    "$@" \
     "::data_${date}" \
     /home /srv
 
@@ -75,6 +76,7 @@ borg create \
     --exclude "/srv" \
     --compression auto,zstd \
     --checkpoint-interval 60 \
+    "$@" \
     "::root_${date}" \
     / /boot /sysinfo /var
 
