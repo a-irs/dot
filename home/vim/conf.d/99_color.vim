@@ -86,3 +86,6 @@ catch
     " fallback color scheme
     colorscheme default
 endtry
+
+" override 'vim-log-highlighting'
+" autocmd BufRead,BufNewFile * syn match logEmptyLines display '^#.*'

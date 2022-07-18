@@ -24,6 +24,19 @@ Plug 'LnL7/vim-nix'
 " filetype ps1
 Plug 'PProvost/vim-ps1'
 
+" disabled for now, to slow compared to builtin markdown ft
+" let g:pandoc#syntax#conceal#use = g:markdown_syntax_conceal
+" let g:pandoc#syntax#codeblocks#embeds#langs = g:markdown_fenced_languages
+" autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+" Plug 'vim-pandoc/vim-pandoc-syntax'
+
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_no_default_key_mappings = 1
+let g:vim_markdown_conceal = g:markdown_syntax_conceal
+let g:vim_markdown_conceal_code_blocks = g:markdown_syntax_conceal
+let g:vim_markdown_fenced_languages = g:markdown_fenced_languages
+Plug 'preservim/vim-markdown'
+
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
 if exists('$TMUX')
     let g:fzf_layout = { 'tmux': '-d50%' }
@@ -180,6 +193,9 @@ let g:UltiSnipsSnippetDirectories = ['snip']
 
 Plug 'cespare/vim-toml', { 'for': 'toml' }
 
+Plug 'mtdl9/vim-log-highlighting'
+
+" ansible/jinja2
 Plug 'pearofducks/ansible-vim'
 let g:ansible_unindent_after_newline = 1
 let g:ansible_extra_keywords_highlight = 1
