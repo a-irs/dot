@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# dim after 3min, lock 15s later
-xset s 180 15
-
 if [[ "$HOSTNAME" == x1 ]]; then
     # turn off display after 5m
     xset dpms 300 300 300 &
@@ -19,4 +16,11 @@ export XSECURELOCK_AUTH_TIMEOUT=300
 export XSECURELOCK_BLANK_TIMEOUT=300
 export XSECURELOCK_BLANK_DPMS_STATE=off
 
-xss-lock -n /usr/lib/xsecurelock/dimmer -l -- sh -c "killall keepassxc; ssh-add -D; xsecurelock"
+# dim after 3min, lock 15s later
+xset s 180 15
+export XSECURELOCK_DIM_TIME_MS=15000
+
+xss-lock \
+    -n /usr/lib/xsecurelock/dimmer \
+    -l \
+    -- sh -c "killall keepassxc; ssh-add -D; xsecurelock"

@@ -41,7 +41,7 @@ keepassxc &
 ~/.bin/workstats &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
-~/.bin/setup-lock &
+~/.bin/xinitrc/setup-lock &
 
 # parcellite simple mode: do not do anything except keep clipboard of closed applications (no history etc.)
 mkdir -p ~/.config/parcellite
