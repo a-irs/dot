@@ -41,6 +41,8 @@ keepassxc &
 ~/.bin/workstats &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
+~/.bin/setup-lock &
+
 # parcellite simple mode: do not do anything except keep clipboard of closed applications (no history etc.)
 mkdir -p ~/.config/parcellite
 cat << EOF > ~/.config/parcellite/parcelliterc
@@ -53,25 +55,11 @@ EOF
 parcellite --no-icon &
 
 if [[ $HOSTNAME == x1 ]]; then
-    # dim after 3min, lock 15s later
-    xset s 180 15
-    xss-lock -l -n ~/.bin/dim -- ~/.bin/lock-secure &
-
-    # turn off display after 5m
-    xset dpms 300 300 300 &
-
     nm-applet &
     xcalib ~/.config/x1carbon3rd_notebookcheck.com.icc &
 fi
 
 if [[ $HOSTNAME == desk ]]; then
-    # soft-lock (close keepass etc.) after 3min
-    xset s 180
-    xss-lock -l -- ~/.bin/lock-secure soft &
-
-    # turn off display after 10m
-    xset dpms 600 600 600 &
-
     solaar --restart-on-wake-up --window hide &
     numlockx on &
     easyeffects --gapplication-service &
