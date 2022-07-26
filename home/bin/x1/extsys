@@ -154,7 +154,7 @@ def main()
   conf.dest.device = Dir.glob(conf.dest.device)[0]
 
   if ARGV[0] == "boot" then
-    cmd("qemu-system-x86_64 -drive file=/usr/share/ovmf/x64/OVMF.fd,if=pflash,format=raw,unit=0,readonly=on -net none -m 2G -enable-kvm -cpu host -usb -device usb-tablet -display sdl -vga virtio -drive format=raw,index=0,media=disk,file=#{conf.dest.device}", interactive: true)
+    cmd("qemu-system-x86_64 -drive file=/usr/share/ovmf/x64/OVMF.fd,if=pflash,format=raw,unit=0,readonly=on -net none -m 2G -enable-kvm -cpu host -usb -device usb-tablet -display gtk -vga virtio -drive format=raw,index=0,media=disk,file=#{conf.dest.device}", interactive: true)
     exit
   end
 

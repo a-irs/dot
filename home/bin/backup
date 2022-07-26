@@ -54,7 +54,6 @@ set -e
 
 date=$(date +%Y-%m-%d_%H-%M-%S)
 
-# user data: /home /srv
 borg create \
     --show-rc --list --filter=AME --stats --verbose \
     --patterns-from="$0.exclude" --one-file-system \
@@ -62,23 +61,11 @@ borg create \
     --checkpoint-interval 60 \
     "$@" \
     "::data_${date}" \
-    /home /srv
+    /home /srv /var /sysinfo /etc
 
 borg prune --show-rc --stats --list \
     --prefix 'data_' \
     --keep-within 12m || true
-
-# everything else
-borg create \
-    --show-rc --list --filter=AME --stats --verbose \
-    --patterns-from="$0.exclude" --one-file-system \
-    --exclude "/home" \
-    --exclude "/srv" \
-    --compression auto,zstd \
-    --checkpoint-interval 60 \
-    "$@" \
-    "::root_${date}" \
-    / /boot /sysinfo /var
 
 borg prune --show-rc --stats --list \
     --prefix 'root_' \

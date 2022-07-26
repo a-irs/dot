@@ -12,7 +12,7 @@ Host x1 desk
     IdentityFile ~/.ssh/id_me
     User alex
 
-Host srv1 srv2 srv3 pi1 mox1 mox2 backup
+Host srv1 srv2 srv3 pi1 mox1 mox2 backup stor1
     IdentityFile ~/.ssh/id_me
     User root
 

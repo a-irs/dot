@@ -94,6 +94,8 @@ R /
 - /srv/pwdumps
 - /srv/vuls-database/db
 
-- /var/log/journal
+- /var/log/*
 - /var/lib/docker/*
+- /var/lib/texmf/*
+- /var/lib/pacman/sync/*
 - /nix
