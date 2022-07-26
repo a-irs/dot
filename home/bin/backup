@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ $# -gt 0 && $1 == help ]] && { echo "$(basename "$0") sh|start|mount|list|check|info"; exit 2; }
+[[ $# -gt 0 && $1 == help ]] && { echo "$(basename "$0") sh|mount|list|check|info"; exit 2; }
 [[ $EUID != 0 ]] && { exec sudo "$0" "$@"; }
 
 set -u
@@ -9,7 +9,10 @@ MAIN_DIR=/mnt/data/crypt/borg
 USER_HOST=root@backup
 export BORG_REPO=$USER_HOST:$MAIN_DIR/$HOSTNAME
 
-SSH_KEY=(/home/*/.ssh/id_me)
+SSH_KEY=(
+    /root/.ssh/id_backup
+    /home/*/.ssh/id_me
+)
 
 if ! ssh -i "${SSH_KEY[0]}" $USER_HOST test -d "$MAIN_DIR"; then
     echo "$USER_HOST:$MAIN_DIR does not exist"
@@ -40,7 +43,6 @@ fi
 
 umask 077
 mkdir -p /sysinfo
-set +e
 pacman -Qne > /sysinfo/pacman.txt
 pacman -Qme > /sysinfo/pacman-aur.txt
 ln -sf ../etc/lvm /sysinfo/lvm
@@ -49,8 +51,7 @@ lsblk -f > /sysinfo/lsblk-f
 lsblk > /sysinfo/lsblk
 fdisk -l > /sysinfo/fdisk
 luks_dev=$(lsblk -l -p -f | grep crypto_LUKS | head -1 | awk '{print $1}')
-cryptsetup luksDump "$luks_dev" > /sysinfo/luksDump
-set -e
+cryptsetup luksDump "$luks_dev" > /sysinfo/luksDump 2>/dev/null
 
 date=$(date +%Y-%m-%d_%H-%M-%S)
 
