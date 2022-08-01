@@ -150,7 +150,7 @@ def pandoc(input_file: str, output_file: str, style: str, args: List[str]) -> in
         processed_file = preprocess(preprocess_cmd, processed_file)
 
     resource_path = ".:{}".format(os.path.expanduser("~/.local/share/pandoc"))
-    cmd = shlex.split(f"pandoc -i {processed_file} -o {output_file} --resource-path={resource_path} " + output_style) + args
+    cmd = shlex.split(f"pandoc {processed_file} -o {output_file} --resource-path={resource_path} " + output_style) + args
 
     logging.info(' '.join(cmd))
     logging.debug("command line: %s", cmd)
