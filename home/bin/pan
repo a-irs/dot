@@ -28,13 +28,15 @@ from typing import List
 # much simpler than lua/python/haskell filter
 PREPROCESS = [
     ["perl", "-ne", "s/^\\!include:(.+).*$/`cat $1`/e;print"],
+    ["perl", "-pe", r"s/([\(\)]?|\s)-> /\1\$\\rightarrow\$ /g"],
+    ["perl", "-pe", r"s/([\(\)]?|\s)--> /\1\$\\longrightarrow\$ /g"],
 ]
 
 CONFIG_DEFAULT = 'sans-short'
 CONFIG_DEFAULT_OUTPUT = '.html'
 
 CONFIG = {
-    'base': {
+    '_base': {
         'all': [
             '--standalone',  # do not produce a document fragment, but whole document (e.g. wrapped with <html></html>)
             '--lua-filter=always-compact-list.lua',  # always convert lists to compact lists
@@ -46,7 +48,7 @@ CONFIG = {
         ],
         '.pdf': [
             '-V header-includes="\\usepackage{csquotes}"',  # localized quotation marks
-            '--pdf-engine=pdflatex',  # or: xelatex
+            '--pdf-engine=pdflatex',  # or: xelatex: smaller file sizes, longer compilation time
             '-V colorlinks',
             '-V links-as-notes',
 
@@ -58,22 +60,26 @@ CONFIG = {
             # better code blocks (e.g. with line wrapping)
             # http://texdoc.net/texmf-dist/doc/latex/listings/listings.pdf
             '--listings',
-            '-V header-includes="\\lstset{breaklines=true}"',
-            '-V header-includes="\\lstset{columns=fullflexible}"',
-            '-V header-includes="\\lstset{keepspaces=true}"',
-            '-V header-includes="\\lstset{extendedchars=true}"',
-            '-V header-includes="\\lstset{postbreak=\\mbox{\\textcolor{Gray}{$\\hookrightarrow$}\\space}}"',
-            '-V header-includes="\\lstset{showstringspaces=false}"',
-            '-V header-includes="\\lstset{basicstyle=\\ttfamily}"',
-            '-V header-includes="\\lstset{keywordstyle=\\color{Maroon}}"',
-            '-V header-includes="\\lstset{stringstyle=\\color{PineGreen}}"',
-            '-V header-includes="\\lstset{commentstyle=\\slshape\\color{Blue}}"',
-            '-V header-includes="\\lstset{numberstyle=\\color{Green}}"',
+            r'-V header-includes="\lstset{breaklines=true}"',
+            r'-V header-includes="\lstset{columns=fullflexible}"',
+            r'-V header-includes="\lstset{keepspaces=true}"',
+            r'-V header-includes="\lstset{extendedchars=true}"',
+            r'-V header-includes="\lstset{showstringspaces=false}"',
+            r'-V header-includes="\lstset{basicstyle=\small\ttfamily}"',
+            r'-V header-includes="\lstset{keywordstyle=\color{Maroon}}"',
+            r'-V header-includes="\lstset{stringstyle=\color{PineGreen}}"',
+            r'-V header-includes="\lstset{commentstyle=\slshape\color{Blue}}"',
+            r'-V header-includes="\lstset{numberstyle=\color{Green}}"',
+
+            # postbreak arrow for code listings
+            r'-V header-includes="\newsavebox\mypostbreak"',
+            r'-V header-includes="\savebox\mypostbreak{\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{Gray}\hookrightarrow\space}}}"',
+            r'-V header-includes="\lstset{breaklines=true,postbreak=\usebox\mypostbreak}"',
         ]
     },
 
     'sans': {
-        'inherit': ['base'],
+        'inherit': ['_base'],
         '.html': [
             '--self-contained',
             '--css {}'.format("sans.css"),
@@ -95,6 +101,36 @@ CONFIG = {
         'all': [
             '--toc',
         ],
+    },
+
+    '_beamer': {
+        'inherit': ['sans-short'],
+        '.pdf': [
+            '-t beamer',
+            '--slide-level=2',
+            '-V aspectratio=32',  # 3:2 ratio
+            '-V geometry=top=0cm,bottom=0cm,left=1cm,right=1cm',  # reset _base
+        ]
+    },
+
+    'beamer-basic': {
+        'inherit': ['_beamer'],
+        '.pdf': [
+            '-t beamer',
+            '--slide-level=2',
+            '-V fonttheme=professionalfonts',
+            '-V navigation=horizontal',
+        ]
+    },
+
+    'beamer': {
+        'inherit': ['_beamer'],
+        '.pdf': [
+            '-V theme:metropolis',
+            '-V themeoptions:progressbar=frametitle,sectionpage=progressbar,subsectionpage=progressbar',
+            r'-V header-includes="\usepackage[sfdefault]{AlegreyaSans}"',
+            r'-V header-includes="\renewcommand*\oldstylenums[1]{{\AlegreyaSansOsF #1}}"',
+        ]
     },
 
     'sans-long': {
