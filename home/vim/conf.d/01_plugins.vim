@@ -79,8 +79,8 @@ let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini,vim'
 let g:colorizer_colornames = 0  "do not colorize simple 'red', 'yellow', ...
 
 Plug 'tpope/vim-commentary'
-nmap <leader># :Commentary<CR>
-vmap <leader># :Commentary<CR>
+nmap <silent> <leader># :Commentary<CR>
+vmap <silent> <leader># :Commentary<CR>
 autocmd FileType markdown setlocal commentstring=<!--\ %s\ -->
 autocmd FileType nasm setlocal commentstring=;\ %s
 
