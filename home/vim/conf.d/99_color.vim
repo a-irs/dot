@@ -52,6 +52,9 @@ augroup my_highlight
     autocmd ColorScheme * highlight! link ALEWarningSign diffFile
     autocmd ColorScheme * highlight! link ALEInfoSign diffFile
 
+    autocmd ColorScheme * highlight! link CocMenuSel TermCursor
+    " autocmd ColorScheme * highlight! link CocMenuSel Cursor
+
     " change VIM background to terminal background
     " autocmd ColorScheme * highlight NonText guibg=NONE ctermbg=NONE
     " autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
