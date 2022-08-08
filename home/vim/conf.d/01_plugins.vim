@@ -1,3 +1,9 @@
+command PluginsUpdate
+  \ PlugUpdate | PlugSnapshot! ~/.vim/conf.d/plug.snapshot
+
+command PluginsLoad
+  \ source ~/.vim/conf.d/plug.snapshot
+
 call plug#begin()
 
 if has('nvim')
@@ -160,6 +166,7 @@ let g:coc_global_extensions = [
     \ 'coc-pyright',
     \ 'coc-yaml',
     \ 'coc-vimlsp',
+    \ 'coc-snippets',
     \ 'coc-sh'
     \ ]
 
@@ -188,10 +195,15 @@ function! s:check_back_space() abort
 endfunction
 
 " Insert <tab> when previous text is space, refresh completion if not.
+" also use UltiSnips snippets
 inoremap <silent><expr> <TAB>
     \ coc#pum#visible() ? coc#pum#next(1):
+    \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
     \ <SID>check_back_space() ? "\<Tab>" :
     \ coc#refresh()
+let g:coc_snippet_next = '<tab>'
+let g:UltiSnipsSnippetDirectories = ['snip']
+
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " <CR>: when a completion entry is selected, confirm selection. else, stop undo (see :h i_CTRL-g) and send return
@@ -214,9 +226,6 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 endif
-
-Plug 'sirver/ultisnips'
-let g:UltiSnipsSnippetDirectories = ['snip']
 
 Plug 'cespare/vim-toml', { 'for': 'toml' }
 
@@ -251,12 +260,3 @@ Plug 'rhysd/vim-color-spring-night'
 Plug 'sainnhe/gruvbox-material'
 
 call plug#end()
-
-
-" auto-install missing plugins
-augroup pluginstall
-    autocmd VimEnter *
-      \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-      \|   PlugInstall --sync | q
-      \| endif
-augroup END
