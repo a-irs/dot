@@ -44,7 +44,7 @@ CONFIG = {
         ],
         '.html': [
             '--mathml',  # best for maths in html, only for firefox+safari
-            # '--mathjax',  # 2nd best alternative, more compatible but embeds huge JS (800KB) when used with --self-contained
+            # '--mathjax',  # 2nd best alternative, more compatible but embeds huge JS (800KB) when used with --embed-resources
         ],
         '.pdf': [
             '-V header-includes="\\usepackage{csquotes}"',  # localized quotation marks
@@ -55,7 +55,6 @@ CONFIG = {
             '-V papersize=a4',
             '-V geometry=top=3cm,bottom=3cm,left=2.5cm,right=2.5cm',  # tweaked Word 2007 style (2.5cm on any side)
             '-V linestretch=1.2',
-            '-V fontsize=10pt',  # default: 10
 
             # better code blocks (e.g. with line wrapping)
             # http://texdoc.net/texmf-dist/doc/latex/listings/listings.pdf
@@ -81,11 +80,13 @@ CONFIG = {
     'sans': {
         'inherit': ['_base'],
         '.html': [
-            '--self-contained',
+            '--embed-resources',
             '--css {}'.format("sans.css"),
         ],
         '.pdf': [
-            '-V fontfamily=utopia',  # good fonts: charter (sans), utopia (sans), palatino (serif)
+            # see e.g. https://icl.utk.edu/~mgates3/docs/latex-fonts.pdf
+            '-V fontfamily=fourier',  # good fonts: charter (sans), utopia/fourier (sans), palatino (serif)
+            '-V fontsize=11pt',  # default: 10
         ]
     },
 
