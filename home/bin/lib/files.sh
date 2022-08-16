@@ -8,7 +8,9 @@ out=~/projects/filesgit
 
 if [[ "$#" -gt 0 && "$1" == commit ]]; then
     lsfiles() { find "$1" -type f | sort -hf > "$out/$(basename "$1").txt"; }
-    for d in /media/data?; do lsfiles "$d"; done
+    for d in /media/data?; do
+        mountpoint -q "$d" && lsfiles "$d"
+    done
 
     git -C "$out" add -v --all
     git -C "$out" commit -am "[automatic commit]" || true
