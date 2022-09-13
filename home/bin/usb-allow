@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+devices=$(usbguard list-devices --blocked \
+    | sed -E 's/ ?via-port \S+//g' \
+    | sed -E 's/ ?(with-connect-type|parent-hash|hash) "[^"]*"//g' \
+    | sed -E 's/^[0-9]+: //' \
+    | sed -E 's/^block/allow/')
+selection=$(echo "$devices" | fzf)
+
+if [[ -n "$selection" ]]; then
+    echo "$selection"
+    usbguard append-rule "$selection"
+fi
