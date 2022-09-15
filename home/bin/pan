@@ -2,6 +2,7 @@
 
 # dependencies: pandoc texlive-core
 #   for xelatex + custom fonts: texlive-latexextra
+#   beamer template: texlive-pictures, texlive-fontsextra
 #
 # https://pandoc.org/MANUAL.html
 #
