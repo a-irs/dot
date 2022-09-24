@@ -51,13 +51,19 @@ umask 077
 mkdir -p /sysinfo
 pacman -Qne > /sysinfo/pacman.txt
 pacman -Qme > /sysinfo/pacman-aur.txt
-ln -sf ../etc/lvm /sysinfo/lvm
+lvs > /sysinfo/lvm-lv
+pvs > /sysinfo/lvm-pv
+vgs > /sysinfo/lvm-vg
 blkid > /sysinfo/blkid
 lsblk -f > /sysinfo/lsblk-f
 lsblk > /sysinfo/lsblk
 fdisk -l > /sysinfo/fdisk
+
 luks_dev=$(lsblk -l -p -f | grep crypto_LUKS | head -1 | awk '{print $1}')
-cryptsetup luksDump "$luks_dev" > /sysinfo/luksDump 2>/dev/null
+if [[ -n "$luks_dev" ]]; then
+    cryptsetup luksDump "$luks_dev" > /sysinfo/luksDump 2>/dev/null
+    cryptsetup luksHeaderBackup "$luks_dev" --header-backup-file /sysinfo/luksHeader 2>/dev/null
+fi
 
 date=$(date +%Y-%m-%d_%H-%M-%S)
 
@@ -71,7 +77,7 @@ borg create \
     /home /srv /var /sysinfo /etc
 
 borg prune --show-rc --stats --list \
-    --prefix 'data_' \
+    --glob-archives 'data_*' \
     --keep-within 12m || true
 
 # TODO

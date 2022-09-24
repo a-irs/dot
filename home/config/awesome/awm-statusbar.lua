@@ -27,8 +27,12 @@ if is_mobile then
     batterywidget = lain.widget.bat({
         timeout = 3,
         notify = "off",
+        battery = "BAT0",
         settings = function()
             perc = tonumber(bat_now.perc)
+            if perc == nil then
+                widget:set_markup(bat_now.perc)
+            end
             if perc > 100 then
                 perc = 100
             end
@@ -125,42 +129,44 @@ musicwidget_wrap = bg_wrap(musicwidget, theme.widget_music_bg, 0, 0)
 
 -- VOLUME
 
-audiowidget = lain.widget.alsa({
-    timeout = 3,
-    cmd = 'amixer -D pipewire',
-    settings = function()
+audiowidget, audiowidget_timer = awful.widget.watch(
+    "sh -c 'pactl get-sink-volume @DEFAULT_SINK@; pactl get-sink-mute @DEFAULT_SINK@'",
+    5, -- timeout
+    function(widget, stdout)
+        local volume = string.match(stdout, "(%d+)%%")
+        local mute = string.match(stdout, "Mute: (%S+)")
+
         local limit = 100
         if is_mobile then
             limit = 120
         end
 
-        if tonumber(volume_now.level) == nil then
+        if tonumber(volume) == nil then
             widget:set_markup("no audio")
             return
         end
-        local level = math.floor((volume_now.level) / 5 + 0.5) * 5
+        local volume_rounded = math.floor((volume) / 5 + 0.5) * 5
         local color_fg = theme.widget_pulse_fg
         local color_bg = theme.widget_pulse_bg
 
-        widget:set_markup(volume_now.status)
-        if volume_now.status =="off" then
-            if level >= limit then
+        if mute =="yes" then
+            if volume_rounded >= limit then
                 color_fg = theme.widget_pulse_fg_mute
                 color_bg = theme.widget_pulse_bg_crit
             else
                 color_fg = theme.widget_pulse_fg_mute
                 color_bg = theme.widget_pulse_bg_mute
             end
-        elseif level >= limit then
+        elseif volume_rounded >= limit then
             color_fg = theme.widget_pulse_fg_crit
             color_bg = theme.widget_pulse_bg_crit
         end
 
-        widget:set_markup(markup.bold(markup(color_fg, level)))
+        widget:set_markup(markup.bold(markup(color_fg, volume_rounded)))
         audiowidget_wrap:set_bg(color_bg)
     end
-})
-audiowidget.widget:buttons(awful.util.table.join(
+)
+audiowidget:buttons(awful.util.table.join(
     awful.button({ }, 4, function() volume.increase() end), -- wheel up
     awful.button({ }, 5, function() volume.decrease() end), -- wheel down
     awful.button({ }, 1, function() volume.toggle()   end), -- left click
@@ -171,7 +177,7 @@ audiowidget.widget:buttons(awful.util.table.join(
         awful.client.run_or_raise('pavucontrol', matcher)
     end)
 ))
-audiowidget_wrap = bg_wrap(audiowidget.widget, theme.widget_pulse_bg, theme.statusbar_margin, theme.statusbar_margin)
+audiowidget_wrap = bg_wrap(audiowidget, theme.widget_pulse_bg, theme.statusbar_margin, theme.statusbar_margin)
 
 -- DATE, TIME
 

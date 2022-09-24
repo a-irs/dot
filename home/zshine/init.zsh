@@ -27,7 +27,7 @@ autoload -U zmv
 
 zstyle ':completion:*' rehash true # always rehash on completion
 
-export GREP_COLOR='1;32'
+export GREP_COLOR='mt=1;32'
 export TZ='Europe/Berlin'
 export REPORTTIME=5
 
