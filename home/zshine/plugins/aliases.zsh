@@ -398,48 +398,46 @@ alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 
 extract() {
-    while (( $# > 0 )); do
+    local f=$@
+    local file
+    for file in "${f[@]}"; do
         if [[ ! -f "$1" ]]; then
-            echo "extract: '$1' is not a valid file" 1>&2
-            shift
+            echo "extract: '$file' is not a valid file" 1>&2
             continue
-      fi
+        fi
 
-      file_name="$( basename "$1" )"
-      extract_dir="$( echo "$file_name" | sed "s/\.${1##*.}//g" )"
-      case "$1" in
-            (*.tar.gz|*.tgz) [[ ! $commands[pigz] ]] && tar zxvf "$1" || pigz -dc "$1" | tar xv ;;
-            (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$1" ;;
-            (*.tar.xz|*.txz) tar --xz --help &> /dev/null \
-                && tar --xz -xvf "$1" \
-                || xzcat "$1" | tar xvf - ;;
-            (*.tar.zma|*.tlz) tar --lzma --help &> /dev/null \
-                && tar --lzma -xvf "$1" \
-                || lzcat "$1" | tar xvf - ;;
-                (*.tar) tar xvf "$1" ;;
-            (*.gz) [[ ! $commands[pigz] ]] && gunzip "$1" || pigz -d "$1" ;;
-            (*.bz2) bunzip2 "$1" ;;
-            (*.xz) unxz "$1" ;;
-            (*.lzma) unlzma "$1" ;;
-            (*.Z) uncompress "$1" ;;
-            (*.pax) mkdir -p "$extract_dir" && cd "$extract_dir" && pax -rf ../"$1" && cd -;;
-            (*.zip|*.war|*.jar|*.sublime-package|*.ipsw|*.xpi|*.apk) unzip "$1" -d $extract_dir ;;
-            (*.rar) unrar x -ad "$1" ;;
-            (*.7z) 7za x "$1" ;;
-            (*.pkg) pkgutil --expand "$1" "$extract_dir" ;;
+        file_name="${file##*/}"
+        extract_dir="${file_name%.*}"
+        extract_dir="${extract_dir%.tar}"
+        case "$file" in
+            (*.tar.gz|*.tgz|*.tar.bz2|*.tar.xz) mkdir -p "$extract_dir" && tar xvf "$file" -C "$extract_dir" ;;
+            (*.gz) gunzip "$file" ;;
+            (*.bz2) bunzip2 "$file" ;;
+            (*.xz) unxz "$file" ;;
+            (*.lzma) unlzma "$file" ;;
+            (*.Z) uncompress "$file" ;;
+            (*.pax) mkdir -p "$extract_dir" && cd "$extract_dir" && pax -rf "../$file" && cd - ;;
+            (*.zip|*.war|*.jar|*.sublime-package|*.ipsw|*.xpi|*.apk|*.docx|*.pptx|*.xlsx) unzip "$file" -d $extract_dir ;;
+            (*.rar) unrar x -ad "$file" ;;
+            (*.7z) 7za x "$file" -o"$extract_dir" ;;
+            (*.dmg)
+                local mnt=$(mktemp -d)
+                hdiutil attach -readonly -mountpoint "$mnt" "$file" >/dev/null && \
+                cp -av "$mnt" "$extract_dir" && \
+                hdiutil detach >/dev/null "$mnt"
+                ;;
+            (*.pkg) pkgutil --expand "$file" "$extract_dir" ;;
             (*.deb)
-                mkdir -p "$extract_dir/control"
-                mkdir -p "$extract_dir/data"
-                cd "$extract_dir"; ar vx "../${1}" > /dev/null
-                cd control; tar xzvf ../control.tar.gz
-                cd ../data; tar xzvf ../data.tar.gz
-                cd ..; rm *.tar.gz debian-binary
-                cd .. ;;
-            (*) echo "extract: '$1' cannot be extracted" 1>&2 ;;
-      esac
-
-      shift
-  done
+                mkdir -p "$extract_dir"/{control,data} && \
+                cd "$extract_dir"; ar vx "../$file" > /dev/null && \
+                tar xvf control.tar.* -C control && \
+                tar xvf data.tar.* -C data && \
+                rm -f *.tar.* && \
+                cd -
+                ;;
+            (*) echo "extract: '$file' cannot be extracted: unknown extension" 1>&2 ;;
+        esac
+    done
 }
 alias x=extract
 

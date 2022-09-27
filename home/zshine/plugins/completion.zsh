@@ -5,6 +5,9 @@
 # - http://www.masterzen.fr/2009/04/19/in-love-with-zsh-part-one/
 # - https://github.com/paulmillr/dotfiles/blob/master/terminal/completion.sh
 
+# make zsh "do you wish to see all xxx possibilities (xxx lines)?" appear after TAB only after this many elements
+LISTMAX=1000
+
 # disable flow control keys (ctrl+s, ctrl+q)
 unsetopt flowcontrol
 

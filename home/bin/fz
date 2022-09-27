@@ -20,7 +20,7 @@ if [[ -n "$out" ]]; then
         fi
         LINES_BEGIN="$((LINE - FZF_PREVIEW_LINES/2))"; (( LINES_BEGIN < 0 )) && LINES_BEGIN=0
         LINES_END="$((LINE + FZF_PREVIEW_LINES/2))"; (( LINES_END < FZF_PREVIEW_LINES )) && LINES_END=$FZF_PREVIEW_LINES
-        bat -pp --force-colorization --theme=ansi --highlight-line "$LINE" --line-range "$LINES_BEGIN:$LINES_END" "$FILE" 2>/dev/null
+        bat -pp --force-colorization --theme=base16 --highlight-line "$LINE" --line-range "$LINES_BEGIN:$LINES_END" "$FILE" 2>/dev/null
         printf "\033[2m%s\033[0m\n" "~"
         ' <<< "$out")
     IFS=$'\n' selected=($selected)
