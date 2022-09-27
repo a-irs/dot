@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+export BAT_THEME=ansi
+
 set-git() {
     git config --local user.name  "a-irs"
     git config --local user.email "a-irs@users.noreply.github.com"
