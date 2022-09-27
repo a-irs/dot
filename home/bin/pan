@@ -25,12 +25,18 @@ from typing import List
 # lists_without_preceding_blankline
 # '-f markdown+emoji',
 
-# replace "!include:<filename>" with content of file
-# much simpler than lua/python/haskell filter
 PREPROCESS = [
+    # replace "!include:<filename>" with content of file
+    # much simpler than lua/python/haskell filter
     ["perl", "-ne", "s/^\\!include:(.+).*$/`cat $1`/e;print"],
+
+    # replace arrows with latex arrows
     ["perl", "-pe", r"s/([\(\)]?|\s)-> /\1\$\\rightarrow\$ /g"],
     ["perl", "-pe", r"s/([\(\)]?|\s)--> /\1\$\\longrightarrow\$ /g"],
+
+    # needed for pdflatex: sanitize non-latex-compatible stuff, e.g. in systemctl output
+    # ["perl", "-pe", r"s/—/-/g"],
+    # ["perl", "-pe", r"s/→/->/g"],
 ]
 
 CONFIG_DEFAULT = 'sans-short'
@@ -49,7 +55,7 @@ CONFIG = {
         ],
         '.pdf': [
             '-V header-includes="\\usepackage{csquotes}"',  # localized quotation marks
-            '--pdf-engine=pdflatex',  # or: xelatex: smaller file sizes, longer compilation time
+            '--pdf-engine=xelatex',  # or: pdflatex (faster, worse utf8 support for listings, bigger filesizes)
             '-V colorlinks',
             '-V links-as-notes',
 
