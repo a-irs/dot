@@ -17,6 +17,7 @@ ZSHINE_PLUGINS=(
   python # python dev stuff
   nim # python dev stuff
   aliases # provides some aliases and functions for daily work
+  aliases-global # ZSH global aliases
   auto-ls # launch "ls" when entering directory
   nix # nixos, nix package manager
   kubernetes  # aliases, autocompletion for k8s
