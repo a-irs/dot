@@ -5,6 +5,7 @@ unset "FAST_HIGHLIGHT[chroma-man]"
 unset "FAST_HIGHLIGTH[chroma-whatis]"
 
 FAST_HIGHLIGHT_STYLES[alias]='fg=magenta,bold'
+FAST_HIGHLIGHT_STYLES[global-alias]='fg=yellow,bold,bg=black'
 FAST_HIGHLIGHT_STYLES[assign]='fg=white,bold'
 FAST_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=cyan'
 FAST_HIGHLIGHT_STYLES[back-or-dollar-double-quoted-argument]='fg=cyan'
