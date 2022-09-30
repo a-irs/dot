@@ -1,0 +1,21 @@
+# Makefile
+
+dest := out
+
+PAN_PROFILE := "<%= vars[:profile] %>"
+
+SOURCE_DOCS := $(wildcard *.md)
+
+<% vars[:filetypes].each do |filetype| %>
+DEST_<%= filetype.upcase %> := $(addprefix $(dest)/, $(SOURCE_DOCS:.md=.<%= filetype %>))
+$(dest)/%.<%= filetype %>: %.md
+	@mkdir -p $(dest)/
+	pan -v $< $@ $(PAN_PROFILE)
+<% end %>
+
+.PHONY: <%= vars[:filetypes].join(" ") %> clean
+.DEFAULT_GOAL := all
+
+all: <%= vars[:filetypes].map{|x| "$(DEST_" + x.upcase + ")"}.join(" ") %>
+clean:
+	- rm -rfv $(dest)

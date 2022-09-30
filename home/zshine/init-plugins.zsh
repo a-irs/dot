@@ -28,6 +28,7 @@ ZSHINE_PLUGINS=(
 
   status  # server status on login
   vault  # hashicorp vault
+  jq
 )
 
 if [[ "$os" != darwin* ]]; then

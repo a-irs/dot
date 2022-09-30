@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+# ",<TAB>" for recently used
+
 export BAT_THEME=ansi
 
 set-git() {
@@ -111,7 +113,8 @@ else
     vim=vim
 fi
 
-alias vi="$vim -N -u $HOME/.vimrc.minimal"
+alias vi="$vim -N -u $HOME/.vim/conf.d/00_basic.vim"
+alias magit="$vim -c MagitOnly"
 
 alias et="emacsclient -c --alternate-editor='' -t"
 alias e="emacsclient -c --alternate-editor='' -n"
