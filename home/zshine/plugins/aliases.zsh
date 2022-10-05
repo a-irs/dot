@@ -112,6 +112,20 @@ else
 fi
 alias vi="$vim -N -u <(cat $HOME/.vim/conf.d/00_basic.vim $HOME/.vim/conf.d/99_post.vim)"
 
+anon() {
+    unset HISTFILE
+    if [[ -n "$ZSHINE_PROMPT_SYMBOL" ]]; then
+        ZSHINE_PROMPT_SYMBOL="ANON $ZSHINE_PROMPT_SYMBOL"
+    else
+        PS1="${PS1}ANON >"
+    fi
+    alias vim="$vim -n -i NONE '+set undolevels=-1'"
+    add-zsh-hook -d chpwd chpwd_recent_dirs
+    add-zsh-hook -d preexec _fasd_preexec
+    zstyle ':chpwd:*' recent-dirs-file /dev/null +
+    export LESSHISTFILE=/dev/null
+ }
+
 alias et="emacsclient -c --alternate-editor='' -t"
 alias e="emacsclient -c --alternate-editor='' -n"
 
