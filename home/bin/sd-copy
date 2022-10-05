@@ -5,6 +5,11 @@ set -ux
 DEST=$1
 SRC=/dev/disk/by-id/usb-Multiple_Card_Reader_058F63666433-0:0-part1
 
+if [[ ! -e "$SRC" ]]; then
+    echo "'$SRC' does not exist!"
+    exit 1
+fi
+
 MNT=$(mktemp -d)
 die() {
     sync && sync

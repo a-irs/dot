@@ -37,10 +37,6 @@ if [[ $HOSTNAME == srv1 ]]; then
     sstatus qemu-guest-agent.service
     sstatus sshd.service
     echo ""
-    sstatus media-data1.mount
-    sstatus media-data2.mount
-    sstatus media-data3.mount
-    sstatus media-data4.mount
     sstatus media-data.mount
     sstatus media-crypto.mount
     exclude_df='(/var/lib/docker|/srv/sftp)'

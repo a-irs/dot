@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 mountpoint=/media/crypto
-crypt=/media/data4/crypto.enc
+crypt=/media/data/crypto.enc
 
 if [[ $1 == close || $1 == umount ]]; then
     fusermount -u "$mountpoint"

@@ -104,6 +104,7 @@ class Parser():
             r'\.German\.(DTS|AC3)(D|HD)?\.DL\.': "EN,DE",
             r'\.German\..*\.Dubbed\.DL\.': "EN,DE",
             r'\.German\.': "DE",
+            r'\.JPN.': "EN,JP",
         }
         for key, val in normalize.items():
             if re.search(key, s, flags=re.IGNORECASE):
