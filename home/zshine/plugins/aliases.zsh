@@ -110,8 +110,7 @@ if [[ "$commands[nvim]" ]]; then
 else
     vim=vim
 fi
-
-alias vi="$vim -N -u $HOME/.vimrc.minimal"
+alias vi="$vim -N -u <(cat $HOME/.vim/conf.d/00_basic.vim $HOME/.vim/conf.d/99_post.vim)"
 
 alias et="emacsclient -c --alternate-editor='' -t"
 alias e="emacsclient -c --alternate-editor='' -n"
@@ -670,6 +669,7 @@ if [[ "$commands[systemctl]" ]]; then
     )
     for c in $user_commands; do; alias sc-$c="systemctl $c"; done
     for c in $sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
+    alias lock="loginctl lock-session"
 fi
 unset sudo_commands user_commands
 

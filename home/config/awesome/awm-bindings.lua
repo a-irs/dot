@@ -201,7 +201,7 @@ globalkeys = awful.util.table.join(
 
     -- suspend, lock
 
-    awful.key({ win }, "l",       function() run_script("lock-secure") end),
+    awful.key({ win }, "l",       function() run("loginctl lock-session") end),
 
     -- restart awesome wm
 
