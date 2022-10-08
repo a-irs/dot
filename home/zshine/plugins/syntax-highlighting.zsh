@@ -1,3 +1,10 @@
+FAST_WORK_DIR=~/.local/share/zsh
+if [[ ! -f "$FAST_WORK_DIR/secondary_theme.zsh" ]]; then
+    mkdir -p "$FAST_WORK_DIR"
+    cp -a \
+        "$ZSHINE_DIR/plugins/fast-syntax-highlighting.plugin/share/free_theme.zsh" \
+        "$FAST_WORK_DIR/secondary_theme.zsh"
+fi
 source "$ZSHINE_DIR/plugins/fast-syntax-highlighting.plugin/fast-syntax-highlighting.plugin.zsh"
 
 # man/whatis is slow otherwise
