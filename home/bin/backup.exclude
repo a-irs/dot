@@ -49,7 +49,6 @@ R /
 - **/dolphin/User/Load/Textures
 
 - /home/*/.config/VirtualBox/*.iso
-- /home/*/.dropbox*
 - /home/*/.kodi/addons/packages/*
 - /home/*/.kodi/userdata/Thumbnails/*
 - /home/*/.local/share/Trash/
@@ -69,10 +68,6 @@ R /
 - /home/*/.cargo/registry
 - /home/*/.opam
 - /home/*/Dropbox/media/wallpapers
-- /home/*/vm/**/*.raw
-- /home/*/vm/**/*.qcow2
-- /home/*/vm/**/*.vmdk
-- /home/*/vm/**/*.vdi
 - /home/*/downloads/
 - /home/*/media/
 - /home/*/videos/

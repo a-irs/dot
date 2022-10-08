@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import pathlib
+import sys
+from datetime import datetime
+
+BASES = [
+    pathlib.Path("~/doc").expanduser(),
+    pathlib.Path("~/Dropbox/doc").expanduser()
+]
+ARCHIVE = BASES[0] / "_archive"
+SUBFOLDER_FORMAT = "%Y"
+
+paths = [pathlib.Path(p) for p in sys.argv[1:]]
+if not all([p.exists() for p in paths]):
+    print("ERROR: does not exist: {}".format(
+        ', '.join([str(p) for p in paths if not p.is_file()])
+    ))
+    exit(1)
+
+for p in paths:
+    if not any([b in p.parents for b in BASES]):
+        print(f"{p} is not in any of: {', '.join(map(str, BASES))}")
+        exit(1)
+
+for path in paths:
+    last_modified = datetime.fromtimestamp(path.stat().st_mtime)
+
+    date = pathlib.Path(last_modified.strftime(SUBFOLDER_FORMAT))
+    parents = path.parent.absolute()
+    for b in [str(x) for x in BASES]:
+        if str(parents).startswith(b):
+            parents = str(parents).lstrip(b)
+    if parents == path.parent:
+        dest_dir = ARCHIVE / date / parents
+    else:
+        dest_dir = ARCHIVE / date
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    dest_file = dest_dir / path.name
+    if dest_file.exists():
+        print("ERROR: '{}' already exists.".format(dest_file))
+        exit(1)
+
+    path.rename(dest_file)
+    print(f"{path.name} -> {dest_file}")

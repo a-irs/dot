@@ -26,6 +26,7 @@ postcommands:
 exclude:
   - "**/.cache/*"
   - "**/.fr-*/*"
+  - "/home/*/doc/**/*.mp4"
   - /home/**/nintendo-switch-hacking/sd
   - /home/**/nintendo-switch-hacking/tmp
   - /home/*/.dropbox
