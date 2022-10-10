@@ -13,8 +13,10 @@ postcommands:
   - sed -i -E '/.*dropbox.*/d' $MOUNT$/home/*/.xinitrc
 
   # avoid hardware dependencies
-  - rm -f $MOUNT$/etc/systemd/system/multi-user.target.wants/tlp.service
-  - rm -f $MOUNT$/etc/systemd/system/timers.target.wants/fstrim.timer
+  - rm -f $MOUNT$/etc/systemd/system/*/tlp.service
+  - rm -f $MOUNT$/etc/systemd/system/*/fstrim.timer
+  - rm -f $MOUNT$/etc/systemd/system/*/usbguard.service
+  - rm -f $MOUNT$/etc/systemd/system/*/usbguard-dbus.service
 
   # disable auto-startx, add ability to launch via alias (just 'startx' does not work as we're inside tmux by default)
   - rm -f $MOUNT$/home/*/.zprofile*

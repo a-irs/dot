@@ -19,7 +19,7 @@ if not all([p.exists() for p in paths]):
     exit(1)
 
 for p in paths:
-    if not any([b in p.parents for b in BASES]):
+    if not any([b in p.resolve().parents for b in BASES]):
         print(f"{p} is not in any of: {', '.join(map(str, BASES))}")
         exit(1)
 

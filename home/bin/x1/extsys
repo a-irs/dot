@@ -104,8 +104,7 @@ def umount(conf, mount)
   # unmounts and closes everything
   #
 
-  cmd("umount -l #{mount}/efi || true")
-  cmd("umount -l #{mount} || true")
+  cmd("umount -f --recursive #{mount} || true")
   cmd("vgchange -a n vg_extsys || true")
   cmd("cryptsetup close EXTSYS_CRYPTO || true")
   cmd("pvscan --cache || true")
@@ -142,7 +141,7 @@ def write_initramfs(conf, mount)
 
     # build UEFI executable / unified kernel image (fallback version, with all modules included)
     cmd("mkdir -p #{mount}/efi/EFI/BOOT")
-    cmd("mkinitcpio -S autodetect -c #{tmp}/mkinitcpio.conf --cmdline #{tmp}/cmdline -U #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+    cmd("mkinitcpio --skiphooks autodetect --config #{tmp}/mkinitcpio.conf --cmdline #{tmp}/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 
     # sign with own keys for UEFI secure boot
     cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
