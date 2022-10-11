@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 
-xset dpms 300 300 300 &
+TIME_LOCK=$(( 60 * 10 ))
+TIME_BLANK=$(( 60 * 15 ))
+
+killall xss-lock 2>/dev/null || true
+
+xset dpms $TIME_BLANK $TIME_BLANK $TIME_BLANK
 
 export XSECURELOCK_SHOW_HOSTNAME=0
 export XSECURELOCK_SHOW_USERNAME=0
 export XSECURELOCK_AUTH_BACKGROUND_COLOR=crimson
-export XSECURELOCK_AUTH_TIMEOUT=300
-export XSECURELOCK_BLANK_TIMEOUT=300
+export XSECURELOCK_AUTH_TIMEOUT=30
+export XSECURELOCK_BLANK_TIMEOUT=30
 export XSECURELOCK_BLANK_DPMS_STATE=off
 
 # dim after 2min, lock 1m later
-xset s 120 60
+xset s $(( TIME_LOCK - 60 )) 60
 export XSECURELOCK_WAIT_TIME_MS=60000
 export XSECURELOCK_DIM_TIME_MS=3000
 
