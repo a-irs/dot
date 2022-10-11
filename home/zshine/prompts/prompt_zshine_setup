@@ -135,7 +135,7 @@ _prompt_virtualenv() {
 
 _prompt_path() {
     [[ ! -w ./ ]] && prompt_segment $ZSHINE_PATH_BG_RO $ZSHINE_PATH_FG_RO ro
-    prompt_segment $ZSHINE_PATH_BG $ZSHINE_PATH_FG "${PWD/#$HOME/~}"
+    prompt_segment $ZSHINE_PATH_BG $ZSHINE_PATH_FG '%~'
 }
 
 _prompt_user_host() {
