@@ -63,6 +63,10 @@ R /
 - /home/*/.mozilla/firefox/*/extension-data/ublock*.sqlite
 - /home/*/.mozilla/firefox/*/saved-telemetry-pings
 - /home/*/.mozilla/firefox/*/webappsstore.sqlite
+- /home/*/.stack/programs
+- /home/*/.stack/snapshots
+- /home/*/.stack/*-cache
+- /home/*/.ghcup
 - /home/*/.thumbnails/*
 - /home/*/thumbnails/*
 - /home/*/.cargo/registry

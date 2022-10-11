@@ -117,8 +117,8 @@ let g:ale_yaml_yamllint_options='-d "{extends: default, rules: {line-length: dis
 let g:ale_nasm_nasm_options='-f elf64'
 let g:ale_python_flake8_options='--config ~/.config/flake8'
 
-" disable python linters - done with coc
-let g:ale_linters_ignore = ["flake8", "mypy"]
+" disable some linters - done with coc
+let g:ale_linters_ignore = ["flake8", "mypy", "hls"]
 
 " ALE appearance  ▸▪
 let g:ale_sign_warning = '▪'
