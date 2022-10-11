@@ -12,6 +12,7 @@ zshine_load=(
     ~/.zshrc.d/pre/*(N)
     "$ZSHINE_DIR/init.zsh"
     ~/.zshrc.d/post/*(N)
+    ~/doc/dot/zsh(N)
 )
 
 for _load in ${zshine_load[@]}; do

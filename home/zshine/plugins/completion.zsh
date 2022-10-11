@@ -53,8 +53,20 @@ zstyle ':completion:*' squeeze-slashes true
 # cdpath=(.)
 
 # use ssh_config for hostname completion
-[[ -r ~/.ssh/config ]] && _ssh_hosts+=($(sed -ne 's/Host[=\t ]//p' ~/.ssh/config* | grep -vE '[\*]' | tr ' ' '\n' | sort | uniq))
-zstyle ':completion:*:ssh:*' hosts "$_ssh_hosts[@]"
+if [[ -r ~/.ssh/config ]]; then
+    ssh_files=(~/.ssh/config)
+    while read -r line; do
+        ssh_files+=("${line#Include *}")
+    done < <(grep ^Include ~/.ssh/config)
+
+    ssh_hosts=()
+    for f in "${ssh_files[@]}"; do
+        f=${f/\~/$HOME}
+        [[ ! -r "$f" ]] && continue
+        ssh_hosts+=($(sed -ne 's/Host[=\t ]//p' "$f" | grep -vE '[\*]' | tr ' ' '\n' | sort | uniq))
+    done
+fi
+zstyle ':completion:*:ssh:*' hosts "$ssh_hosts[@]"
 
 # Prevent autocompletion of user names
 zstyle ':completion:*:rsync:*' users
