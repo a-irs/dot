@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+
+import os
+import asyncio
+import json
+import time
+import subprocess
+
+
+if os.path.exists("/tmp/pom.socket"):
+    os.remove("/tmp/pom.socket")
+
+async def handle_client(reader, writer):
+    request = None
+    while request != 'quit':
+        request = (await reader.read(255)).decode()
+        try:
+            result = eval(request)
+            if result:
+                response = str(result) + '\n'
+            else:
+                response = ""
+        except SyntaxError:
+            return
+        writer.write(response.encode())
+        await writer.drain()
+    writer.close()
+
+async def start_server():
+    server = await asyncio.start_unix_server(handle_client, '/tmp/pom.socket')
+    async with server:
+        await server.serve_forever()
+
+
+class PomStatus(object):
+    def __init__(self, mode: str, remaining):
+        self.mode = mode
+        self.remaining = remaining
+
+        self.mode_before = ""
+        self.start = time.time()
+        self.streak = 0
+    def json(self):
+        return json.dumps(vars(self))
+    def pretty(self):
+        if not self.mode:
+            return "--:--"
+        def pretty_duration(secs: int):
+            if secs < 0:
+                secs = 0
+            m, s = divmod(secs, 60)
+            return f"{m:02}:{s:02}"
+        return "[{}-{}] {}".format(
+            self.mode.upper()[0],
+            self.streak,
+            pretty_duration(self.remaining)
+        )
+
+PS = PomStatus("", 0)
+
+async def start_pomodoro():
+    global PS
+    while True:
+        if not PS.mode:
+            print("not started")
+            await asyncio.sleep(1)
+            continue
+        if PS.remaining < 0:
+            if PS.mode == "WORK":
+                PS.streak += 25
+                PS.mode = "BREAK"
+                PS.remaining = 5 * 60
+                notify_pomodoro("BREAK TIME!")
+            elif PS.mode == "BREAK":
+                PS.streak += 5
+                PS.mode = "WORK"
+                PS.remaining = 25 * 60
+                notify_pomodoro("WORK TIME!")
+
+        print(PS.json())
+        if PS.mode != "PAUSE":
+            PS.remaining -= 1
+        await asyncio.sleep(1)
+
+
+def notify_pomodoro(msg):
+    subprocess.run(
+        "notify-send {} &".format(msg),
+        shell=True
+    )
+
+def pom_status():
+    return PS.pretty()
+
+def pom_start():
+    global PS
+    PS = PomStatus("WORK", 25 * 60)
+    notify_pomodoro("START!")
+    return pom_status()
+
+def pom_pause():
+    if not PS.mode:
+        return
+    if PS.mode == "PAUSE":
+        PS.mode, PS.mode_before = PS.mode_before, ""
+    else:
+        PS.mode, PS.mode_before = "PAUSE", PS.mode
+
+async def main():
+    await asyncio.gather(
+        asyncio.create_task(start_pomodoro()),
+        asyncio.create_task(start_server())
+    )
+
+if __name__ == "__main__":
+    asyncio.run(main())
