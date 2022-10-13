@@ -7,9 +7,6 @@ import time
 import subprocess
 
 
-if os.path.exists("/tmp/pom.socket"):
-    os.remove("/tmp/pom.socket")
-
 async def handle_client(reader, writer):
     request = None
     while request != 'quit':
@@ -37,6 +34,8 @@ class PomStatus(object):
         self.mode = mode
         self.remaining = remaining
 
+        self.total = self.remaining
+
         self.mode_before = ""
         self.start = time.time()
         self.streak = 0
@@ -48,7 +47,7 @@ class PomStatus(object):
         def pretty_duration(secs: int):
             if secs < 0:
                 secs = 0
-            m, s = divmod(secs, 60)
+            m, s = map(round, divmod(secs, 60))
             return f"{m:02}:{s:02}"
         return "[{}-{}] {}".format(
             self.mode.upper()[0],
@@ -61,6 +60,7 @@ PS = PomStatus("", 0)
 async def start_pomodoro():
     global PS
     while True:
+        now = time.time()
         if not PS.mode:
             print("not started")
             await asyncio.sleep(1)
@@ -79,8 +79,9 @@ async def start_pomodoro():
 
         print(PS.json())
         if PS.mode != "PAUSE":
-            PS.remaining -= 1
-        await asyncio.sleep(1)
+            diff = now - PS.start
+            PS.remaining = PS.total - diff
+        await asyncio.sleep(0.5)
 
 
 def notify_pomodoro(msg):
@@ -113,4 +114,6 @@ async def main():
     )
 
 if __name__ == "__main__":
+    if os.path.exists("/tmp/pom.socket"):
+        os.remove("/tmp/pom.socket")
     asyncio.run(main())

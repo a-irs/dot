@@ -137,13 +137,20 @@ git_get_repo() {
             namespace=$match[2]
             repo=$match[3]
             repo=${repo/.git/}
-        else
+        elif [[ $url == *:*/* ]]; then
             # git@server:user/project.git
             pcre_compile -m -- "^.+:(.+?)/(.+)"
             pcre_match -- "$url"
             namespace=$match[1]
             repo=$match[2]
             repo=${repo/.git/}
+            protocol=ssh
+        else
+            # server:directory
+            pcre_compile -m -- "(.+?):(.+)"
+            pcre_match -- "$url"
+            namespace=$match[1]
+            repo=$match[2]
             protocol=ssh
         fi
         url="${namespace}/${repo}"

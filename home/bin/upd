@@ -73,6 +73,7 @@ show_outdated() {
         | grep -vE 'logins-backup\.json' \
         | grep -vE '/var/log/journal' \
         | grep -vE '/share/icons/.*\.cache' \
+        | grep -vE 'mime.cache' \
         | grep -vE '/var/log/' \
         | awk '{print $1 " " $3 " " $10}' \
         | column -t \

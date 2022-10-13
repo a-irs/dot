@@ -89,6 +89,10 @@ local function dynamic_tagging()
                         name = make_name(name, c, "ssh")
                     elseif c.class == "firefox" or c.class == "Firefox" or c.class == "Chrome" or c.class == "Chromium" then
                         name = make_name(name, c, "web")
+                    elseif c.class == "Thunderbird" or c.class == "thunderbird" then
+                        name = make_name(name, c, "mail")
+                    elseif c.class == "TickTick" or c.class == "ticktick" then
+                        name = make_name(name, c, "todo")
                     elseif c.class ~= nil and string.find(c.class:lower(), "libreoffice") then
                         name = make_name(name, c, "office")
                     elseif c.class ~= nil and string.find(c.class:lower(), "org.remmina.remmina") then
