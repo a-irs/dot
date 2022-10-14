@@ -129,6 +129,7 @@ end
 
 def write_initramfs(conf, mount)
   Dir.mktmpdir do |tmp|
+    # FIXME: don't write to tmp, simply to destination mount! so mkinit/kernel-updates etc. work inside booted system as well
     # note: systemd hooks do not work here (they do not run latehooks apparently), so use the default arch linux busybox hooks here
     File.write("#{tmp}/mkinitcpio.conf", %{
     HOOKS=(base systemd sd-vconsole keyboard autodetect block sd-encrypt lvm2 filesystems)
