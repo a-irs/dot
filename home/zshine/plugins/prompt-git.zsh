@@ -132,6 +132,7 @@ git_get_repo() {
             # ssh://git@server/user/project.git
             # https://server/user/project.git
             pcre_compile -m -- "^(.+)://.+?/(.+?)/(.+)"
+            [[ -z "$match" ]] && pcre_compile -m -- "^(.+)://.+?/(.+)"
             pcre_match -- "$url"
             protocol=$match[1]
             namespace=$match[2]
@@ -153,7 +154,11 @@ git_get_repo() {
             repo=$match[2]
             protocol=ssh
         fi
-        url="${namespace}/${repo}"
+        if [[ -n "$repo" ]]; then
+            url="${namespace}/${repo}"
+        else
+            url="${namespace}"
+        fi
     fi
     [[ "$url" == "/" ]] || prompt_segment "$ZSHINE_GIT_PROJECT_BG" "$ZSHINE_GIT_PROJECT_FG" "$url"
 }
