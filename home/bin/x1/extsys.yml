@@ -44,6 +44,8 @@ exclude:
   - /home/*/tmp
   - /home/*/videos
   - /home/*/vm
+  - /home/*/.ghcup
+  - /home/*/.stack
   - /srv/kube
   - /srv/splunk
   - /usr/share/gtk-doc/*

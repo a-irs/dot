@@ -77,7 +77,7 @@ def rsync(conf, mount)
     rsync_command = rsync_command + " --exclude '#{exclude}'"
   end
   # implicit excludes
-  rsync_command = "#{rsync_command} --exclude /dev --exclude /proc --exclude /run --exclude /sys --exclude /tmp --exclude /.snapshots --exclude '/lost+found' --exclude '/*/lost+found' --exclude /mnt --exclude /media --exclude /efi --exclude /boot"
+  rsync_command = "#{rsync_command} --exclude /dev --exclude /proc --exclude /run --exclude /sys --exclude /tmp --exclude /.snapshots --exclude '/lost+found' --exclude '/*/lost+found' --exclude /mnt --exclude /media --exclude /efi"
 
   rsync_command = "#{rsync_command} / #{mount}"
 
