@@ -72,6 +72,7 @@ R /
 - /home/*/.cargo/registry
 - /home/*/.opam
 - /home/*/Dropbox/media/wallpapers
+- /home/*/Dropbox/.dropbox.cache
 - /home/*/downloads/
 - /home/*/media/
 - /home/*/videos/

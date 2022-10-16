@@ -167,7 +167,8 @@ let g:coc_global_extensions = [
     \ 'coc-yaml',
     \ 'coc-vimlsp',
     \ 'coc-snippets',
-    \ 'coc-sh'
+    \ 'coc-sh',
+    \ 'coc-java'
     \ ]
 
 function! s:show_documentation()

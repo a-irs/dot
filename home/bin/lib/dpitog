@@ -11,7 +11,7 @@ import logging
 
 DPI_FACTORS = {
     "desk": [1.0, 1.25, 1.5, 2.0, 3.0],
-    "x1": [1.5, 1.75, 2.0]
+    "x1": [1.75, 2.0, 3.0]
 }
 
 def exec(cmd: str) -> None:
@@ -38,24 +38,27 @@ def set_dpi(dpi: int, apply=False) -> None:
         time.sleep(0.2)
         exec(f"notify-send dpitog 'switched to DPI = {dpi} (x{factor})'")
 
-# def get_current_dpi() -> int:
-#     try:
-#         with open(Path.home() / ".Xresources.d/dpi", 'r') as f:
-#             match = re.findall(r'^.*.dpi:\s+(\d+)$', f.read(), re.MULTILINE)
-#             return int(match[0]) if len(match) > 0 else 0
-#     except FileNotFoundError:
-#         return 0
+def get_current_dpi() -> int:
+    try:
+        with open(Path.home() / ".Xresources.d/dpi", 'r') as f:
+            match = re.findall(r'^.*.dpi:\s+(\d+)$', f.read(), re.MULTILINE)
+            return int(match[0]) if len(match) > 0 else 0
+    except FileNotFoundError:
+        return 0
 
 def main() -> None:
-    DPIS = DPI_FACTORS.get(os.uname()[1], [])
-    DPIS = [DPIS[int(sys.argv[1]) - 1]]
+    if len(sys.argv) > 1:
+        DPIS = DPI_FACTORS.get(os.uname()[1], [])
+        DPIS = [DPIS[int(sys.argv[1]) - 1]]
 
-    apply = False
-    if len(sys.argv) >= 3:
-        apply = True
+        apply = False
+        if len(sys.argv) >= 3:
+            apply = True
 
-    dpis = [int(i * 96) for i in DPIS]
-    set_dpi(dpis[0], apply=apply)
+        dpis = [int(i * 96) for i in DPIS]
+        set_dpi(dpis[0], apply=apply)
+    else:
+        print(get_current_dpi())
 
 
 if __name__ == "__main__":

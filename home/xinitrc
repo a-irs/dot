@@ -55,7 +55,6 @@ EOF
 parcellite --no-icon &
 
 if [[ $HOSTNAME == x1 ]]; then
-    nm-applet &
     usbguard-notifier &
     xcalib ~/.config/x1carbon3rd_notebookcheck.com.icc &
 fi

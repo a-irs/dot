@@ -128,25 +128,22 @@ def write_hostname(conf, mount)
 end
 
 def write_initramfs(conf, mount)
-  Dir.mktmpdir do |tmp|
-    # FIXME: don't write to tmp, simply to destination mount! so mkinit/kernel-updates etc. work inside booted system as well
-    # note: systemd hooks do not work here (they do not run latehooks apparently), so use the default arch linux busybox hooks here
-    File.write("#{tmp}/mkinitcpio.conf", %{
-    HOOKS=(base systemd sd-vconsole keyboard autodetect block sd-encrypt lvm2 filesystems)
-    })
+  # note: systemd hooks do not work here (they do not run latehooks apparently), so use the default arch linux busybox hooks here
+  File.write("#{mount}/etc/mkinitcpio.conf", %{
+HOOKS=(base systemd sd-vconsole keyboard block sd-encrypt lvm2 filesystems)
+})
 
-    uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")
-    File.write("#{tmp}/cmdline", %{
-    rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
-    })
+  uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")
+  File.write("#{mount}/etc/kernel/cmdline", %{
+rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
+})
 
-    # build UEFI executable / unified kernel image (fallback version, with all modules included)
-    cmd("mkdir -p #{mount}/efi/EFI/BOOT")
-    cmd("mkinitcpio --skiphooks autodetect --config #{tmp}/mkinitcpio.conf --cmdline #{tmp}/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+  # build UEFI executable / unified kernel image (fallback version, with all modules included)
+  cmd("mkdir -p #{mount}/efi/EFI/BOOT")
+  cmd("mkinitcpio --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 
-    # sign with own keys for UEFI secure boot
-    cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
-  end
+  # sign with own keys for UEFI secure boot
+  cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 end
 
 def main()

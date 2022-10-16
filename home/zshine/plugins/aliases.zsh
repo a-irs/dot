@@ -318,6 +318,14 @@ alias chx='chmod u+x'
 
 alias mmv='noglob zmv -W'
 
+if [[ "$commands[iotop]" ]]; then
+    iotop() {
+        sudo sysctl kernel.task_delayacct=1
+        sudo iotop -o
+        sudo sysctl kernel.task_delayacct=0
+    }
+fi
+
 # define basic "ls" first
 if [[ "$commands[lsd]" ]]; then
     ls="\lsd -F --date relative --group-dirs first"
@@ -675,6 +683,7 @@ if [[ "$commands[systemctl]" ]]; then
     user_commands=(
         list-units is-active status show help list-unit-files is-enabled
         list-jobs show-environment suspend suspend-then-hibernate hibernate
+        cat
     )
     sudo_commands=(
         start stop reload restart try-restart isolate kill daemon-reload
