@@ -93,6 +93,7 @@ R /
 - /srv/docker/nzbget/queue
 - /srv/pwdumps
 - /srv/vuls-database/db
+- /srv/infra/PKGBUILD/
 
 - /var/log/*
 - /var/lib/docker/*

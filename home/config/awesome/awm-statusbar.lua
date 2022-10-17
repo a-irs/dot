@@ -25,7 +25,7 @@ end
 
 if is_mobile then
     batterywidget = lain.widget.bat({
-        timeout = 3,
+        timeout = 10,
         notify = "off",
         battery = "BAT0",
         settings = function()
@@ -36,11 +36,11 @@ if is_mobile then
             if perc > 100 then
                 perc = 100
             end
-            if perc <= 10 then
+            if perc <= 5 then
                 color = "#fa7883"
-            elseif perc <= 30 then
+            elseif perc <= 20 then
                 color = "#ffff00"
-            elseif perc <= 60 then
+            elseif perc <= 35 then
                 color = "#ffffff"
             else
                 color = "#90ee90"

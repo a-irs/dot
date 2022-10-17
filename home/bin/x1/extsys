@@ -159,6 +159,8 @@ def main()
 
     if ARGV[0] == "prepare" then
       prepare(conf)
+      umount(conf, mount)
+      exit
     end
 
     begin

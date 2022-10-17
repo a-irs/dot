@@ -1,3 +1,17 @@
+function ToggleLight()
+    if (g:colors_name ==# 'spring-night')
+        set background=light
+        colorscheme PaperColor  " alternative: rakr
+        if (exists('b:semanticOn') && b:semanticOn == 1)
+            SemanticHighlightRevert
+        endif
+    else
+        set background=dark
+        colorscheme spring-night
+    endif
+endfunction
+nnoremap <Leader>l :call ToggleLight()<CR>
+
 if has('termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"

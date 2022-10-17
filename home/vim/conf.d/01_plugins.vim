@@ -12,6 +12,9 @@ if has('nvim')
     nmap <leader>n :Neogit<CR>
 endif
 
+Plug 'Yggdroot/indentLine'
+let g:indentLine_char = '¦'
+
 Plug 'jreybert/vimagit'
 let g:magit_default_fold_level=2  " unfold all
 autocmd User VimagitEnterCommit startinsert  " go directly to insert mode for commit message
@@ -255,10 +258,15 @@ Plug 'RRethy/vim-illuminate'
 
 Plug 'zah/nim.vim'
 
-" color schemes
+" dark color schemes
 Plug 'morhetz/gruvbox'
 Plug 'sjl/badwolf'
 Plug 'rhysd/vim-color-spring-night'
 Plug 'sainnhe/gruvbox-material'
+Plug 'NLKNguyen/papercolor-theme'
+
+" light color schemes
+Plug 'endel/vim-github-colorscheme'
+Plug 'rakr/vim-colors-rakr'
 
 call plug#end()

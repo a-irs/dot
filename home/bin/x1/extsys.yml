@@ -48,6 +48,7 @@ exclude:
   - /home/*/.stack
   - /srv/kube
   - /srv/splunk
+  - /srv/infra/PKGBUILD/
   - /usr/share/gtk-doc/*
   - /usr/share/texmf-dist
   - /var/cache/*
