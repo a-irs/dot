@@ -127,6 +127,25 @@ local musicwidget = awful.widget.watch(
 )
 musicwidget_wrap = bg_wrap(musicwidget, theme.widget_music_bg, 0, 0)
 
+local timewarriorwidget, timewarriorwidget_timer = awful.widget.watch(
+    "timew", 1,
+    function(widget, stdout)
+        color = theme.widget_pulse_fg_mute
+        if string.match(stdout, "no active time tracking") then
+            widget:set_markup(markup.bold(markup(color, "")))
+        else
+            tags = string.match(stdout, "Tracking (.*)")
+            time = string.match(stdout, "Total %s+(%g+)")
+            time = string.gsub(time, "^0:", "")
+            widget:set_markup(
+                markup.bold(markup("#ff79c6", time)) .. " " ..
+                markup.bold(markup("#d7d7d7", tags))
+            )
+        end
+    end
+)
+timewarriorwidget_wrap = bg_wrap(timewarriorwidget, theme.bg_normal, 10, 10)
+
 
 -- VOLUME
 
@@ -242,6 +261,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- layouts
 
     local layout1 = wibox.layout.fixed.horizontal()
+    layout1:add(timewarriorwidget_wrap)
     layout1:add(musicwidget_wrap)
     layout1:add(s.mytasklist)
     layout1:add(s.myprompt_wrap)
