@@ -409,7 +409,7 @@ cd() {
 
 [[ -d ~/.dot ]] && dot() { cd ~/.dot; git status -sb; }
 [[ -d ~/git/a-irs/dot ]] && dot() { cd ~/git/a-irs/dot; git status -sb; }
-[[ -d /srv/infra ]] && infra() { cd /srv/infra; git status -sb; }
+[[ -d ~/infra ]] && infra() { cd ~/infra; git status -sb; }
 
 alias ..="cd .."
 alias ...="cd ../.."
@@ -704,11 +704,8 @@ pall() {
     printf "\n"
     local git_dirs=(
         ~/.dot
-        ~/git/a-irs/dot
         ~/.doc
-        ~/git/a-irs/doc
-        /srv/infra
-        ~/git/a-irs/infra
+        ~/infra
     )
     for d in "${git_dirs[@]}"; do
         if [[ -d "$d" ]]; then

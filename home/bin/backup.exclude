@@ -81,6 +81,7 @@ R /
 - /home/*/nintendo-switch-hacking/sd/
 - /home/*/nintendo-switch-hacking/tmp/
 - /home/*/.rustup/toolchains
+- /home/*/infra/PKGBUILD/
 - **/Package Control.cache
 - **/packer_cache/
 
@@ -93,7 +94,6 @@ R /
 - /srv/docker/nzbget/queue
 - /srv/pwdumps
 - /srv/vuls-database/db
-- /srv/infra/PKGBUILD/
 
 - /var/log/*
 - /var/lib/docker/*

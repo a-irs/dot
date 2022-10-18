@@ -46,9 +46,9 @@ exclude:
   - /home/*/vm
   - /home/*/.ghcup
   - /home/*/.stack
+  - /home/*/infra/PKGBUILD/
   - /srv/kube
   - /srv/splunk
-  - /srv/infra/PKGBUILD/
   - /usr/share/gtk-doc/*
   - /usr/share/texmf-dist
   - /var/cache/*
