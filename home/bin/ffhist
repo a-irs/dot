@@ -12,7 +12,7 @@ import sqlite3
 import tempfile
 import sys
 
-OUTPUT_DIR = "/srv/splunk/input/browser_history"
+OUTPUT_DIR = os.path.expanduser("~/data/splunk/input/browser_history")
 
 
 def get_firefox_sqlite() -> tempfile.TemporaryDirectory:

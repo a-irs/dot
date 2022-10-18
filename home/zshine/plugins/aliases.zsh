@@ -1,5 +1,48 @@
 #!/usr/bin/env zsh
 
+if [[ "$commands[timew]" ]]; then
+    t() {
+        if (($# == 0)); then
+            timew
+            t sum
+            return
+        fi
+
+        action=$1; shift
+        case "$action" in
+            start)
+                if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
+                    echo "Do not forget to supply the tag(s)."
+                    return 1
+                fi
+                timew start "$@"
+                ;;
+            stop)
+                timew stop "$@"
+                ;;
+            cont*)
+                timew continue "$@"
+                ;;
+            sum*)
+                timew summary :ids "$@"
+                ;;
+            edit)
+                $EDITOR ~/.timewarrior/data/"$(date +%Y-%m).data"
+                ;;
+            track)
+                if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
+                    echo "Do not forget to supply the tag(s)."
+                    return 1
+                fi
+                timew track "$@"
+                ;;
+            *)
+                echo "UNKNOWN: $action"
+                ;;
+        esac
+    }
+fi
+
 export BAT_THEME=ansi
 
 set-git() {
@@ -358,14 +401,8 @@ alias lS="$ls -lhSr"
 [[ "$commands[nmcli]" ]] && alias nd='nmcli connection down'
 
 if [[ "$commands[tmux]" ]]; then
-    alias t='tmux'
-    alias ta='TMUX= tmux attach -t'
-    alias tn='tmux new-session -s'
-    alias tk='tmux kill-session -t'
-    alias tl='tmux list-sessions'
-
     # capture tmux pane and edit in vim
-    tc() {
+    tmux-capture() {
         # http://man7.org/linux/man-pages/man1/tmux.1.html
         tmux capture-pane -pCJS - \
             | sed -E -e 's/[[:space:]]*$//' \

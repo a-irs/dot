@@ -11,7 +11,7 @@ import os
 
 TERMINAL = "alacritty"
 SHELL_TITLE = f"{os.getlogin()}@{os.uname()[1]}"
-DIR = "/srv/splunk/input/workstats"
+DIR = os.path.expanduser("~/data/splunk/input/workstats")
 
 
 def parse_name(window_name, window_class):

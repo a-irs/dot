@@ -54,7 +54,8 @@ if is_mobile then
             if bat_now.status == "Full" or bat_now.time == "00:00" then
                 widget:set_markup(markup.bold(markup(color, perc .. charg)))
             else
-                widget:set_markup(markup.bold(markup(color, perc .. charg)) .. " " .. bat_now.time)
+                -- widget:set_markup(markup.bold(markup(color, perc .. charg)) .. " " .. bat_now.time)
+                widget:set_markup(markup.bold(markup(color, perc .. charg)))
             end
         end
     })

@@ -1,0 +1,2 @@
+- group: {name: teaching, enabled: true}
+- ignore: {name: "Use camelCase"}
