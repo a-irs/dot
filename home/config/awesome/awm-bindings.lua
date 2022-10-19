@@ -123,8 +123,8 @@ globalkeys = awful.util.table.join(
 
     -- window size
 
-    awful.key({ win, "Control" }, "Right", function() awful.tag.incmwfact( 0.01) end),
-    awful.key({ win, "Control" }, "Left",  function() awful.tag.incmwfact(-0.01) end),
+    awful.key({ win, "Control" }, "Right", function() awful.tag.incmwfact( 0.005) end),
+    awful.key({ win, "Control" }, "Left",  function() awful.tag.incmwfact(-0.005) end),
 
     -- swap windows
 

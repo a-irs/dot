@@ -128,7 +128,7 @@ local musicwidget = awful.widget.watch(
 musicwidget_wrap = bg_wrap(musicwidget, theme.widget_music_bg, 0, 0)
 
 local timewarriorwidget, timewarriorwidget_timer = awful.widget.watch(
-    "timew", 1,
+    "timew", 10,
     function(widget, stdout)
         color = theme.widget_pulse_fg_mute
         if string.match(stdout, "no active time tracking") then

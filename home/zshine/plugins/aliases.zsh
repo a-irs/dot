@@ -3,8 +3,8 @@
 if [[ "$commands[timew]" ]]; then
     t() {
         if (($# == 0)); then
-            timew
-            t sum
+            timew "$@"
+            timew summary :ids :week "$@"
             return
         fi
 
@@ -22,9 +22,6 @@ if [[ "$commands[timew]" ]]; then
                 ;;
             cont*)
                 timew continue "$@"
-                ;;
-            sum*)
-                timew summary :ids "$@"
                 ;;
             edit)
                 $EDITOR ~/.timewarrior/data/"$(date +%Y-%m).data"
