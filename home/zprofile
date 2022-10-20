@@ -3,6 +3,8 @@ if [[ "$TTY" != /dev/pts/* ]]; then
     [[ "$commands[redshift]" ]] && redshift -o -m drm
 fi
 
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
 if [[ -n "$commands[startx]" ]]; then
-    [[ -z "$DISPLAY" && "$XDG_VTNR" == 1 && "$USER" != root ]] && ssh-agent -- startx
+    [[ -z "$DISPLAY" && "$XDG_VTNR" == 1 && "$USER" != root ]] && startx
 fi
