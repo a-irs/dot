@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+help() {
+    echo "Examples:"
+    echo
+    echo "t start tag1 tag2"
+    echo "t start 14:40 tag3"
+    echo "t stop"
+    echo "t continue"
+    echo "t track 10:00 - 10:30 tag123"
+}
+
+action=${1:-status}; shift || true
+case "$action" in
+    status)
+        timew "$@" || true
+        timew summary :ids :week "$@"
+        ;;
+    help)
+        help
+        ;;
+    cancel)
+        timew
+        echo
+        read -r -p "Are you sure to cancel? (y/N) " -n1
+        if [[ ${REPLY} =~ ^[Yy]$ ]]; then
+            timew cancel
+        fi
+        ;;
+    start)
+        if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
+            echo "Do not forget to supply the tag(s)."
+            exit 1
+        fi
+        timew start "$@"
+        ;;
+    stop)
+        timew stop "$@"
+        ;;
+    cont*)
+        timew continue "$@"
+        ;;
+    edit)
+        $EDITOR ~/.timewarrior/data/"$(date +%Y-%m).data"
+        ;;
+    track)
+        if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
+            echo "Do not forget to supply the tag(s)."
+            exit 1
+        fi
+        timew track "$@"
+        ;;
+    *)
+        echo "Unknown action: $action"
+        echo
+        help
+        exit 1
+        ;;
+esac

@@ -1,54 +1,5 @@
 #!/usr/bin/env zsh
 
-if [[ "$commands[timew]" ]]; then
-    t() {
-        if (($# == 0)); then
-            timew "$@"
-            timew summary :ids :week "$@"
-            return
-        fi
-
-        action=$1; shift
-        case "$action" in
-            cancel)
-                timew
-                echo
-                echo -n "Are you sure to cancel? (y/N) "
-                read REPLY
-                if [[ ${REPLY} =~ ^[Yy]$ ]]; then
-                    timew cancel
-                fi
-                ;;
-            start)
-                if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
-                    echo "Do not forget to supply the tag(s)."
-                    return 1
-                fi
-                timew start "$@"
-                ;;
-            stop)
-                timew stop "$@"
-                ;;
-            cont*)
-                timew continue "$@"
-                ;;
-            edit)
-                $EDITOR ~/.timewarrior/data/"$(date +%Y-%m).data"
-                ;;
-            track)
-                if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
-                    echo "Do not forget to supply the tag(s)."
-                    return 1
-                fi
-                timew track "$@"
-                ;;
-            *)
-                echo "UNKNOWN: $action"
-                ;;
-        esac
-    }
-fi
-
 export BAT_THEME=ansi
 
 set-git() {
