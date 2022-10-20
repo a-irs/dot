@@ -18,6 +18,9 @@
     "python.pythonPath": "python3",
     "python.linting.enabled": true,
 
+    "outline.keepWindow": true,
+    "outline.autoPreview": true,
+
     "languageserver": {
       "nim": {
         "command": "nimlsp",

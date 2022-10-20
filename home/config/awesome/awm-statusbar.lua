@@ -135,6 +135,7 @@ local timewarriorwidget, timewarriorwidget_timer = awful.widget.watch(
             widget:set_markup(markup.bold(markup(color, "")))
         else
             tags = string.match(stdout, "Tracking (.*)")
+            tags = string.gsub(tags, "\"", "")
             time = string.match(stdout, "Total %s+(%g+)")
             time = string.gsub(time, "^0:", "")
             widget:set_markup(

@@ -10,6 +10,15 @@ if [[ "$commands[timew]" ]]; then
 
         action=$1; shift
         case "$action" in
+            cancel)
+                timew
+                echo
+                echo -n "Are you sure to cancel? (y/N) "
+                read REPLY
+                if [[ ${REPLY} =~ ^[Yy]$ ]]; then
+                    timew cancel
+                fi
+                ;;
             start)
                 if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
                     echo "Do not forget to supply the tag(s)."
