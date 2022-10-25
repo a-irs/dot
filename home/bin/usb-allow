@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 devices=$(usbguard list-devices --blocked \
     | sed -E 's/ ?via-port \S+//g' \
     | sed -E 's/ ?(with-connect-type|parent-hash|hash) "[^"]*"//g' \
@@ -7,7 +9,16 @@ devices=$(usbguard list-devices --blocked \
     | sed -E 's/^block/allow/')
 selection=$(echo "$devices" | fzf)
 
+id=$(sed -E 's/.+id ([0-9:]+) .+/\1/' <<< "$selection")
+
 if [[ -n "$selection" ]]; then
+    echo "SELECTION:"
+    lsusb -d "$id" | grep -oE 'ID .+'
     echo "$selection"
-    usbguard append-rule "$selection"
+    echo
+
+    read -r -p "Description of device: "
+
+    echo "$(date +%F)|$REPLY|$selection" >> data/usbguard.log
+    usbguard append-rule "$selection" >/dev/null
 fi

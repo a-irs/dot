@@ -45,6 +45,10 @@ zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 
+# kill process name -> PID autocompletion
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=32'
+zstyle ':completion:*:*:kill:*:processes' command 'ps xo pid,cmd'
+
 # treat foo//bar as foo/bar instead of foo/*/bar when completing
 zstyle ':completion:*' squeeze-slashes true
 

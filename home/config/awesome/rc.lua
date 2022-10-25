@@ -62,7 +62,7 @@ local function bat_notification()
     local f_status = assert(io.open("/sys/class/power_supply/BAT0/status", "r"))
     local bat_capacity = tonumber(f_capacity:read("*all"))
     local bat_status = trim(f_status:read("*all"))
-    if (bat_capacity <= 10 and bat_status == "Discharging") then
+    if (bat_capacity <= 5 and bat_status == "Discharging") then
         naughty.notify({
             preset = naughty.config.presets.critical,
             text = lain.util.markup.bold("Critical battery!")

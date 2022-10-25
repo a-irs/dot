@@ -128,7 +128,6 @@ def write_hostname(conf, mount)
 end
 
 def write_initramfs(conf, mount)
-  # note: systemd hooks do not work here (they do not run latehooks apparently), so use the default arch linux busybox hooks here
   File.write("#{mount}/etc/mkinitcpio.conf", %{
 HOOKS=(base systemd sd-vconsole keyboard block sd-encrypt lvm2 filesystems)
 })

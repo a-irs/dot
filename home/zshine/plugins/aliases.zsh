@@ -686,6 +686,9 @@ if [[ "$commands[systemctl]" ]]; then
     )
     for c in $user_commands; do; alias sc-$c="systemctl $c"; done
     for c in $sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
+
+    for c in $user_commands; do; alias su-$c="systemctl --user $c"; done
+    for c in $sudo_commands; do; alias su-$c="systemctl --user $c"; done
     alias lock="loginctl lock-session"
 fi
 unset sudo_commands user_commands
