@@ -9,10 +9,10 @@ devices=$(usbguard list-devices --blocked \
     | sed -E 's/^block/allow/')
 selection=$(echo "$devices" | fzf)
 
-id=$(sed -E 's/.+id ([0-9:]+) .+/\1/' <<< "$selection")
 
 if [[ -n "$selection" ]]; then
     echo "SELECTION:"
+    id=$(sed -E 's/.+id ([0-9a-f:]+) .+/\1/' <<< "$selection")
     lsusb -d "$id" | grep -oE 'ID .+'
     echo "$selection"
     echo
