@@ -41,10 +41,10 @@ check_kernel() {
             version_running=${version_running%-zen}
             version_running=${version_running/-zen/.zen}
             ;;
-        *-yoga)
-            package=linux-yoga
-            version_running=${version_running%-yoga}
-            version_running=${version_running/-arch/.arch}
+        *-zen-yoga)
+            package=linux-zen-yoga
+            version_running=${version_running%-zen-yoga}
+            version_running=${version_running/-zen/.zen}
             ;;
         *-lts)
             package=linux-lts

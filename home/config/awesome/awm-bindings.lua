@@ -159,6 +159,7 @@ globalkeys = awful.util.table.join(
     awful.key({ alt, ctrl }, "5",    function() run_script("dpitog 5 apply") end),
     awful.key({ alt, ctrl }, "6",    function() run_script("dpitog 6 apply") end),
     awful.key({ alt }, "o",          function() run_gui_script("mpv-clipboard.sh") end),
+    awful.key({ alt }, "p",          function() run_script("xr-rate") end),
 
     -- displays
 

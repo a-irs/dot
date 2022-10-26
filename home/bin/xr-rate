@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+current_rate() {
+    xrandr | grep '\*' | sed -E 's/.*\s([0-9\.]+)\*.*/\1/' | sed -E 's/\.[0-9]*//'
+}
+
+set_rate() {
+    local rate=$1
+    xrandr -r "$rate"
+    notify-send -i /usr/share/icons/Faba/32x32/devices/video-display.svg "Display set to $rate hz"
+}
+
+case $(current_rate) in
+    30) set_rate 48 ;;
+    48) set_rate 72 ;;
+    72) set_rate 96 ;;
+    96) set_rate 120 ;;
+    120) set_rate 30 ;;
+    *) set_rate 120 ;;
+esac
+

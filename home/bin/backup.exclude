@@ -100,3 +100,5 @@ R /
 - /var/lib/texmf/*
 - /var/lib/pacman/sync/*
 - /nix
+
+- /efi/EFI/Linux/archlinux_*_*.efi

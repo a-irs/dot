@@ -48,8 +48,8 @@ let &t_SR = "\<Esc>[4 q"  " replace mode: underline
 let &t_EI = "\<Esc>[2 q"  " normal mode: block
 
 " gvim
-set guifont=InputMonoCondensed\ 9
-" set guioptions-=m  " remove menu bar
+set guifont=Input\ Mono\ Condensed:h9
+set guioptions-=m  " remove menu bar
 set guioptions-=T  " remove toolbar
 set guioptions-=r  " remove right scroll bar
 set guioptions-=L  " remove left scroll bar

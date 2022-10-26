@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+entropy() {
+    keepassxc-cli estimate | sed -E 's/^Length .*Entropy ([0-9]+).*$/\1/' | tr -d '\n'
+}
+
+gen_1() {
+    len=$1
+    pwgen --capitalize --numerals --symbols "$len" 1
+}
+
+gen() {
+    len=$1
+    bits=$2
+
+    for _ in $(seq 1 10000); do
+        p=$(gen_1 "$len")
+        if ! printf "%s" "$p" | grep -Eq "[][{}\!\"$%&/()=?\`^~\\|*<>@'yz]"; then
+            entropy="$(printf "%s" "$p" | entropy)"
+            if ((entropy > bits)); then
+                printf '%s (%s)\n' "$p" "$entropy"
+                return
+            fi
+        fi
+    done
+}
+
+echo "len=16:"
+echo
+for ((i=0; i < 5; i++)) do gen 16 90; done
+echo
+echo "len=20:"
+echo
+for ((i=0; i < 5; i++)) do gen 20 105; done
+echo
+echo "len=24:"
+echo
+for ((i=0; i < 5; i++)) do gen 24 128; done
+echo

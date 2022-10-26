@@ -75,16 +75,28 @@ Plug 'arzg/vim-sh', { 'for': 'sh' }
 Plug 'Konfekt/vim-CtrlXA'
 
 Plug 'jaxbot/semantic-highlight.vim'
+" curl -s https://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html | grep '<td.*><code>' | sed -E "s|.*<code>(.+)</code>.*|\'\1\'|" | sort | tr '\n' ','
+let g:semanticBlacklistOverride = {
+	\ 'java': [
+    \ 'abstract','assert','boolean','break','byte','case','catch','char','class','const','continue','default','do','double','else','enum','extends','final','finally','float','for','goto','if','implements','import','instanceof','int','interface','long','native','new','package','private','protected','public','return','short','static','strictfp','super','switch','synchronized','this','throw','throws','transient','try','void','volatile','while',
+	\ 'Boolean', 'Double', 'Float', 'Char', 'Long', 'Int', 'Short', 'Byte', 'String',
+	\ ]
+\ }
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim'}
+let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim', 'java': 'java', 'haskell': 'haskell', 'ruby': 'ruby'}
 " re-highlight on save
 augroup SemanticHL
-    autocmd FileType python,lua
+    autocmd FileType python,lua,java,nim,haskell,ruby
         \ autocmd! SemanticHL BufWritePost <buffer> :SemanticHighlight
 augroup END
 
+" java
+Plug 'uiiaoo/java-syntax.vim'
+highlight link javaDelimiter NONE
+highlight link javaIdentifier NONE
+
 Plug 'chrisbra/Colorizer'
-let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini,vim'
+let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini'
 let g:colorizer_colornames = 0  "do not colorize simple 'red', 'yellow', ...
 
 Plug 'tpope/vim-commentary'
@@ -189,6 +201,7 @@ autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 nmap <silent> K         :call <SID>show_documentation()<CR>
 nmap <silent> <leader>k :call <SID>show_documentation()<CR>
 nmap <leader>cr <Plug>(coc-rename)
+nmap <leader>cd :CocDiagnostics<CR>
 xmap <leader>cf <Plug>(coc-format-selected)
 nmap <leader>cf <Plug>(coc-format-selected)
 
@@ -225,9 +238,11 @@ omap ac <Plug>(coc-classobj-a)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> go :CocList outline<CR>
+nmap <silent> gs :CocList symbols<CR>
 
 endif
 

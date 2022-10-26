@@ -27,6 +27,7 @@ case "$action" in
         echo
         read -r -p "Are you sure to cancel? (y/N) " -n1
         if [[ ${REPLY} =~ ^[Yy]$ ]]; then
+            echo
             timew cancel
         fi
         ;;
