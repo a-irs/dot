@@ -19,6 +19,7 @@ fi
 
 # make some cache persistent, some in tmpfs
 rm -f ~/.cache && ln -s /tmp ~/.cache
+mkdir -p ~/.local/share/ansible-lint && ln -sfn ~/.local/share/ansible-lint ~/.cache/ansible-lint
 mkdir -p ~/.local/share/yay && ln -sfn ~/.local/share/yay ~/.cache/yay
 mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/keepassxc
 mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails

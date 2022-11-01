@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# - how to rollback?
+
+RETENTION=30
+NOW=$(date +%F_%H-%M-%S)
+KERNEL=$(uname -r); KERNEL=linux-${KERNEL##*-}
+
+set -eu
+
+if grep snapshots /proc/cmdline; then
+    exit 1
+fi
+
+btrfs-create-snapshot() {
+    local TMP="$(mktemp -d)"
+    root=$(awk '$1 ~ /^\/dev\// && $2 == "/" { print $1 }' /proc/mounts)
+    mount -o subvol=snapshots "$root" "$TMP"
+    btrfs subvolume snapshot / "$TMP/root_$NOW"
+    umount "$TMP"
+    rmdir "$TMP"
+}
+
+create-uefi-bin() {
+    local TMP=$(mktemp)
+    sed -E "s|rootflags=\\S+|rootflags=subvol=snapshots/root_$NOW|" /etc/kernel/cmdline > "$TMP"
+    mkinitcpio --cmdline "$TMP" --uefi "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
+    sbctl sign "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
+    rm -f "$TMP"
+}
+
+delete-old-snapshots() {
+    local retention=$1
+
+    local TMP="$(mktemp -d)"
+    root=$(awk '$1 ~ /^\/dev\// && $2 == "/" { print $1 }' /proc/mounts)
+    mount -o subvol=snapshots "$root" "$TMP"
+
+    local to_delete=$(find "$TMP" -maxdepth 1 -type d -name "root_*" -mtime +"$retention" | sort)
+    readarray -t to_delete <<< "$to_delete"
+    for item in "${to_delete[@]}"; do
+        [[ -z "$item" ]] || btrfs subvolume delete "$item"
+    done
+
+    umount "$TMP"
+    rmdir "$TMP"
+}
+
+delete-old-uefi() {
+    local retention=$1
+    local to_delete=$(find /efi/EFI/Linux -type f -name "archlinux_${KERNEL}_*.efi" -mtime +"$retention" | sort)
+
+    readarray -t to_delete <<< "$to_delete"
+    for item in "${to_delete[@]}"; do
+        [[ -z "$item" ]] || rm -fv "$item"
+    done
+}
+
+main() {
+    echo ":: Creating snapshot of root volume..."
+    btrfs-create-snapshot > /dev/null
+    echo
+    echo ":: Creating bootable EFI executable..."
+    create-uefi-bin > /dev/null
+    echo
+    echo ":: Cleanup after $RETENTION days..."
+    delete-old-uefi "$RETENTION"
+    delete-old-snapshots "$RETENTION"
+    echo
+}
+
+main "$@"

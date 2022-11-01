@@ -76,8 +76,7 @@ R /
 - /home/*/downloads/
 - /home/*/media/
 - /home/*/videos/
-- /home/*/iphone-backup/
-- /home/*/iphone-photos/
+- /home/*/data/ios-backup/
 - /home/*/nintendo-switch-hacking/sd/
 - /home/*/nintendo-switch-hacking/tmp/
 - /home/*/.rustup/toolchains

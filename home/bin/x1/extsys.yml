@@ -1,5 +1,6 @@
 dest:
-  device: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_*-0:0
+  device: /dev/disk/by-id/usb-SanDisk_Ultra_Fit_*-0:0
+  # device: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_*-0:0
   filesystem:
     name: btrfs
     options: noatime,compress=zstd
@@ -39,7 +40,7 @@ exclude:
   - /home/*/.local/share/thumbnails/*
   - /home/*/Dropbox/media
   - /home/*/downloads/*
-  - /home/*/iphone-photos
+  - /home/*/data/ios-backup
   - /home/*/photos
   - /home/*/tmp
   - /home/*/videos

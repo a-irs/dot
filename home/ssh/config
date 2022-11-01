@@ -21,7 +21,7 @@ Host erx
     IdentityFile ~/.ssh/id_me
     User ubnt
 
-Host remarkable
+Host rm-usb
     HostName 10.11.99.1
     User root
     IdentityFile ~/.ssh/id_remarkable
