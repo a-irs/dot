@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+blur() {
+    local image=$1
+
+    # shellcheck disable=SC2054
+    local colors=(-modulate 70,60,100)  # brightness, saturation, hue (in percent)
+    # local effect=(-scale 4% -scale 2510%)
+    # local effect=(-scale 2% -scale 5010%)
+    local effect=(-resize 50% -blur 0x32 -resize 200%)
+
+    local cmd=(convert "$image" "${colors[@]}" "${effect[@]}")
+    local hash=$(echo -n "${cmd[@]}" | sha256sum | awk '{print $1}')
+
+    local output=~/.local/share/blur/$hash.jpg
+    if [[ ! -f "$output" ]]; then
+        mkdir -p ~/.local/share/blur
+        "${cmd[@]}" "$output"
+    fi
+    printf '%s' "$output"
+}
+
+image=$(grep '^file=' ~/.config/nitrogen/bg-saved.cfg | cut -d= -f 2-)
+
+blurred=$(blur "$image")
+
+feh \
+    --auto-zoom \
+    --zoom fill \
+    --window-id="${XSCREENSAVER_WINDOW}" \
+    --fullscreen \
+    "$blurred"
