@@ -37,7 +37,7 @@
     b2m = back-to-master
 
 [merge]
-    tool = vimdiff
+    tool = nvimdiff
     conflictstyle = diff3
 
 [mergetool]

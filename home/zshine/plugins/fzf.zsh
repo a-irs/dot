@@ -31,16 +31,4 @@ export FZF_CTRL_T_OPTS='--preview="s {}" --preview-window "~2"'
 export FZF_COMPLETION_TRIGGER='#'
 export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2"'
 
-if [[ "$(tmux -V)" == "tmux 3.0a" ]]; then
-    fzf() { fzf-tmux -d 90% "$@"; }
-else
-    fzf() { fzf-tmux -p 90% "$@"; }
-fi
-
-c() {
-    dir=$(while read -r line; do
-        d="${(Q)line}"
-        [[ -d "$d" ]] && printf "%s\n" "${d/$HOME/~}"
-    done < ~/.zsh_recent-dirs | fzf)
-    cd "${dir/\~/$HOME}"
-}
+fzf() { fzf-tmux -d 50% "$@"; }

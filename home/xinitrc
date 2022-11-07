@@ -25,6 +25,13 @@ mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/k
 mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails
 mkdir -p ~/.local/share/thumbnails/darktable && ln -sfn ~/.local/share/thumbnails/darktable ~/.cache/darktable
 
+# cleanup history
+rm -rf ~/.local/share/recently-used.xbel ~/.local/share/RecentDocuments
+echo -n > ~/.local/share/recently-used.xbel
+sudo chattr +i ~/.local/share/recently-used.xbel
+mkdir -p ~/.local/share/RecentDocuments
+sudo chattr +i ~/.local/share/RecentDocuments
+
 # the location ~/.local/share/applications is deprecated for mimeapps.list but it gets still used sometimes, so make sure they are the same
 mkdir -p ~/.local/share/applications
 ln -sf ~/.config/mimeapps.list ~/.local/share/applications/mimeapps.list
@@ -39,7 +46,6 @@ picom &
 redshift &
 dunst &
 keepassxc &
-~/.bin/workstats &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
 ~/.bin/xinitrc/setup-lock &

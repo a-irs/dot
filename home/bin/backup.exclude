@@ -98,6 +98,7 @@ R /
 - /var/lib/docker/*
 - /var/lib/texmf/*
 - /var/lib/pacman/sync/*
+- /var/lib/systemd/coredump/*
 - /nix
 
-- /efi/EFI/Linux/archlinux_*_*.efi
+- /efi/EFI/Linux/archlinux_*2022*.efi

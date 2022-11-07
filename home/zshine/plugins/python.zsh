@@ -10,6 +10,8 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 [[ "$commands[ipdb]" ]] && export PYTHONBREAKPOINT=ipdb.set_trace
 [[ "$commands[pudb]" ]] && export PYTHONBREAKPOINT=pudb.set_trace
 
+# hide message: "Pipenv found itself running within a virtual environment, so it will automatically use that environment, instead of creating its own for any project."
+export PIPENV_VERBOSITY=-1
 
 # pipenv
 

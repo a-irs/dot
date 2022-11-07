@@ -6,7 +6,7 @@ blur() {
     local image=$1
 
     # shellcheck disable=SC2054
-    local colors=(-modulate 70,60,100)  # brightness, saturation, hue (in percent)
+    local colors=(-modulate 80,70,100)  # brightness, saturation, hue (in percent)
     # local effect=(-scale 4% -scale 2510%)
     # local effect=(-scale 2% -scale 5010%)
     local effect=(-resize 50% -blur 0x32 -resize 200%)
