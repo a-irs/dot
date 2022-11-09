@@ -46,7 +46,6 @@ picom &
 redshift &
 dunst &
 keepassxc &
-easyeffects --gapplication-service &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
 ~/.bin/xinitrc/setup-lock &
@@ -69,13 +68,10 @@ fi
 if [[ $HOSTNAME == desk ]]; then
     solaar --restart-on-wake-up --window hide &
     numlockx on &
+    easyeffects --gapplication-service &
 
     # for ddcutil (brightness control)
     sudo modprobe i2c-dev &
-
-    # if ! mount | grep -q "root@srv1.home:/media/data"; then
-    #     bash -c "$HOME/.bin/wait-for-host srv1.home && sshfs root@srv1.home:/media/data /media/data -o reconnect -o BatchMode=yes -o allow_other" &
-    # fi
 
     cat << 'EOF' | bash &
     set -e
