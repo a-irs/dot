@@ -38,18 +38,20 @@ exclude:
   - /home/*/.local/share/yay
   - /home/*/.local/share/Trash/*
   - /home/*/.local/share/thumbnails/*
+  - /home/*/.local/share/blur/*
   - /home/*/Dropbox/media
   - /home/*/downloads/*
   - /home/*/data/ios-backup
+  - /home/*/data/splunk
   - /home/*/photos
   - /home/*/tmp
   - /home/*/videos
   - /home/*/vm
   - /home/*/.ghcup
   - /home/*/.stack
+  - /home/*/.cabal/packages
   - /home/*/infra/PKGBUILD/
   - /srv/kube
-  - /srv/splunk
   - /usr/share/gtk-doc/*
   - /usr/share/texmf-dist
   - /var/cache/*

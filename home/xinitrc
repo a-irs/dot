@@ -46,6 +46,7 @@ picom &
 redshift &
 dunst &
 keepassxc &
+easyeffects --gapplication-service &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
 ~/.bin/xinitrc/setup-lock &
@@ -68,7 +69,6 @@ fi
 if [[ $HOSTNAME == desk ]]; then
     solaar --restart-on-wake-up --window hide &
     numlockx on &
-    easyeffects --gapplication-service &
 
     # for ddcutil (brightness control)
     sudo modprobe i2c-dev &

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# - how to rollback?
+# TODO how to rollback?
 
 RETENTION=30
 NOW=$(date +%F_%H-%M-%S)
@@ -8,42 +8,41 @@ KERNEL=$(uname -r); KERNEL=linux-${KERNEL##*-}
 
 set -eu
 
+# disable tool if already running from snapshot
 if grep snapshots /proc/cmdline; then
     exit 1
 fi
 
+# setup + teardown
+MOUNT="$(mktemp -d)"
+root=$(awk '$1 ~ /^\/dev\// && $2 == "/" { print $1 }' /proc/mounts)
+mount -o subvol=snapshots "$root" "$MOUNT"
+
+cleanup() {
+    umount "$MOUNT"
+    rmdir "$MOUNT"
+}
+trap cleanup EXIT
+
+
 btrfs-create-snapshot() {
-    local TMP="$(mktemp -d)"
-    root=$(awk '$1 ~ /^\/dev\// && $2 == "/" { print $1 }' /proc/mounts)
-    mount -o subvol=snapshots "$root" "$TMP"
-    btrfs subvolume snapshot / "$TMP/root_$NOW"
-    umount "$TMP"
-    rmdir "$TMP"
+    btrfs subvolume snapshot / "$MOUNT/root_$NOW"
 }
 
 create-uefi-bin() {
-    local TMP=$(mktemp)
-    sed -E "s|rootflags=\\S+|rootflags=subvol=snapshots/root_$NOW|" /etc/kernel/cmdline > "$TMP"
-    mkinitcpio --cmdline "$TMP" --uefi "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
+    sed -E "s|rootflags=\\S+|rootflags=subvol=snapshots/root_$NOW|g;s|resume=\\S+||g" /etc/kernel/cmdline > "$MOUNT/root_$NOW/etc/kernel/cmdline"
+    mkinitcpio --cmdline "$MOUNT/root_$NOW/etc/kernel/cmdline" --uefi "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
     sbctl sign "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
-    rm -f "$TMP"
 }
 
 delete-old-snapshots() {
     local retention=$1
 
-    local TMP="$(mktemp -d)"
-    root=$(awk '$1 ~ /^\/dev\// && $2 == "/" { print $1 }' /proc/mounts)
-    mount -o subvol=snapshots "$root" "$TMP"
-
-    local to_delete=$(find "$TMP" -maxdepth 1 -type d -name "root_*" -mtime +"$retention" | sort)
+    local to_delete=$(find "$MOUNT" -maxdepth 1 -type d -name "root_*" -mtime +"$retention" | sort)
     readarray -t to_delete <<< "$to_delete"
     for item in "${to_delete[@]}"; do
         [[ -z "$item" ]] || btrfs subvolume delete "$item"
     done
-
-    umount "$TMP"
-    rmdir "$TMP"
 }
 
 delete-old-uefi() {
@@ -56,6 +55,10 @@ delete-old-uefi() {
     done
 }
 
+list-snapshots() {
+    ls -ld --color=always "$MOUNT"/root_* | cut -d' ' -f 6- | sed -E "s|$MOUNT/||"
+}
+
 main() {
     echo ":: Creating snapshot of root volume..."
     btrfs-create-snapshot > /dev/null
@@ -66,6 +69,9 @@ main() {
     echo ":: Cleanup after $RETENTION days..."
     delete-old-uefi "$RETENTION"
     delete-old-snapshots "$RETENTION"
+    echo
+    echo ":: List snapshots"
+    list-snapshots
     echo
 }
 
