@@ -14,6 +14,8 @@ endif
 
 Plug 'Yggdroot/indentLine'
 let g:indentLine_char = '¦'
+" indentLine feature needs concealing, but we don't want that for those file types
+let g:indentLine_fileTypeExclude = ['json']
 
 Plug 'jreybert/vimagit'
 let g:magit_default_fold_level=2  " unfold all
@@ -243,6 +245,15 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> go :CocList outline<CR>
 nmap <silent> gs :CocList symbols<CR>
+nnoremap <silent><nowait> <leader>o  :call ToggleOutline()<CR>
+function! ToggleOutline() abort
+  let winid = coc#window#find('cocViewId', 'OUTLINE')
+  if winid == -1
+    call CocActionAsync('showOutline', 1)
+  else
+    call coc#window#close(winid)
+  endif
+endfunction
 
 endif
 

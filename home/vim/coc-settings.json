@@ -20,6 +20,9 @@
 
     "outline.keepWindow": true,
     "outline.autoPreview": true,
+    "outline.followCursor": true,
+    "outline.showLineNumber": false,
+    "outline.sortBy": "position",
 
     "languageserver": {
       "nim": {
