@@ -3,9 +3,9 @@
 # run less or cat, depending on terminal/pipe position
 function global-aliases:less() {
     if [[ -t 1 ]]; then
-        less -XR
+        command less -XR
     else
-        cat
+        command cat
     fi
 }
 
@@ -28,23 +28,26 @@ function global-aliases:awk-n() {
     awk "{print ${(j:,:)args[@]}}"
 }
 
-alias -g -- :a,='2>&1 | awk -F,'
-alias -g -- :a/='2>&1 | awk -F/'
-alias -g -- :a:='2>&1 | awk -F:'
-alias -g -- :a='2>&1 | awk'
-alias -g -- :an='2>&1 | global-aliases:awk-n'
-alias -g -- :c='2>&1 | cut -d'
-alias -g -- :g='2>&1 | grep -E'
-alias -g -- :gi='2>&1 | grep -Ei'
-alias -g -- :gv='2>&1 | grep -Ev'
-alias -g -- :h='2>&1 | head -n'
-alias -g -- :l='2>&1 | global-aliases:less'
-alias -g -- :nonempty="2>&1 | awk NF"
-alias -g -- :p='2>&1 | perl -pe'
-alias -g -- :py='2>&1 | global-aliases:python'
-alias -g -- :s='2>&1 | sed -E'
-alias -g -- :t='2>&1 | tail -n'
-alias -g -- :td='2>&1 | tr -d'
-alias -g -- :tr='2>&1 | tr'
-alias -g -- :u="2>&1 | awk '!x[\$0]++'"
-alias -g -- :uc="2>&1 | sort | uniq -c | sort -n"
+alias -g -- :a,='| awk -F,'
+alias -g -- :a/='| awk -F/'
+alias -g -- :a:='| awk -F:'
+alias -g -- :a='| awk'
+alias -g -- :an='| global-aliases:awk-n'
+alias -g -- :c='| cut -d'
+alias -g -- :g='| grep -E'
+alias -g -- :gi='| grep -Ei'
+alias -g -- :gv='| grep -Ev'
+alias -g -- :h='| head -n'
+alias -g -- :l='| global-aliases:less'
+alias -g -- :nonempty="| awk NF"
+alias -g -- :p='| perl -pe'
+alias -g -- :py='| global-aliases:python'
+alias -g -- :s='| sed -E'
+alias -g -- :t='| tail -n'
+alias -g -- :td='| tr -d'
+alias -g -- :tr='| tr'
+alias -g -- :u="| awk '!x[\$0]++'"
+alias -g -- :uc="| sort | uniq -c | sort -n"
+alias -g -- :2null="2>/dev/null"
+alias -g -- :1null=">/dev/null"
+alias -g -- :21="2>&1"

@@ -260,6 +260,9 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 *Rakefile 36
 *Dockerfile 36
 .py 36
+.java 36
+.hs 36
+.lhs 36
 .nim 36
 .pl 36
 .ps1 36
@@ -307,6 +310,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .so 31
 *a.out 31
 .bin 31
+.class 31
 .nro 31
 .nsp 31
 .pak 31

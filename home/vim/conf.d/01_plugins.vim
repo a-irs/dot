@@ -17,6 +17,14 @@ let g:indentLine_char = '¦'
 " indentLine feature needs concealing, but we don't want that for those file types
 let g:indentLine_fileTypeExclude = ['json']
 
+Plug 'preservim/nerdtree'
+nnoremap <leader>t :NERDTreeToggle<CR>:wincmd p<CR>
+Plug 'PhilRunninger/nerdtree-buffer-ops'
+
+Plug 'tpope/vim-dispatch'
+map <silent> <C-y> :Make<CR>
+set errorformat=%m  " anything is shown in quickfix window instead of errors only
+
 Plug 'jreybert/vimagit'
 let g:magit_default_fold_level=2  " unfold all
 autocmd User VimagitEnterCommit startinsert  " go directly to insert mode for commit message
@@ -205,7 +213,7 @@ nmap <silent> <leader>k :call <SID>show_documentation()<CR>
 nmap <leader>cr <Plug>(coc-rename)
 nmap <leader>cd :CocDiagnostics<CR>
 xmap <leader>cf <Plug>(coc-format-selected)
-nmap <leader>cf <Plug>(coc-format-selected)
+nmap <leader>cf :call CocActionAsync('format')<CR>
 
 " Use <tab> and <S-tab> to navigate completion list:
 function! s:check_back_space() abort
