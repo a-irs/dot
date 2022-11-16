@@ -22,7 +22,7 @@ blur() {
     printf '%s' "$output"
 }
 
-image=$(grep '^file=' ~/.config/nitrogen/bg-saved.cfg | cut -d= -f 2-)
+image=$(grep '^file=' ~/.config/nitrogen/bg-saved.cfg | tail -1 | cut -d= -f 2-)
 
 blurred=$(blur "$image")
 

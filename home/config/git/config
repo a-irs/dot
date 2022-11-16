@@ -42,6 +42,8 @@
 
 [mergetool]
     prompt = false
+    keepBackup = false  # do not generate .orig files
+    keepTemporaries = false
 
 [init]
     defaultBranch = master

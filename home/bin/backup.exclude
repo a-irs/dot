@@ -94,6 +94,7 @@ R /
 - /srv/pwdumps
 - /srv/vuls-database/db
 
+- /home/*/.local/share/containers
 - /var/log/*
 - /var/lib/docker/*
 - /var/lib/texmf/*

@@ -149,7 +149,6 @@ globalkeys = awful.util.table.join(
     awful.key({ alt }, "c",          function() run_or_raise("firefox", "firefox") end),
     awful.key({ alt }, "t",          function() run_or_raise("thunderbird", "thunderbird") end),
     awful.key({ alt, "Shift" }, "c", function() run_gui("firefox --private-window") end),
-    awful.key({ alt }, "p",          function() run_script("pick-color.sh") end),
     awful.key({ alt }, "k",          function() run_or_raise("keepassxc", "keepassxc") end),
     awful.key({ alt }, "s",          function() run_or_raise("emacsclient -c -a=''", "Emacs") end),
     awful.key({ alt, ctrl }, "1",    function() run_script("dpitog 1 apply") end),

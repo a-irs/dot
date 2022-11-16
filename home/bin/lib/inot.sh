@@ -15,7 +15,7 @@ green() {
     echo "$(tput setaf 2)${*}$(tput sgr0)"
 }
 
-make() {
+mk() {
     timestamp=$(date +%H:%M:%S)
     echo -n "$(tput bold)[$timestamp] $(tput setaf 5)${1/$HOME/\~} $(tput setaf 3)${2/$HOME/\~}$(tput sgr0) → "
 
@@ -27,11 +27,11 @@ make() {
 }
 
 echo ""
-make "$cmd" "$file"
+mk "$cmd" "$file"
 while true; do
     inotifywait -mrq -e create -e move -e modify --format %w%f "$file" | while read f
     do
         [[ ! -f "$f" ]] && continue
-        make "$cmd" "$f"
+        mk "$cmd" "$f"
     done
 done

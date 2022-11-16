@@ -75,6 +75,9 @@ nnoremap <silent> <Leader>fg :GFiles<CR>
 nnoremap <silent> <Leader>fm :GFiles?<CR>
 nnoremap <silent> <Leader>g :Rg<CR>
 
+" remember more history files (default: 100)
+set viminfo=!,'200,h
+
 Plug 'eiginn/iptables-vim', { 'for': 'iptables' }
 autocmd BufNewFile,BufFilePre,BufRead *.rules set filetype=iptables
 

@@ -425,7 +425,7 @@ extract() {
         extract_dir="${file_name%.*}"
         extract_dir="${extract_dir%.tar}"
         case "$file" in
-            (*.tar.gz|*.tgz|*.tar.bz2|*.tar.xz) mkdir -p "$extract_dir" && tar xvf "$file" -C "$extract_dir" ;;
+            (*.tar.gz|*.tgz|*.tar.bz2|*.tar.xz|*.tar.zst) mkdir -p "$extract_dir" && tar xvf "$file" -C "$extract_dir" ;;
             (*.gz) gunzip "$file" ;;
             (*.bz2) bunzip2 "$file" ;;
             (*.xz) unxz "$file" ;;

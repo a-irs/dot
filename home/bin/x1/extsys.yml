@@ -55,6 +55,7 @@ exclude:
   - /usr/share/gtk-doc/*
   - /usr/share/texmf-dist
   - /var/cache/*
+  - /home/*/.local/share/containers
   - /var/lib/docker/*
   - /var/lib/pacman/sync/*
   - /var/lib/texmf/*

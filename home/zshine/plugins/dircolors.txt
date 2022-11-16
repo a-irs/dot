@@ -108,6 +108,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .qcow2 3;32
 .whl 32
 .cpgz 32
+.hc 32
 
 ###### temp
 .DS_Store 1;30
