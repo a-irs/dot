@@ -24,6 +24,7 @@ ZSHINE_PLUGINS=(
   python
   nim
   haskell
+  asdf
 
   infra # custom
   fasd  # autocomplete paths
