@@ -31,6 +31,7 @@ btrfs-create-snapshot() {
 
 create-uefi-bin() {
     sed -E "s|rootflags=\\S+|rootflags=subvol=snapshots/root_$NOW|g;s|resume=\\S+||g" /etc/kernel/cmdline > "$MOUNT/root_$NOW/etc/kernel/cmdline"
+    echo "$(hostname)-$NOW" > "$MOUNT/root_$NOW/etc/hostname"
     mkinitcpio --cmdline "$MOUNT/root_$NOW/etc/kernel/cmdline" --uefi "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
     sbctl sign "/efi/EFI/Linux/archlinux_${KERNEL}_${NOW}.efi"
 }

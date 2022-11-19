@@ -52,7 +52,7 @@ git_get_commit() {
     local git_out=$1
     if [[ "$git_out" == gitstatus ]]; then
         s=${VCS_STATUS_COMMIT[0,7]}
-        [[ -n "$VCS_STATUS_TAG" ]] && s="$s ($VCS_STATUS_TAG)"
+        [[ -n "$VCS_STATUS_TAG" ]] && s="$VCS_STATUS_TAG@$s"
         printf '%s' "$s"
         return
     fi
@@ -76,7 +76,7 @@ git_get_branch() {
     local git_out=$1
     if [[ "$git_out" == gitstatus ]]; then
         s=$VCS_STATUS_LOCAL_BRANCH
-        [[ "$s" == master ]] && s=""
+        [[ "$s" == master || "$s" == main ]] && s=""
         printf '%s' "$s"
         return
     fi
@@ -86,7 +86,7 @@ git_get_branch() {
     pcre_match -- "$git_out"
     s=$match[1]
 
-    [[ "$s" == master ]] && s=''
+    [[ "$s" == master || "$s" == main ]] && s=''
     printf "%s" "$s"
 }
 
@@ -160,7 +160,7 @@ git_get_repo() {
             url="${namespace}"
         fi
     fi
-    [[ "$url" == "/" ]] || prompt_segment "$ZSHINE_GIT_PROJECT_BG" "$ZSHINE_GIT_PROJECT_FG" "$url"
+    echo "$url"
 }
 
 git_prompt_info() {
@@ -177,9 +177,18 @@ git_prompt_info() {
     [[ "$git_out" == gitstatus ]] || git_out=$(git status --ignore-submodules --porcelain=v2 --branch 2>/dev/null)
     [[ "$?" -eq 0 ]] || return
 
-    git_get_repo "$git_out"
-    # prompt_segment "$ZSHINE_GIT_COMMIT_BG" "$ZSHINE_GIT_COMMIT_FG" "$(git_get_commit "$git_out")"
-    prompt_segment "$ZSHINE_GIT_BRANCH_BG" "$ZSHINE_GIT_BRANCH_FG" "$(git_get_branch "$git_out")"
-    prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$(git_get_remote "$git_out")"
-    prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$(git_get_dirt "$git_out")"
+    local git_repo=$(git_get_repo "$git_out")
+    local git_branch=$(git_get_branch "$git_out")
+    local git_remote=$(git_get_remote "$git_out")
+    local git_mod=$(git_get_dirt "$git_out")
+    if [[ "$(wc -c <<< "${git_repo}${git_branch}${git_remote}${git_mod}")" -le 1 ]]; then
+        # show commit hash if all other information is not available
+        local git_commit=$(git_get_commit "$git_out")
+        prompt_segment "$ZSHINE_GIT_COMMIT_BG" "$ZSHINE_GIT_COMMIT_FG" "$git_commit"
+    else
+        [[ "$git_repo" == "/" ]] || prompt_segment "$ZSHINE_GIT_PROJECT_BG" "$ZSHINE_GIT_PROJECT_FG" "$git_repo"
+        prompt_segment "$ZSHINE_GIT_BRANCH_BG" "$ZSHINE_GIT_BRANCH_FG" "$git_branch"
+        prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$git_remote"
+        prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$git_mod"
+    fi
 }

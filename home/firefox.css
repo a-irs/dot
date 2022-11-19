@@ -49,24 +49,35 @@
 
 
 /* collapse in default state and add transition, expand on hover */
+/* https://gist.github.com/eizedev/f0a65275859b16e2649656d2e283dc81 */
+
 :root {
-  --sidebar-min-width: 180px;
-  --sidebar-visible-width: 360px;
-  --sidebar-animation-delay: 0s;
-  --sidebar-animation-duration: 0.05s;
+    --thin-tab-width: 180px;
+    --wide-tab-width: 360px;
 }
-#sidebar, #sidebar-header {
-  position: relative !important;
-  min-width: var(--sidebar-min-width) !important;
-  max-width: var(--sidebar-min-width) !important;
-  transition: var(--sidebar-animation-duration) ease var(--sidebar-animation-delay);
-  z-index: 1;
+
+#sidebar-box:not([sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]) {
+    min-width: var(--wide-tab-width) !important;
+    max-width: none !important;
 }
-#sidebar-box:hover :-moz-any(#sidebar,#sidebar-header) {
-  min-width: var(--sidebar-visible-width) !important;
-  max-width: var(--sidebar-visible-width) !important;
-  margin-right: calc((var(--sidebar-visible-width) - var(--sidebar-min-width)) * -1) !important;
-  z-index: 1;
-  position: relative !important;
-  transition: var(--sidebar-animation-duration) ease var(--sidebar-animation-delay);
+
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
+    position: relative !important;
+    transition: all 50ms !important;
+    min-width: var(--thin-tab-width) !important;
+    max-width: var(--thin-tab-width) !important;
+    opacity: 0.75 !important;
+    transition: all 50ms cubic-bezier(0.075, 0.820, 0.165, 1.000);
+}
+
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover {
+    transition: all 50ms !important;
+    min-width: var(--wide-tab-width) !important;
+    max-width: var(--wide-tab-width) !important;
+
+    /* Negative right-margin to keep page from being pushed to the side. */
+    margin-right: calc((var(--wide-tab-width) - var(--thin-tab-width)) * -1) !important;
+    z-index: 1;
+    opacity: 1 !important;
+    transition: all 50ms cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
