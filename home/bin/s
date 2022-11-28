@@ -104,7 +104,7 @@ extension="${filename##*.}"
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz)
         preview_tar; exit ;;
-    zip)
+    zip|jar)
         preview_zip; exit ;;
     md)
         preview_markdown; exit ;;
