@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+buffer=$(tmux show-buffer)
+urls=$(echo -n "$buffer" | grep -Eo "(http|https)://[^ >]+")
+
+die() {
+    tmux display-message "$1"
+    exit 0
+}
+
+open() {
+    if [[ "$OSTYPE" == darwin* ]]; then
+        command open "$1" &> /dev/null
+    else
+        xdg-open "$1" &> /dev/null &
+    fi
+}
+
+if [[ -z "$urls" ]]; then
+    die "No URL found in: '$buffer'."
+fi
+
+tmux display-message "Opening $urls ..." &
+while read -r url; do
+    open "$url" &
+done <<< "$urls"
+
+exit 0
