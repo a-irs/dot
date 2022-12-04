@@ -17,5 +17,10 @@ export PIPENV_VERBOSITY=-1
 
 # or: pipenv shell
 venv() {
-    source "$(pipenv --venv)/bin/activate"
+    local venv=$(pipenv --venv)
+    if [[ -z "$venv" ]]; then
+        pipenv install --site-packages --dev
+        venv=$(pipenv --venv)
+    fi
+    source "$venv/bin/activate"
 }
