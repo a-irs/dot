@@ -102,8 +102,10 @@ local function dynamic_tagging()
                         name = make_name(name, c, rex)
                     elseif c.class == "qemu-system-x86_64" then
                         name = make_name(name, c, "qemu")
-                    elseif c.class == "VirtualBox" and string.find(c.name, 'xp ') then
-                        name = make_name(name, c, "xp-vm")
+                    elseif c.class == "VirtualBox Manager" then
+                        name = make_name(name, c, "vbox-manager")
+                    elseif c.class == "VirtualBox Machine" then
+                        name = make_name(name, c, "vbox")
                     elseif c.class == "Thunar" or c.class == "Pcmanfm" or c.class == "dolphin" then
                         name = make_name(name, c, "files")
                     elseif c.class == "Gimp-2.8" then

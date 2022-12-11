@@ -102,7 +102,7 @@ esac
 extension="${filename##*.}"
 # extension="${extension,,}" # lower case - bash4
 case "$extension" in
-    bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz)
+    bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
         preview_tar; exit ;;
     zip|jar)
         preview_zip; exit ;;

@@ -5,7 +5,7 @@ import sys
 
 # use this config dict to filter (key) and show pretty descriptions (value)
 TYPES = {
-    'vpn': "OpenVPN",
+    'vpn': "VPN",
     'wireguard': "WireGuard",
     # '802-11-wireless': "Wifi",
     # '802-3-ethernet': "LAN",
@@ -17,8 +17,9 @@ def get_connections() -> list:
 
     if proc.returncode == 0:
         connections = [dict(zip(fields, line.split(":"))) for line in proc.stdout.split("\n") if line]
+        return connections
 
-    return connections
+    return []
 
 def get_rofi_lines(connections: list) -> str:
     lines = []

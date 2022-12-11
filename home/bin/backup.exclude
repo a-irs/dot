@@ -77,6 +77,12 @@ R /
 - /home/*/media/
 - /home/*/videos/
 - /home/*/data/ios-backup/
+- /home/*/data/vm/*.log
+- /home/*/data/vm/*.log.*
+- /home/*/data/vm/*.vdi
+- /home/*/data/vm/*.vmdk
+- /home/*/data/vm/*.qcow
+- /home/*/data/vm/*.qcow2
 - /home/*/nintendo-switch-hacking/sd/
 - /home/*/nintendo-switch-hacking/tmp/
 - /home/*/.rustup/toolchains

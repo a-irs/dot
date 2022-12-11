@@ -35,9 +35,9 @@ PREPROCESS = [
     ["perl", "-pe", r"s/([\(\)]?|\s)--> /\1\$\\longrightarrow\$ /g"],
 
     # needed for pdflatex: sanitize non-latex-compatible stuff, e.g. in systemctl output
-    # ["perl", "-pe", r"s/—/-/g"],
-    # ["perl", "-pe", r"s/→/->/g"],
-    # ["perl", "-pe", r"s/│/|/g"],
+    ["perl", "-pe", r"s/—/-/g"],
+    ["perl", "-pe", r"s/→/->/g"],
+    ["perl", "-pe", r"s/│/|/g"],
 ]
 
 CONFIG_DEFAULT = 'sans-short'
