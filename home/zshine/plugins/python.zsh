@@ -17,9 +17,14 @@ export PIPENV_VERBOSITY=-1
 
 # or: pipenv shell
 venv() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        deactivate
+        return
+    fi
+
     local venv=$(pipenv --venv)
     if [[ -z "$venv" ]]; then
-        pipenv install --site-packages --dev
+        pipenv install --site-packages --dev --ignore-pipfile
         venv=$(pipenv --venv)
     fi
     source "$venv/bin/activate"

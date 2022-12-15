@@ -46,7 +46,7 @@ exclude:
   - /home/*/photos
   - /home/*/tmp
   - /home/*/videos
-  - /home/*/vm
+  - /home/*/data/vm
   - /home/*/.ghcup
   - /home/*/.stack
   - /home/*/.cabal/packages

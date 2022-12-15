@@ -180,9 +180,6 @@ let g:strip_whitespace_confirm = 0
 let g:strip_whitespace_on_save = 1
 let g:strip_only_modified_lines = 1
 
-Plug 'vim-python/python-syntax', { 'for': 'python' }
-let python_highlight_all = 1
-
 
 " COC
 

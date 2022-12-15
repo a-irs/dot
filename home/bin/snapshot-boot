@@ -61,19 +61,25 @@ list-snapshots() {
 }
 
 main() {
-    echo ":: Creating snapshot of root volume..."
-    btrfs-create-snapshot > /dev/null
-    echo
-    echo ":: Creating bootable EFI executable..."
-    create-uefi-bin > /dev/null
-    echo
-    echo ":: Cleanup after $RETENTION days..."
-    delete-old-uefi "$RETENTION"
-    delete-old-snapshots "$RETENTION"
-    echo
-    echo ":: List snapshots"
-    list-snapshots
-    echo
+    local action=${1:-backup}
+    if [[ "$action" == list ]]; then
+        list-snapshots
+        exit
+    elif [[ "$action" == backup ]]; then
+        echo ":: Creating snapshot of root volume..."
+        btrfs-create-snapshot > /dev/null
+        echo
+        echo ":: Creating bootable EFI executable..."
+        create-uefi-bin > /dev/null
+        echo
+        echo ":: Cleanup after $RETENTION days..."
+        delete-old-uefi "$RETENTION"
+        delete-old-snapshots "$RETENTION"
+        echo
+        echo ":: List snapshots"
+        list-snapshots
+        echo
+    fi
 }
 
 main "$@"

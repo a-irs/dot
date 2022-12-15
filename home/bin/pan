@@ -47,6 +47,7 @@ CONFIG = {
     '_base': {
         'all': [
             '--standalone',  # do not produce a document fragment, but whole document (e.g. wrapped with <html></html>)
+            '--filter pandoc-crossref', '--citeproc',
             '--lua-filter=always-compact-list.lua',  # always convert lists to compact lists
             '-V lang=en',
         ],
@@ -69,6 +70,7 @@ CONFIG = {
             # better code blocks (e.g. with line wrapping)
             # http://texdoc.net/texmf-dist/doc/latex/listings/listings.pdf
             '--listings',
+            '-V listings=true',  # make pandoc-crossref compatible with listings
             r'-V header-includes="\lstset{breaklines=true}"',
             r'-V header-includes="\lstset{columns=fullflexible}"',
             r'-V header-includes="\lstset{keepspaces=true}"',
