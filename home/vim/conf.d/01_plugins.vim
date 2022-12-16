@@ -76,7 +76,7 @@ nnoremap <silent> <Leader>fm :GFiles?<CR>
 nnoremap <silent> <Leader>g :Rg<CR>
 
 " remember more history files (default: 100)
-set viminfo=!,'200,h
+set viminfo=!,'300,h
 
 Plug 'eiginn/iptables-vim', { 'for': 'iptables' }
 autocmd BufNewFile,BufFilePre,BufRead *.rules set filetype=iptables
@@ -93,7 +93,10 @@ let g:semanticBlacklistOverride = {
 	\ 'java': [
     \ 'abstract','assert','boolean','break','byte','case','catch','char','class','const','continue','default','do','double','else','enum','extends','final','finally','float','for','goto','if','implements','import','instanceof','int','interface','long','native','new','package','private','protected','public','return','short','static','strictfp','super','switch','synchronized','this','throw','throws','transient','try','void','volatile','while',
 	\ 'Boolean', 'Double', 'Float', 'Char', 'Long', 'Int', 'Short', 'Byte', 'String',
-	\ ]
+	\ ],
+    \ 'nim': [
+    \ 'if', 'elif', 'else', 'for', 'while', 'in', 'proc', 'type', 'let', 'import', 'const', 'var', 'assert', 'string', 'int', 'seq', 'object', 'bool'
+    \ ]
 \ }
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim', 'java': 'java', 'haskell': 'haskell', 'ruby': 'ruby'}
