@@ -79,8 +79,8 @@ theme.widget_pulse_fg_mute          = "#aaaaaa"
 
 -- TITLEBAR
 
-theme.titlebar_height                          = dpi(22)
-theme.titlebar_font                            = "Sans Medium 8"
+theme.titlebar_height                          = dpi(24)
+theme.titlebar_font                            = "InputMonoCondensed Medium 8"
 
 theme.titlebar_fg_normal                       = theme.fg_normal
 theme.titlebar_fg_focus                        = theme.fg_focus

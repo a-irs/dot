@@ -150,7 +150,8 @@ CONFIG = {
         'inherit': ['sans'],
         'all': [
             '--toc',
-
+        ],
+        '.pdf': [
             # make section headers slightly bigger - see https://tex.stackexchange.com/questions/59726/change-size-of-section-subsection-subsubsection-paragraph-and-subparagraph-ti
             r'-V header-includes="\usepackage{titlesec}"',
             r'-V header-includes="\titleformat*{\section}{\LARGE\bfseries}"',
@@ -164,8 +165,10 @@ CONFIG = {
     },
     'sans-very-long': {
         'inherit': ['sans'],
-        '.pdf': [
+        'all': [
             '--toc',
+        ],
+        '.pdf': [
             '-V documentclass=report',
 
             # reduce spacing above chapter - see https://tex.stackexchange.com/questions/63390/how-to-decrease-spacing-before-chapter-title
@@ -176,7 +179,7 @@ CONFIG = {
     },
     'sans-very-long-numbered': {
         'inherit': ['sans-very-long'],
-        '.pdf': [
+        'all': [
             '--number-sections',
         ]
     },

@@ -31,6 +31,8 @@ R /
 - **/*.log.8
 - **/*.log.9
 - **/*.log.10
+- **/Signal/stickers.noindex
+- **/GrShaderCache
 
 # logs
 - **/nzbget.log
