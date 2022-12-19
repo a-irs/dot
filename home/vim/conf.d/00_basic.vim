@@ -159,6 +159,7 @@ nnoremap <silent> <leader>8 :buffer 8<CR>
 nnoremap <silent> <leader>9 :buffer 9<CR>
 
 noremap <silent> <Leader>x :bd<CR>
+noremap <silent> <Leader>X :tabc<CR>
 noremap <silent> <Leader>y "+y
 
 " toggle markdown checkboxes

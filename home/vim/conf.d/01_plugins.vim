@@ -9,13 +9,21 @@ call plug#begin()
 if has('nvim')
     " magit clone
     Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit'
-    nmap <leader>n :Neogit<CR>
+    nn <leader>gg :Neogit<cr>
+
+    Plug 'nvim-lua/plenary.nvim' | Plug 'sindrets/diffview.nvim'
+    nn <leader>gd :DiffviewOpen<cr>
+    nn <leader>gm :DiffviewOpen master<cr>
+    nn <leader>gh :DiffviewFileHistory<cr>
+
+    Plug 'folke/which-key.nvim'
+    set timeoutlen=500
 endif
 
 Plug 'Yggdroot/indentLine'
 let g:indentLine_char = '¦'
 " indentLine feature needs concealing, but we don't want that for those file types
-let g:indentLine_fileTypeExclude = ['json']
+let g:indentLine_fileTypeExclude = ['json', 'dockerfile']
 
 Plug 'preservim/nerdtree'
 nnoremap <leader>t :NERDTreeToggle<CR>:wincmd p<CR>
@@ -24,12 +32,6 @@ Plug 'PhilRunninger/nerdtree-buffer-ops'
 Plug 'tpope/vim-dispatch'
 map <silent> <C-y> :Make<CR>
 set errorformat=%m  " anything is shown in quickfix window instead of errors only
-
-Plug 'jreybert/vimagit'
-let g:magit_default_fold_level=2  " unfold all
-autocmd User VimagitEnterCommit startinsert  " go directly to insert mode for commit message
-let g:magit_jump_next_hunk = '<Leader><'
-let g:magit_jump_prev_hunk = '<Leader>>'
 
 Plug 'tolecnal/icinga2-vim', { 'for': 'icinga2' }
 autocmd BufNewFile,BufFilePre,BufRead */icinga/*/*.conf set filetype=icinga2
@@ -73,7 +75,7 @@ nnoremap <silent> <Leader>fh :History<CR>
 nnoremap <silent> <Leader><Tab> :History<CR>
 nnoremap <silent> <Leader>fg :GFiles<CR>
 nnoremap <silent> <Leader>fm :GFiles?<CR>
-nnoremap <silent> <Leader>g :Rg<CR>
+nnoremap <silent> <Leader>s :Rg<CR>
 
 " remember more history files (default: 100)
 set viminfo=!,'300,h
@@ -280,6 +282,9 @@ let g:ansible_with_keywords_highlight = 'Constant'
 let g:ansible_template_syntaxes = { '*.conf.j2': 'conf', '*.rules.j2': 'iptables', '*.xml.j2': 'xml', '*.sh.j2': 'sh', '*.yml.j2': 'yaml.ansible', '*.py.j2': 'python', '*.jcfg.j2': 'conf', '*.rb.j2': 'ruby', '*iptables/*': 'iptables' }
 autocmd BufNewFile,BufFilePre,BufRead */playbooks/*.yml set filetype=yaml.ansible
 
+" CSV filetype, for :Select queries see https://github.com/mechatroner/rainbow_csv#examples-of-rbql-queries
+Plug 'mechatroner/rainbow_csv'
+
 " verbose git commit message
 Plug 'rhysd/committia.vim'
 let g:committia_use_singlecolumn = 'always'
@@ -307,3 +312,18 @@ Plug 'endel/vim-github-colorscheme'
 Plug 'rakr/vim-colors-rakr'
 
 call plug#end()
+
+lua << EOF
+require("neogit").setup{
+    disable_commit_confirmation = true,
+    disable_insert_on_commit = false,
+    integrations = {
+        diffview = true
+    }
+}
+require("diffview").setup{
+    use_icons = false
+}
+require("which-key").setup {
+}
+EOF
