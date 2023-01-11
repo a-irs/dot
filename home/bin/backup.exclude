@@ -1,6 +1,6 @@
 # patterns file, see borg help patterns
 P fm
-R /
+R /home
 
 # temporary files
 - *.swp
@@ -34,9 +34,6 @@ R /
 - **/Signal/stickers.noindex
 - **/GrShaderCache
 
-# logs
-- **/nzbget.log
-
 - **/.vagrant.d/boxes
 - **/.semantic-highlight-cache
 - **/.cache.json
@@ -62,64 +59,65 @@ R /
 - **/Default/Extensions/fahmaaghhglfmonjliepjlchgpgfmobi
 - **/dolphin/User/Load/Textures
 
-- /home/*/.config/VirtualBox/*.iso
-- /home/*/.kodi/addons/packages/*
-- /home/*/.kodi/userdata/Thumbnails/*
-- /home/*/.local/share/Trash/
-- /home/*/.local/share/yay/**/*.deb
-- /home/*/.local/share/yay/**/*.tar
-- /home/*/.local/share/yay/**/*.tar.*
-- /home/*/.local/share/gvfs-metadata/*
-- /home/*/.local/share/virtualenvs
-- /home/*/.local/share/xorg/*.old
-- /home/*/.mozilla/firefox/Crash Reports
-- /home/*/.mozilla/firefox/*/datareporting
-- /home/*/.mozilla/firefox/*/extension-data/ublock*.sqlite
-- /home/*/.mozilla/firefox/*/saved-telemetry-pings
-- /home/*/.mozilla/firefox/*/webappsstore.sqlite
-- /home/*/.stack/programs
-- /home/*/.stack/snapshots
-- /home/*/.stack/*-cache
-- /home/*/.ghcup
-- /home/*/.thumbnails/*
-- /home/*/thumbnails/*
-- /home/*/.cargo/registry
-- /home/*/.opam
-- /home/*/Dropbox/media/wallpapers
-- /home/*/Dropbox/.dropbox.cache
-- /home/*/downloads/
-- /home/*/media/
-- /home/*/videos/
-- /home/*/data/ios-backup/
-- /home/*/data/vm/*.log
-- /home/*/data/vm/*.log.*
-- /home/*/data/vm/*.vdi
-- /home/*/data/vm/*.vmdk
-- /home/*/data/vm/*.qcow
-- /home/*/data/vm/*.qcow2
-- /home/*/nintendo-switch-hacking/sd/
-- /home/*/nintendo-switch-hacking/tmp/
-- /home/*/.rustup/toolchains
-- /home/*/infra/PKGBUILD/
+- home/*/.config/VirtualBox/*.iso
+- home/*/.kodi/addons/packages/*
+- home/*/.kodi/userdata/Thumbnails/*
+- home/*/.local/share/Trash/
+- home/*/.local/share/yay/**/*.deb
+- home/*/.local/share/yay/**/*.tar
+- home/*/.local/share/yay/**/*.tar.*
+- home/*/.local/share/gvfs-metadata/*
+- home/*/.local/share/virtualenvs
+- home/*/.local/share/xorg/*.old
+- home/*/.mozilla/firefox/Crash Reports
+- home/*/.mozilla/firefox/*/datareporting
+- home/*/.mozilla/firefox/*/extension-data/ublock*.sqlite
+- home/*/.mozilla/firefox/*/saved-telemetry-pings
+- home/*/.mozilla/firefox/*/webappsstore.sqlite
+- home/*/.stack/programs
+- home/*/.stack/snapshots
+- home/*/.stack/*-cache
+- home/*/.ghcup
+- home/*/.thumbnails/*
+- home/*/thumbnails/*
+- home/*/.cargo/registry
+- home/*/.opam
+- home/*/Dropbox/media/wallpapers
+- home/*/Dropbox/.dropbox.cache
+- home/*/downloads/
+- home/*/media/
+- home/*/videos/
+- home/*/data/ios-backup/
+- home/*/data/vm/*.log
+- home/*/data/vm/*.log.*
+- home/*/data/vm/*.vdi
+- home/*/data/vm/*.vmdk
+- home/*/data/vm/*.qcow
+- home/*/data/vm/*.qcow2
+- home/*/nintendo-switch-hacking/sd/
+- home/*/nintendo-switch-hacking/tmp/
+- home/*/.rustup/toolchains
+- home/*/infra/PKGBUILD/
 - **/Package Control.cache
 - **/packer_cache/
 
 # exclude steam, except proton (save) data
-+ /home/*/.local/share/Steam/steamapps/compatdata/
-- /home/*/.local/share/Steam/*
++ home/*/.local/share/Steam/steamapps/compatdata/
+- home/*/.local/share/Steam/*
 
-- /srv/docker/grafana/sessions
-- /srv/docker/nzbget/drop
-- /srv/docker/nzbget/queue
-- /srv/pwdumps
-- /srv/vuls-database/db
+- srv/docker/grafana/sessions
+- srv/docker/nzbget/drop
+- srv/docker/nzbget/queue
+- srv/pwdumps
+- srv/vuls-database/db
 
-- /home/*/.local/share/containers
-- /var/log/*
-- /var/lib/docker/*
-- /var/lib/texmf/*
-- /var/lib/pacman/sync/*
-- /var/lib/systemd/coredump/*
-- /nix
+- home/*/.local/share/containers
+- var/log/*
+- var/lib/docker/*
+- var/lib/texmf/*
+- var/lib/pacman/sync/*
+- var/lib/systemd/coredump/*
+- nix
 
-- /efi/EFI/Linux/archlinux_*2022*.efi
+- efi/EFI/Linux/archlinux_*2022*.efi
+- efi/EFI/Linux/archlinux_*2023*.efi

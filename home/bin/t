@@ -10,7 +10,7 @@ help() {
     echo "t stop"
     echo "t continue"
     echo "t track 10:00 - 10:30 tag123"
-    echo "t report <tag> [<tag>] ..."
+    echo "t report <tag> [<tag>] ... [:month|:lastyear|...]"
 }
 
 action=${1:-status}; shift || true

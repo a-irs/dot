@@ -136,7 +136,7 @@ rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
 
   # build UEFI executable / unified kernel image (fallback version, with all modules included)
   cmd("mkdir -p #{mount}/efi/EFI/BOOT")
-  cmd("mkinitcpio -k /boot/vmlinuz-linux --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+  cmd("mkinitcpio -k /boot/vmlinuz-linux-zen --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 
   # sign with own keys for UEFI secure boot
   cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")

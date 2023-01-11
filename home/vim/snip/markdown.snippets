@@ -28,3 +28,14 @@ ${1:${VISUAL}}
 \`\`\`
 endsnippet
 
+snippet fig "figure" rb
+![${1:description}](${2:image.png}){width=30% #fig:${3:label}}
+endsnippet
+
+snippet ref "reference to figure" rb
+@fig:${1:label}
+endsnippet
+
+snippet refs "reference to figure" rb
+[@fig:${1:label};@fig:${2:label2}]
+endsnippet

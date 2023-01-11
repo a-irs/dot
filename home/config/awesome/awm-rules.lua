@@ -122,9 +122,9 @@ local function dynamic_tagging()
                         name = make_name(name, c, "pdf")
                     elseif c.class == "jetbrains-idea" then
                         name = make_name(name, c, "intelliJ")
-                    -- wine: show window title instead of class
+                    -- wine: show window title (up to first space) instead of class
                     elseif c.class and (string.find(c.class, '.exe')) then
-                        name = make_name(name, c, c.name)
+                        name = make_name(name, c, string.match(c.name, "%S+"))
                     else
                         if c.class == nil or c.class == "" then
                             if c.name then

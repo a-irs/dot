@@ -306,6 +306,7 @@ if [[ "$commands[fd]" || "$commands[fdfind]" ]]; then
     alias fda="$fd --hidden --no-ignore --unrestricted --no-ignore-vcs"
 fi
 [[ "$commands[rg]" ]] && alias rg='rg --case-sensitive'
+alias rga='rg -uuu'
 
 alias cp='cp -i'
 alias ln='ln -i'

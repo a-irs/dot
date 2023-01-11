@@ -62,7 +62,7 @@ EOF
 parcellite --no-icon &
 
 if [[ $HOSTNAME == x1 ]]; then
-    usbguard-notifier &
+    usbguard-notifier --wait &
 fi
 
 if [[ $HOSTNAME == desk ]]; then
