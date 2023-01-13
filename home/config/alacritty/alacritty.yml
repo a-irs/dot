@@ -7,7 +7,7 @@ draw_bold_text_with_bright_colors: true
 
 colors:
   primary:
-    background: '#1b2c49'
+    background: '#17263f'
     foreground: '#ffffff'
 
   hints:

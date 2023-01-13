@@ -56,8 +56,11 @@ CONFIG = {
             # '--mathjax',  # 2nd best alternative, more compatible but embeds huge JS (800KB) when used with --embed-resources
         ],
         '.pdf': [
+            '--pdf-engine=tectonic',  # pdflatex (faster, worse utf8 support for listings, bigger filesizes) - or xelatex/tectonic
+            # '--pdf-engine=pdflatex',
+            # '--pdf-engine=xelatex',
+
             '-V header-includes="\\usepackage{csquotes}"',  # localized quotation marks
-            '--pdf-engine=pdflatex',  # pdflatex (faster, worse utf8 support for listings, bigger filesizes) - or xelatex
             '-V colorlinks',
             '-V links-as-notes',
 
@@ -96,9 +99,21 @@ CONFIG = {
             '--css {}'.format("sans.css"),
         ],
         '.pdf': [
-            # see e.g. https://icl.utk.edu/~mgates3/docs/latex-fonts.pdf
-            '-V fontfamily=fourier',  # good fonts: charter (sans), utopia/fourier (sans), palatino (serif)
             '-V fontsize=11pt',  # default: 10
+
+            # TECTONIC/XELATEX
+
+            # like utopia/fourier - either Erewhon+Erewhon-Math or XCharter+Erewhon-Math
+            # r'-V header-includes="\setmainfont{Erewhon}[Extension = .otf, UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic, SlantedFont = *-RegularSlanted]"',
+            r'-V header-includes="\setmainfont{XCharter}"',
+            r'-V header-includes="\setmathfont{Erewhon-Math.otf}"',
+
+            # like palatino
+            # r'-V header-includes="\setmainfont{texgyrepagella}[Extension = .otf, UprightFont = *-regular, BoldFont = *-bold, ItalicFont = *-italic, BoldItalicFont = *-bolditalic]"',
+
+            # PDFLATEX
+            # see e.g. https://icl.utk.edu/~mgates3/docs/latex-fonts.pdf
+            # '-V fontfamily=fourier',  # good fonts: charter (sans), utopia/fourier (sans), palatino (serif)
         ]
     },
 

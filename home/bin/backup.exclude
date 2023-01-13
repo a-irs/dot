@@ -84,6 +84,7 @@ R /home
 - home/*/.opam
 - home/*/Dropbox/media/wallpapers
 - home/*/Dropbox/.dropbox.cache
+- home/*/.dropbox
 - home/*/downloads/
 - home/*/media/
 - home/*/videos/

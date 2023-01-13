@@ -6,12 +6,12 @@ theme.master_width_factor           = 0.6
 
 theme.statusbar_height              = dpi(20)
 theme.statusbar_top_pixel           = "#586779"
-theme.statusbar_bottom_pixel        = "#3A4859"
+theme.statusbar_bottom_pixel        = "#3f4e60"
 
 
 -- FG, BG COLORS
 
-theme.bg_normal                     = "#1b2c49"
+theme.bg_normal                     = "#17263f"
 theme.bg_focus                      = "#364b73"
 theme.bg_focus2                     = "#2F4163"
 theme.bg_urgent                     = "#d9304f"
