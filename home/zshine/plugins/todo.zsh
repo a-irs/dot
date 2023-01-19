@@ -29,4 +29,5 @@ _show_todos() {
     done
     unset file
 }
+
 _show_todos --random

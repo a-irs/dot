@@ -7,7 +7,7 @@ zstyle ':chpwd:*' recent-dirs-max 50
 function fzf-cdr () {
     setopt localoptions pipefail
     local dir=$(
-        (cdr -l | awk '{print $2}'; awk -F\| '{print $1}' ~/.bookmarks | uniq | sed 's/\$HOME/~/' ) | fzf --no-multi --query "$LBUFFER"
+        (cdr -l | awk '{print $2}' | uniq | sed 's/\$HOME/~/' ) | fzf --no-multi --query "$LBUFFER"
     )
     if [ -n "$dir" ]; then
     BUFFER="cd $dir"

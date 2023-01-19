@@ -149,22 +149,16 @@ if [[ "$commands[docker]" ]]; then
     do-rm() { docker rm "$@" || docker rmi "$@"; }
 fi
 
-es() {
-    local query=$1
-    local line=$(command rg -n --color=always "$query" | fzf --reverse)
-
-    local filename=$(printf '%s' "$line" | awk -F ':' '{print $1}')
-    local linenumber=$(printf '%s' "$line" | awk -F ':' '{print $2}')
-
-    if [[ -n "$filename" ]]; then
-        echo $vim "+$linenumber" -c "silent! /$query" "$filename"
-        $vim "+$linenumber" -c "silent! /$query" "$filename"
-    fi
-}
-
 mac() { curl -q "https://api.macvendors.com/${1:0:8}" && printf "\n"; }
 
-cht() { curl -s "https://cht.sh/$1?q&style=rrt" | less -FXR; }
+cht() {
+    local query=${(j:+:)@}  # join all argument strings with "+" (URL whitespace)
+    if [[ -n "$query" ]]; then
+        curl -s "https://cht.sh/$query?style=rrt" | less -FXR
+    else
+        curl -s "https://cht.sh/:random?style=rrt" | less -FXR
+    fi
+}
 
 tar-tar() { tar cvaf "$(basename "$PWD")".tar -- "$@"; }
 tar-gz()  { tar cvaf "$(basename "$PWD")".tar.gz -- "$@"; }
@@ -173,10 +167,10 @@ tar-bz()  { tar cvaf "$(basename "$PWD")".tar.bz2 -- "$@"; }
 tar-lz()  { tar cvaf "$(basename "$PWD")".tar.lzma -- "$@"; }
 tar-zip() { zip -r "$(basename "$PWD")".zip -- "$@"; }
 
-rotate() {
+rotate-log() {
     [[ -z "$1" || ! -f "$1" ]] && return 1
-    local outname="$1.$(date +'%F_%T')"
-    mv -v "$1" "$outname" && bzip2 -v "$outname"
+    local outname="$1_$(date +'%F_%H-%M-%S')"
+    mv -v "$1" "$outname" && zstd --rm "$outname"
 }
 
 toggle-scheme() {

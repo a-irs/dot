@@ -32,11 +32,9 @@ ZSHINE_PLUGINS=(
 
   status  # server status on login
   vault  # hashicorp vault
-)
 
-if [[ "$os" != darwin* ]]; then
-    ZSHINE_PLUGINS+=todo  # show ~/.todo on start
-fi
+  # todo  # show ~/.todo on start
+)
 
 for _loadx in $ZSHINE_PLUGINS; do
     source "$ZSHINE_DIR/plugins/$_loadx.zsh"

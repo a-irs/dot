@@ -37,15 +37,6 @@ R /home
 - **/.vagrant.d/boxes
 - **/.semantic-highlight-cache
 - **/.cache.json
-- **/.config/retroarch/assets
-- **/.config/retroarch/autoconf
-- **/.config/retroarch/cheats
-- **/.config/retroarch/core-info
-- **/.config/retroarch/cores
-- **/.config/retroarch/database
-- **/.config/retroarch/downloads
-- **/.config/retroarch/shaders
-- **/.config/coc/extensions
 - **/.fzf
 - **/.gem/
 - **/.gnupg/dirmngr-cache.d
@@ -59,7 +50,6 @@ R /home
 - **/Default/Extensions/fahmaaghhglfmonjliepjlchgpgfmobi
 - **/dolphin/User/Load/Textures
 
-- home/*/.config/VirtualBox/*.iso
 - home/*/.kodi/addons/packages/*
 - home/*/.kodi/userdata/Thumbnails/*
 - home/*/.local/share/Trash/
