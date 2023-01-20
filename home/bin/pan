@@ -30,14 +30,14 @@ PREPROCESS = [
     # much simpler than lua/python/haskell filter
     ["perl", "-ne", "s/^\\!include:(.+).*$/`cat $1`/e;print"],
 
-    # replace arrows with latex arrows
-    ["perl", "-pe", r"s/([\(\)]?|\s)-> /\1\$\\rightarrow\$ /g"],
-    ["perl", "-pe", r"s/([\(\)]?|\s)--> /\1\$\\longrightarrow\$ /g"],
+    # replace arrows with latex arrows FIXME does not work in code blocks
+    # ["perl", "-pe", r"s/([\(\)]?|\s)-> /\1\$\\rightarrow\$ /g"],
+    # ["perl", "-pe", r"s/([\(\)]?|\s)--> /\1\$\\longrightarrow\$ /g"],
 
     # needed for pdflatex: sanitize non-latex-compatible stuff, e.g. in systemctl output
-    ["perl", "-pe", r"s/—/-/g"],
-    ["perl", "-pe", r"s/→/->/g"],
-    ["perl", "-pe", r"s/│/|/g"],
+    # ["perl", "-pe", r"s/—/-/g"],
+    # ["perl", "-pe", r"s/→/->/g"],
+    # ["perl", "-pe", r"s/│/|/g"],
 ]
 
 CONFIG_DEFAULT = 'sans-short'
@@ -56,9 +56,10 @@ CONFIG = {
             # '--mathjax',  # 2nd best alternative, more compatible but embeds huge JS (800KB) when used with --embed-resources
         ],
         '.pdf': [
-            '--pdf-engine=tectonic',  # pdflatex (faster, worse utf8 support for listings, bigger filesizes) - or xelatex/tectonic
+            # '--pdf-engine=tectonic',  # pdflatex (faster, worse utf8 support for listings, bigger filesizes) - or xelatex/tectonic/lualatex
             # '--pdf-engine=pdflatex',
             # '--pdf-engine=xelatex',
+            '--pdf-engine=lualatex',
 
             '-V header-includes="\\usepackage{csquotes}"',  # localized quotation marks
             '-V colorlinks',
@@ -89,6 +90,11 @@ CONFIG = {
             r'-V header-includes="\newsavebox\mypostbreak"',
             r'-V header-includes="\savebox\mypostbreak{\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{Gray}\hookrightarrow\space}}}"',
             r'-V header-includes="\lstset{breaklines=true,postbreak=\usebox\mypostbreak}"',
+
+            # rotate pages
+            r'-V header-includes="\usepackage{pdflscape}"',
+            r'-V header-includes="\newcommand{\blandscape}{\begin{landscape}}"',
+            r'-V header-includes="\newcommand{\elandscape}{\end{landscape}}"',
         ]
     },
 

@@ -56,6 +56,16 @@ let g:vim_markdown_no_default_key_mappings = 1
 let g:vim_markdown_conceal = g:markdown_syntax_conceal
 let g:vim_markdown_conceal_code_blocks = g:markdown_syntax_conceal
 let g:vim_markdown_fenced_languages = g:markdown_fenced_languages
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_auto_insert_bullets = 0
+
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_strikethrough = 1
+" enable math syntax highlight, but disable concealing
+let g:vim_markdown_math = 1
+let g:tex_conceal = ''
+
+
 Plug 'preservim/vim-markdown'
 
 Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
