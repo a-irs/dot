@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+from pandocfilters import toJSONFilter, Str, Math
+import re
+import sys
+
+# converts arrows to InlineMath arrows
+rep = {
+    "->": r'\rightarrow',
+    "=>": r'\Rightarrow',
+    "<-": r'\leftarrow',
+    "<=": r'\Leftarrow',
+    "<->": r'\leftrightarrow',
+    "<=>": r'\Leftrightarrow',
+}
+rep = dict((re.escape(k), v) for k, v in rep.items())
+pattern = re.compile("|".join(rep.keys()))
+
+def replace(key, value, format, meta):
+    if key == 'Str':
+        s, count = pattern.subn(lambda m: rep[re.escape(m.group(0))], value)
+        if count > 0:
+            # print(key, value, s, file=sys.stderr)
+            return Math(dict(t="InlineMath", c=[]), "$" + s + "$")
+        else:
+            return Str(s)
+
+if __name__ == "__main__":
+    toJSONFilter(replace)

@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 
 # dependencies: pandoc texlive-core
-#   for xelatex + custom fonts: texlive-latexextra
+#   for luatex + custom fonts: texlive-latexextra
 #   beamer template: texlive-pictures, texlive-fontsextra
 #
 # https://pandoc.org/MANUAL.html
-#
-# TODO:
-# - multiple preprocess
-# - process multiple files at once
 
 import tempfile
 import sys
@@ -29,10 +25,6 @@ PREPROCESS = [
     # replace "!include:<filename>" with content of file
     # much simpler than lua/python/haskell filter
     ["perl", "-ne", "s/^\\!include:(.+).*$/`cat $1`/e;print"],
-
-    # replace arrows with latex arrows FIXME does not work in code blocks
-    # ["perl", "-pe", r"s/([\(\)]?|\s)-> /\1\$\\rightarrow\$ /g"],
-    # ["perl", "-pe", r"s/([\(\)]?|\s)--> /\1\$\\longrightarrow\$ /g"],
 
     # needed for pdflatex: sanitize non-latex-compatible stuff, e.g. in systemctl output
     # ["perl", "-pe", r"s/—/-/g"],
@@ -57,16 +49,19 @@ CONFIG = {
         ],
         '.pdf': [
             # '--pdf-engine=tectonic',  # pdflatex (faster, worse utf8 support for listings, bigger filesizes) - or xelatex/tectonic/lualatex
+            # '--pdf-engine=tectonic',
             # '--pdf-engine=pdflatex',
-            # '--pdf-engine=xelatex',
             '--pdf-engine=lualatex',
 
-            '-V header-includes="\\usepackage{csquotes}"',  # localized quotation marks
+            # replace e.g. ASCII arrows with inline LaTeX math arrows
+            '--filter=str-to-math',
+
+            r'-V header-includes="\usepackage{csquotes}"',  # localized quotation marks
             '-V colorlinks',
             '-V links-as-notes',
 
             '-V papersize=a4',
-            '-V geometry=top=3cm,bottom=3cm,left=2.5cm,right=2.5cm',  # tweaked Word 2007 style (2.5cm on any side)
+            '-V geometry=top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm',  # Word 2007 style
 
             # better than builtin "-V linestretch", because it also affects TOC
             r'-V header-includes="\usepackage{setspace}\setstretch{1.25}"',
@@ -75,21 +70,30 @@ CONFIG = {
             # http://texdoc.net/texmf-dist/doc/latex/listings/listings.pdf
             '--listings',
             '-V listings=true',  # make pandoc-crossref compatible with listings
-            r'-V header-includes="\lstset{breaklines=true}"',
+            r'-V header-includes="\lstset{frame=single,frameround=tttt,framesep=4pt,framexleftmargin=2pt,rulecolor=\color{Gray}}"',
+            r'-V header-includes="\lstset{commentstyle=\tiny}"',
             r'-V header-includes="\lstset{columns=fullflexible}"',
             r'-V header-includes="\lstset{keepspaces=true}"',
+            r'-V header-includes="\lstset{tabsize=4}"',
             r'-V header-includes="\lstset{extendedchars=true}"',
             r'-V header-includes="\lstset{showstringspaces=false}"',
             r'-V header-includes="\lstset{basicstyle=\small\ttfamily}"',
             r'-V header-includes="\lstset{keywordstyle=\color{Maroon}}"',
             r'-V header-includes="\lstset{stringstyle=\color{PineGreen}}"',
-            r'-V header-includes="\lstset{commentstyle=\slshape\color{Blue}}"',
-            r'-V header-includes="\lstset{numberstyle=\color{Green}}"',
+            r'-V header-includes="\lstset{commentstyle=\slshape\color{RoyalBlue}}"',
+            r'-V header-includes="\lstset{numbers=left,,numberstyle=\scriptsize\color{Gray}}"',
 
             # postbreak arrow for code listings
             r'-V header-includes="\newsavebox\mypostbreak"',
             r'-V header-includes="\savebox\mypostbreak{\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{Gray}\hookrightarrow\space}}}"',
             r'-V header-includes="\lstset{breaklines=true,postbreak=\usebox\mypostbreak}"',
+
+            # better bullet points
+            r'-V header-includes="\usepackage{enumitem}"',
+            r'-V header-includes="\setlist[itemize,1]{label=$\bullet$}"',
+            r'-V header-includes="\setlist[itemize,2]{label=\textbf{--}}"',
+            r'-V header-includes="\setlist[itemize,3]{label=$\circ$}"',
+            r'-V header-includes="\setlist[itemize,4]{label=$\circ$}"',
 
             # rotate pages
             r'-V header-includes="\usepackage{pdflscape}"',
@@ -107,11 +111,11 @@ CONFIG = {
         '.pdf': [
             '-V fontsize=11pt',  # default: 10
 
-            # TECTONIC/XELATEX
+            # TECTONIC/XELATEX/LUATEX
 
             # like utopia/fourier - either Erewhon+Erewhon-Math or XCharter+Erewhon-Math
-            # r'-V header-includes="\setmainfont{Erewhon}[Extension = .otf, UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic, SlantedFont = *-RegularSlanted]"',
-            r'-V header-includes="\setmainfont{XCharter}"',
+            r'-V header-includes="\setmainfont{Erewhon}[Extension = .otf, UprightFont = *-Regular, BoldFont = *-Bold, ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic, SlantedFont = *-RegularSlanted]"',
+            # r'-V header-includes="\setmainfont{XCharter}"',
             r'-V header-includes="\setmathfont{Erewhon-Math.otf}"',
 
             # like palatino
