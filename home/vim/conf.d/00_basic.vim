@@ -14,6 +14,12 @@ set hlsearch  " highlight search results
 set incsearch  " search during input
 set fillchars+=vert:│  " prettier split separator
 
+" disable swap file completely:
+" - on concurrent writes, VIM warns accordingly anyway (and undo file helps as well)
+" - backup is not needed as :w is used often enough
+" - does not clutter file system, ...
+set noswapfile
+
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
