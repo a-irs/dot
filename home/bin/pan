@@ -109,6 +109,10 @@ CONFIG = {
             '--css {}'.format("sans.css"),
         ],
         '.pdf': [
+            # make section headers slightly bigger - see https://tex.stackexchange.com/questions/59726/change-size-of-section-subsection-subsubsection-paragraph-and-subparagraph-ti
+            r'-V header-includes="\usepackage{titlesec}"',
+            r'-V header-includes="\titleformat*{\section}{\LARGE\bfseries}"',
+
             '-V fontsize=11pt',  # default: 10
 
             # TECTONIC/XELATEX/LUATEX
@@ -175,11 +179,6 @@ CONFIG = {
         'inherit': ['sans'],
         'all': [
             '--toc',
-        ],
-        '.pdf': [
-            # make section headers slightly bigger - see https://tex.stackexchange.com/questions/59726/change-size-of-section-subsection-subsubsection-paragraph-and-subparagraph-ti
-            r'-V header-includes="\usepackage{titlesec}"',
-            r'-V header-includes="\titleformat*{\section}{\LARGE\bfseries}"',
         ],
     },
     'sans-long-numbered': {

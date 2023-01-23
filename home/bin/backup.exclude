@@ -91,6 +91,7 @@ R /home
 - home/*/infra/PKGBUILD/
 - **/Package Control.cache
 - **/packer_cache/
+- root/.config/borg/security
 
 # exclude steam, except proton (save) data
 + home/*/.local/share/Steam/steamapps/compatdata/
@@ -108,6 +109,7 @@ R /home
 - var/lib/texmf/*
 - var/lib/pacman/sync/*
 - var/lib/systemd/coredump/*
+- var/lib/upower/*
 - nix
 
 - efi/EFI/Linux/archlinux_*2022*.efi
