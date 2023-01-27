@@ -32,20 +32,22 @@ PREPROCESS = [
     # ["perl", "-pe", r"s/│/|/g"],
 ]
 
-CONFIG_DEFAULT = 'sans-short'
+CONFIG_DEFAULT = 'sans-normal'
 CONFIG_DEFAULT_OUTPUT = '.html'
 
 CONFIG = {
     '_base': {
         'all': [
             '--standalone',  # do not produce a document fragment, but whole document (e.g. wrapped with <html></html>)
-            '--filter pandoc-crossref', '--citeproc',
             '--lua-filter=always-compact-list.lua',  # always convert lists to compact lists
             '-V lang=en',
         ],
         '.html': [
             '--mathml',  # best for maths in html, only for firefox+safari
             # '--mathjax',  # 2nd best alternative, more compatible but embeds huge JS (800KB) when used with --embed-resources
+
+            '--embed-resources',
+            '--css {}'.format("sans.css"),
         ],
         '.pdf': [
             # '--pdf-engine=tectonic',  # pdflatex (faster, worse utf8 support for listings, bigger filesizes) - or xelatex/tectonic/lualatex
@@ -61,6 +63,7 @@ CONFIG = {
             '-V links-as-notes',
 
             '-V papersize=a4',
+            '-V fontsize=11pt',  # default: 10
             '-V geometry=top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm',  # Word 2007 style
 
             # better than builtin "-V linestretch", because it also affects TOC
@@ -99,22 +102,8 @@ CONFIG = {
             r'-V header-includes="\usepackage{pdflscape}"',
             r'-V header-includes="\newcommand{\blandscape}{\begin{landscape}}"',
             r'-V header-includes="\newcommand{\elandscape}{\end{landscape}}"',
-        ]
-    },
 
-    'sans': {
-        'inherit': ['_base'],
-        '.html': [
-            '--embed-resources',
-            '--css {}'.format("sans.css"),
-        ],
-        '.pdf': [
-            # make section headers slightly bigger - see https://tex.stackexchange.com/questions/59726/change-size-of-section-subsection-subsubsection-paragraph-and-subparagraph-ti
-            r'-V header-includes="\usepackage{titlesec}"',
-            r'-V header-includes="\titleformat*{\section}{\LARGE\bfseries}"',
-
-            '-V fontsize=11pt',  # default: 10
-
+            # FONTS
             # TECTONIC/XELATEX/LUATEX
 
             # like utopia/fourier - either Erewhon+Erewhon-Math or XCharter+Erewhon-Math
@@ -131,10 +120,33 @@ CONFIG = {
         ]
     },
 
+    'sans-normal': {
+        'inherit': ['_base'],
+        '.pdf': [
+            # KOMA
+            '-V documentclass=scrartcl',
+            '-V classoption="headings=standardclasses,afterindent=false"',  # use roman fonts for headings
+
+            # KOMA: make section headers bigger
+            r'-V header-includes="\RedeclareSectionCommand[font=\Huge]{section}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\LARGE]{subsection}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\large]{subsubsection}"',
+        ],
+    },
+
     'sans-short': {
-        'inherit': ['sans'],
+        'inherit': ['_base'],
         'all': [
             '--lua-filter=promote-headers.lua',  # use first header as title
+        ],
+        '.pdf': [
+            # KOMA
+            '-V documentclass=scrartcl',
+            '-V classoption="headings=standardclasses,afterindent=false"',  # use roman fonts for headings
+
+            r'-V header-includes="\RedeclareSectionCommand[font=\LARGE]{section}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\Large]{subsection}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\large]{subsubsection}"',
         ],
     },
 
@@ -146,7 +158,7 @@ CONFIG = {
     },
 
     '_beamer': {
-        'inherit': ['sans'],
+        'inherit': ['_base'],
         '.pdf': [
             '-t beamer',
             '--slide-level=2',
@@ -175,34 +187,43 @@ CONFIG = {
         ]
     },
 
-    'sans-long': {
-        'inherit': ['sans'],
+    'sans-normal-toc': {
+        'inherit': ['sans-normal'],
         'all': [
             '--toc',
         ],
     },
-    'sans-long-numbered': {
-        'inherit': ['sans-long'],
+
+    'sans-normal-toc-numbered': {
+        'inherit': ['sans-normal'],
         'all': [
             '--number-sections',
         ],
     },
-    'sans-very-long': {
-        'inherit': ['sans'],
+
+    'sans-long': {
+        'inherit': ['_base'],
         'all': [
             '--toc',
         ],
         '.pdf': [
-            '-V documentclass=report',
+            '--filter pandoc-crossref', '--citeproc',
 
-            # reduce spacing above chapter - see https://tex.stackexchange.com/questions/63390/how-to-decrease-spacing-before-chapter-title
-            r'-V header-includes="\usepackage{titlesec}"',
-            r'-V header-includes="\titleformat{\chapter}[display]{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}"',
-            r'-V header-includes="\titlespacing*{\chapter}{0pt}{-40pt}{20pt}"',
+            '-V documentclass=scrbook',  # koma
+            '-V classoption="headings=standardclasses,twoside=false,afterindent=false,chapterprefix=false,headsepline=true"',
+
+            # reduce spacing above chapter
+            r'-V header-includes="\RedeclareSectionCommand[beforeskip=-1sp]{chapter}"',
+
+            # KOMA: make section headers bigger
+            r'-V header-includes="\addtokomafont{chapterprefix}{\Huge}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\LARGE]{section}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\Large]{subsection}"',
+            r'-V header-includes="\RedeclareSectionCommand[font=\large]{subsubsection}"',
         ]
     },
-    'sans-very-long-numbered': {
-        'inherit': ['sans-very-long'],
+    'sans-long-numbered': {
+        'inherit': ['sans-long'],
         'all': [
             '--number-sections',
         ]

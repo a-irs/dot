@@ -11,8 +11,6 @@ local lain       = require 'lain'
 local xresources = require('beautiful').xresources
 local beautiful  = require 'beautiful'
 
-awful.spawn("nitrogen --restore", false)
-
 hostname        = awesome.hostname
 is_mobile       = hostname == "x1"
 

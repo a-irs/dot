@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -x
+
+sudo systemctl stop opensnitchd.service
+
+sudo systemctl stop usbguard-dbus.service usbguard.service
+for i in /sys/bus/usb/devices/*/authorized_default; do sudo tee "$i" <<< 1; done
+
+dropbox-cli stop

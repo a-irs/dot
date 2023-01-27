@@ -8,8 +8,12 @@ dest:
     boot: 256MB
     luks: 32GB
     # rest of device is filled with an unencrypted exFAT partition
+  kernel: /boot/vmlinuz-linux-zen
 
 postcommands:
+  # sign kernel image with own keys for UEFI secure boot
+  - sbctl sign $MOUNT$/efi/EFI/BOOT/BOOTX64.EFI
+
   # disable dropbox autostart
   - sed -i -E '/.*dropbox.*/d' $MOUNT$/home/*/.xinitrc
 
@@ -19,10 +23,10 @@ postcommands:
   - rm -f $MOUNT$/etc/systemd/system/*/usbguard.service
   - rm -f $MOUNT$/etc/systemd/system/*/usbguard-dbus.service
 
-  # disable auto-startx, add ability to launch via alias (just 'startx' does not work as we're inside tmux by default)
-  - rm -f $MOUNT$/home/*/.zprofile*
-  - echo 'alias startx="echo startx > ~/.zprofile && exit"' | tee -a $MOUNT$/home/*/.zshrc
+  # disable auto-startx
+  - rm -f $MOUNT$/etc/systemd/system/*/auto-x11.service
 
+  # change statusbar colors
   - sed -i -E 's/^theme\.bg_normal.*/theme.bg_normal = "#d9304f"/' $MOUNT$/home/*/.config/awesome/theme.lua
   - sed -i -E 's/^theme\.fg_normal.*/theme.fg_normal = "#ffffff"/' $MOUNT$/home/*/.config/awesome/theme.lua
 

@@ -11,11 +11,8 @@ set_rate() {
 }
 
 case $(current_rate) in
-    30) set_rate 120 ;;
-    48) set_rate 30 ;;
-    72) set_rate 48 ;;
-    96) set_rate 72 ;;
-    120) set_rate 96 ;;
+    60) set_rate 120 ;;
+    120) set_rate 60 ;;
     *) set_rate 120 ;;
 esac
 

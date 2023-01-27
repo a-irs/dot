@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+set -x
+
+xrandr -r 60
+
+dropbox-cli stop
+
+rfkill block all

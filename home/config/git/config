@@ -1,9 +1,11 @@
 [core]
     sshCommand = ssh -o StrictHostKeyChecking=ask
 
-[user]
-    name = a-irs
-    email = a-irs@users.noreply.github.com
+# NOT SET BY DEFAULT
+#
+# [user]
+#     name = a-irs
+#     email = a-irs@users.noreply.github.com
 
 [color]
     ui = 1

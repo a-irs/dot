@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+write_status() {
+    change_rate=$(</sys/class/power_supply/BAT0/power_now)
+    change_rate=$(awk -v d="$change_rate" 'BEGIN { printf "%.2f", d/1000000 }')
+    echo "\
+$(date '+%F %T') | \
+$(xrandr | grep '\*' | sed -E 's/.*\s([0-9\.]+)\*.*/\1/' | sed -E 's/\.[0-9]*//') Hz | $(light -G | cut -d . -f 1) % | \
+$(awk '{print $1,$2,$3}' /proc/loadavg) | \
+$change_rate W | \
+$(acpi | sed 's/Battery 0: //')" \
+        >> ~/data/battery.log
+}
+
+while true; do
+    write_status
+    sleep 10
+done

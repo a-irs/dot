@@ -58,7 +58,7 @@ def prepare(conf)
   # format file systems
   cmd("mkfs.fat -F32 -n EXTSYS_EFI #{conf.dest.device}-part1")
   cmd("mkfs.#{conf.dest.filesystem.name} -L EXTSYS /dev/vg_extsys/lv_extsys")
-  cmd("mkexfatfs -n EXTSYS_DATA #{conf.dest.device}-part3")
+  cmd("mkfs.exfat -L EXTSYS_DATA #{conf.dest.device}-part3")
 
   cmd("partprobe #{conf.dest.device}; sleep 2")
 end
@@ -136,10 +136,7 @@ rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
 
   # build UEFI executable / unified kernel image (fallback version, with all modules included)
   cmd("mkdir -p #{mount}/efi/EFI/BOOT")
-  cmd("mkinitcpio -k /boot/vmlinuz-linux-zen --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
-
-  # sign with own keys for UEFI secure boot
-  cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+  cmd("mkinitcpio -k #{conf.dest.kernel} --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 end
 
 def main()
@@ -153,26 +150,24 @@ def main()
 
   Dir.mktmpdir do |mount|
 
-    if ARGV[0] == "prepare" then
-      prepare(conf)
-      umount(conf, mount)
-      exit
-    end
-
     begin
-      mount(conf, mount)
-      rsync(conf, mount)
-      write_fstab(conf, mount)
-      write_hostname(conf, mount)
-      write_initramfs(conf, mount)
+      if ARGV[0] == "prepare" then
+        prepare(conf)
+      else
+        mount(conf, mount)
+        rsync(conf, mount)
+        write_fstab(conf, mount)
+        write_hostname(conf, mount)
+        write_initramfs(conf, mount)
 
-      conf.postcommands.each do |postcommand|
-        cmd(postcommand.gsub(/\$MOUNT\$/, mount))
+        conf.postcommands.each do |postcommand|
+          cmd(postcommand.gsub(/\$MOUNT\$/, mount))
+        end
       end
-
     ensure
       umount(conf, mount)
     end
+
   end
 
 end
