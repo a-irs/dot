@@ -295,7 +295,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="wrapper for pandoc")
     parser.add_argument('input', help="input file")
     parser.add_argument('output', nargs='?', help="output filename or pandoc-supported file type")
-    parser.add_argument('style', metavar='style', nargs='?', help=" | ".join(CONFIG), default=CONFIG_DEFAULT, choices=CONFIG.keys())
+    parser.add_argument('style', metavar='style', nargs='?', help=" | ".join(CONFIG), default=CONFIG_DEFAULT, choices=sorted([k for k in CONFIG.keys() if not k.startswith("_")]))
     parser.add_argument('-v', '--verbose', action='count', default=0, help="set verbose log level")
     parser.add_argument('-l', '--write-build-log', action='store_true', default=False, help="write build commands to <filename>.build.log")
     args, additional_args = parser.parse_known_args()

@@ -80,7 +80,7 @@ require 'awm-statusbar'
 require 'awm-rules'
 
 -- toggle tag1, tag2 on startup (to make initial win+tab possible)
-local tag = awful.tag.gettags(awful.screen.focused())[1]
-local tag2 = awful.tag.gettags(awful.screen.focused())[2]
-if tag2 then awful.tag.viewonly(tag2) end
-if tag then awful.tag.viewonly(tag) end
+local tag = awful.screen.focused().tags[1]
+local tag2 = awful.screen.focused().tags[2]
+if tag2 then tag2:view_only() end
+if tag then tag:view_only() end

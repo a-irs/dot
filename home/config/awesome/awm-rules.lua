@@ -75,7 +75,7 @@ end
 
 local function dynamic_tagging()
     awful.screen.connect_for_each_screen(function(s)
-        for _, t in ipairs(awful.tag.gettags(s)) do
+        for _, t in ipairs(s.tags) do
             if is_empty(t) then
                 t.name = " " .. theme.taglist_empty_tag .. " "
             else
@@ -238,8 +238,8 @@ client.connect_signal("unmanage", function(c)
 
         -- if still empty, return to first
         if is_empty(awful.screen.focused().selected_tag) then
-            local tag = awful.tag.gettags(awful.screen.focused())[1]
-            if tag then awful.tag.viewonly(tag) end
+            local tag = awful.screen.focused().tags[1]
+            if tag then tag:view_only() end
         end
     end
 

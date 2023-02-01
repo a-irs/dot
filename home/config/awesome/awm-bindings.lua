@@ -10,7 +10,7 @@ local ctrl = "Ctrl"
 
 local function tag_view_nonempty(direction)
     local s = awful.screen.focused()
-    for _, _ in pairs(awful.tag.gettags(s)) do
+    for _, _ in pairs(s.tags) do
         awful.tag.viewidx(direction, s)
         if #awful.client.visible(s) > 0 then
             return
@@ -166,7 +166,7 @@ globalkeys = awful.util.table.join(
 
     -- screenshots
 
-    awful.key({ },        "Print", function() run("flameshot gui -p " .. os.getenv("HOME")) end),
+    awful.key({ },        "Print", function() run("flameshot gui -s") end),
     awful.key({ "Ctrl" }, "Print", function() run("flameshot screen -p " .. os.getenv("HOME")) end),
 
     -- media keys
