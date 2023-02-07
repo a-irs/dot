@@ -2,8 +2,6 @@ local gears = require("gears")
 
 theme                               = {}
 
-theme.master_width_factor           = 0.6
-
 theme.statusbar_height              = dpi(20)
 theme.statusbar_top_pixel           = "#586779"
 theme.statusbar_bottom_pixel        = "#3f4e60"
@@ -23,7 +21,10 @@ theme.border_width                  = 1
 theme.border_focus                  = theme.statusbar_bottom_pixel
 theme.border_normal                 = theme.statusbar_bottom_pixel
 
-theme.useless_gap                   = 0
+theme.gap                           = 0
+theme.master_count                  = 1
+theme.column_count                  = 1
+theme.master_width_factor           = 0.65
 
 
 -- NOTIFICATIONS (NAUGHTY)

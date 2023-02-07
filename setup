@@ -17,7 +17,7 @@ def log(level: str, msg: str) -> None:
     print(f"{level.upper()}: {msg}")
 
 
-def handle_firefox(file_path, remove=False) -> None:
+def handle_firefox(file_path_css, file_path_js, remove=False) -> None:
     paths = [
         ".mozilla/firefox",
         "Library/Application Support/Firefox/Profiles"
@@ -26,11 +26,10 @@ def handle_firefox(file_path, remove=False) -> None:
         for profile in glob.glob(str(Path.home() / Path(p)) + "/*.default*"):
             if remove:
                 remove_link(Path(profile) / "chrome" / "userChrome.css")
+                remove_link(Path(profile) / "user.js")
             else:
-                make_link(
-                    Path(THIS_DIR) / file_path,
-                    Path(profile) / "chrome" / "userChrome.css"
-                )
+                make_link(Path(THIS_DIR) / file_path_css, Path(profile) / "chrome" / "userChrome.css")
+                make_link(Path(THIS_DIR) / file_path_js, Path(profile) / "user.js")
 
 
 def render_template(template, dest):
@@ -164,9 +163,9 @@ def main() -> None:
 
     # FIREFOX
     if action == 'link':
-        handle_firefox("home/firefox.css")
+        handle_firefox("home/firefox.css", "home/firefox.js")
     elif action == 'rm':
-        handle_firefox("home/firefox.css", remove=True)
+        handle_firefox("home/firefox.css", "home/firefox.css", remove=True)
 
 
 if __name__ == "__main__":

@@ -85,7 +85,7 @@ local function dynamic_tagging()
                         name = make_name(name, c, "web[*]")
                     elseif c.name and string.find(c.name, ".mosh. ") then
                         name = make_name(name, c, "mosh")
-                    elseif c.name and c.name:find('^ssh ') then
+                    elseif c.class == "Alacritty" and c.name and c.name:find('^ssh ') then
                         name = make_name(name, c, "ssh")
                     elseif c.class == "firefox" or c.class == "Firefox" or c.class == "Chrome" or c.class == "Chromium" then
                         name = make_name(name, c, "web")
@@ -224,10 +224,10 @@ client.connect_signal("unmanage", function(c)
     -- return to last tag and reset settings when last window is closed
     selected_tag = awful.screen.focused().selected_tag
     if is_empty(selected_tag) then
-        awful.tag.setmwfact(theme.master_width_factor)
-        awful.tag.setnmaster(1)
-        awful.tag.setncol(1)
-        awful.tag.setgap(theme.useless_gap)
+        selected_tag.master_width_factor = theme.master_width_factor
+        selected_tag.master_count = theme.master_count
+        selected_tag.column_count = theme.column_count
+        selected_tag.gap = theme.gap
 
         -- return to last non-empty tag
         i = 1
