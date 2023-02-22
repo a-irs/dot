@@ -23,7 +23,7 @@
     co = checkout
     cm = commit
     l = log -p
-    s = status -sbu
+    s = status -sb
     c = !git add --intent-to-add -A && git add --patch && git commit
     ca = !git add --intent-to-add -A && git add --patch && git commit --amend
     trash = !git stash push --include-untracked -m "trash-$(date +%F_%T)"

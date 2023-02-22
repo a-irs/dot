@@ -136,7 +136,7 @@ rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
 
   # build UEFI executable / unified kernel image (fallback version, with all modules included)
   cmd("mkdir -p #{mount}/efi/EFI/BOOT")
-  cmd("mkinitcpio -k #{conf.dest.kernel} --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uefi #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+  cmd("mkinitcpio -k #{conf.dest.kernel} --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uki #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 end
 
 def main()

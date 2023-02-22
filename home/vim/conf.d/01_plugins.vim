@@ -23,7 +23,7 @@ endif
 Plug 'Yggdroot/indentLine'
 let g:indentLine_char = '¦'
 " indentLine feature needs concealing, but we don't want that for those file types
-let g:indentLine_fileTypeExclude = ['json', 'dockerfile']
+let g:indentLine_fileTypeExclude = ['json', 'dockerfile', 'haskell']  " haskell has different indentation rules
 
 Plug 'preservim/nerdtree'
 nnoremap <leader>t :NERDTreeToggle<CR>:wincmd p<CR>
@@ -161,7 +161,8 @@ let g:ale_nasm_nasm_options='-f elf64'
 let g:ale_python_flake8_options='--config ~/.config/flake8'
 
 " disable some linters - done with coc
-let g:ale_linters_ignore = ['flake8', 'mypy', 'hls', 'javac']
+let g:ale_linters_ignore = ['hls', 'javac']
+let g:ale_linters = {'python': []}
 
 " ALE appearance  ▸▪
 let g:ale_sign_warning = '▪'
@@ -208,7 +209,8 @@ let g:coc_global_extensions = [
     \ 'coc-vimlsp',
     \ 'coc-snippets',
     \ 'coc-sh',
-    \ 'coc-java'
+    \ 'coc-java',
+    \ 'coc-word'
     \ ]
 
 function! s:show_documentation()
@@ -281,6 +283,8 @@ endfunction
 endif
 
 Plug 'cespare/vim-toml', { 'for': 'toml' }
+
+Plug 'hashivim/vim-terraform'
 
 Plug 'mtdl9/vim-log-highlighting'
 

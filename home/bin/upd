@@ -132,20 +132,7 @@ show_pacdiff() {
 }
 
 
-if [[ $# -gt 0 && "$1" == all ]]; then
-    shift
-    update "$@"
-else
-    case $OS in
-        arch)
-            update --ignore linux,linux-zen,linux-headers,linux-zen-headers,linux-firmware,linux-hardened,linux-hardened-headers "$@"
-            ;;
-        debian)
-            apt-mark hold "linux-image-*" >/dev/null
-            update "$@"
-            apt-mark unhold "linux-image-*" >/dev/null
-    esac
-fi
+update "$@"
 
 clean_caches
 show_outdated
