@@ -34,12 +34,14 @@ R /home
 - **/Signal/stickers.noindex
 - **/GrShaderCache
 
+- **/COMMIT_EDITMSG
 - **/.vagrant.d/boxes
 - **/.semantic-highlight-cache
 - **/.cache.json
 - **/.fzf
 - **/.gem/
 - **/.gnupg/dirmngr-cache.d
+- **/.gnupg/reader_*
 - **/.m2/repository
 - **/.node-gyp
 - **/.npm/
@@ -52,6 +54,7 @@ R /home
 
 - home/*/.kodi/addons/packages/*
 - home/*/.kodi/userdata/Thumbnails/*
+- home/*/.local/state/nvim/
 - home/*/.local/share/Trash/
 - home/*/.local/share/yay/**/*.deb
 - home/*/.local/share/yay/**/*.tar
@@ -114,3 +117,7 @@ R /home
 
 - efi/EFI/Linux/archlinux_*2022*.efi
 - efi/EFI/Linux/archlinux_*2023*.efi
+
+- etc/mtab
+- etc/adjtime
+- var/lib/systemd/timesync/clock
