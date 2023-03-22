@@ -111,10 +111,10 @@ let g:semanticBlacklistOverride = {
     \ ]
 \ }
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim', 'java': 'java', 'haskell': 'haskell', 'ruby': 'ruby'}
+let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim', 'java': 'java', 'haskell': 'haskell', 'ruby': 'ruby', 'javascript': 'javascript'}
 " re-highlight on save
 augroup SemanticHL
-    autocmd FileType python,lua,java,nim,haskell,ruby
+    autocmd FileType python,lua,java,nim,haskell,ruby,javascript
         \ autocmd! SemanticHL BufWritePost <buffer> :SemanticHighlight
 augroup END
 
@@ -210,6 +210,7 @@ let g:coc_global_extensions = [
     \ 'coc-snippets',
     \ 'coc-sh',
     \ 'coc-java',
+    \ 'coc-tsserver',
     \ 'coc-word'
     \ ]
 

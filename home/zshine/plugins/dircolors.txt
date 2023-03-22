@@ -124,6 +124,8 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 ###################### media
 .jpg 35
 .JPG 35
+.heic 35
+.HEIC 35
 .orf 35
 .ORF 35
 .raw 35
@@ -193,6 +195,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .org             34
 .m3u             34
 .markdown		 34
+.rst		 34
 .txt             34
 .log             34
 .asciidoc 34

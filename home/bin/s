@@ -17,7 +17,7 @@ trim() { head -n "$height"; }
 
 remove_blank() { sed '/./,$!d'; } # remove blank lines at top of file
 remove_double_blank() { cat -s; } # remove multiple blank lines
-highlight_dirs() { GREP_COLOR='1;33' grep -E --color=always '(.)*/|$'; } # TODO: not working in ranger
+highlight_dirs() { GREP_COLOR='mt=1;33' grep -E --color=always '(.)*/|$'; } # TODO: not working in ranger
 cleanup_openssl() {
     local reset=$(tput sgr0)
     local bold=$(tput bold)

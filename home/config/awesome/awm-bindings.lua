@@ -172,6 +172,7 @@ globalkeys = awful.util.table.join(
     -- media keys
 
     awful.key({}, "XF86PowerOff",  function() run("systemctl suspend") end),
+    awful.key({}, "XF86RFKill",  function() naughty.notify({ text = "flight mode" }) end),
     awful.key({"Ctrl", "Shift", alt}, "BackSpace",  function() run("systemctl suspend") end),
 
     awful.key({},        "XF86MonBrightnessUp", function() run_script("brightness +") end),

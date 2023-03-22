@@ -56,8 +56,11 @@ R /home
 - home/*/.kodi/userdata/Thumbnails/*
 - home/*/.local/state/nvim/
 - home/*/.local/share/Trash/
+- home/*/.local/share/yay/*/src
 - home/*/.local/share/yay/**/*.deb
+- home/*/.local/share/yay/**/*.rpm
 - home/*/.local/share/yay/**/*.tar
+- home/*/.local/share/yay/**/*.tgz
 - home/*/.local/share/yay/**/*.tar.*
 - home/*/.local/share/gvfs-metadata/*
 - home/*/.local/share/virtualenvs
@@ -68,6 +71,8 @@ R /home
 - home/*/.mozilla/firefox/*/saved-telemetry-pings
 - home/*/.mozilla/firefox/*/webappsstore.sqlite
 - home/*/.stack/programs
+- home/*/.cabal/packages
+- home/*/.stack/pantry
 - home/*/.stack/snapshots
 - home/*/.stack/*-cache
 - home/*/.ghcup
@@ -112,6 +117,7 @@ R /home
 - var/lib/texmf/*
 - var/lib/pacman/sync/*
 - var/lib/systemd/coredump/*
+- var/lib/tor/cached*
 - var/lib/upower/*
 - nix
 
