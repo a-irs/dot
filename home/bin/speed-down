@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# 1000M
+curl -o /dev/null \
+    "https://speed.cloudflare.com/__down?bytes=$(python3 -c 'print(1024*1024*1000)')"
