@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if [[ $commands[fd] ]]; then
-    export FZF_DEFAULT_COMMAND="fd --hidden --no-ignore --color never -E .vim/undo -E .vim/plugged -E __pycache__ -E Cache -E .cache -E cache -E .gem -E .npm -E .thumbnails -E .steam -E .local/share/Steam -E .git -E .local/share/containers -E .ansible -E .gradle -E data/ios-backup -E .m2 -E .choosenim -E .stack -E .cabal -E '.local/share/yay/*/src' -E '*.zwc' -E '*.zwc.old' -E '*~' -E '*.pyc'"
+    export FZF_DEFAULT_COMMAND="fd --hidden --ignore --color never -E .vim/undo -E .vim/plugged -E __pycache__ -E Cache -E .cache -E cache -E .gem -E .npm -E .thumbnails -E .steam -E .local/share/Steam -E .git -E .local/share/containers -E .ansible -E .gradle -E data/ios-backup -E .m2 -E .choosenim -E .stack -E .cabal -E '.local/share/yay/*/src' -E '*.zwc' -E '*.zwc.old' -E '*~' -E '*.pyc' -E node_modules"
 
     _fzf_compgen_path() {
         eval $FZF_DEFAULT_COMMAND . "$@"

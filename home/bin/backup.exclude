@@ -81,7 +81,10 @@ R /home
 - home/*/.cargo/registry
 - home/*/.opam
 - home/*/Dropbox/media/wallpapers
+- home/*/dropbox/media/wallpapers
 - home/*/Dropbox/.dropbox.cache
+- home/*/dropbox/.dropbox.cache
+- **/.maestral.cache
 - home/*/.dropbox
 - home/*/downloads/
 - home/*/media/

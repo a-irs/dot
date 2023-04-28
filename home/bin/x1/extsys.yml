@@ -44,6 +44,7 @@ exclude:
   - /home/*/.local/share/thumbnails/*
   - /home/*/.local/share/blur/*
   - /home/*/Dropbox/media
+  - /home/*/dropbox/media
   - /home/*/downloads/*
   - /home/*/data/ios-backup
   - /home/*/data/splunk
