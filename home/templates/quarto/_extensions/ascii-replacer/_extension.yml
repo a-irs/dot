@@ -1,0 +1,4 @@
+title: ASCII Replacer
+contributes:
+  filters:
+    - ascii-replacer.py

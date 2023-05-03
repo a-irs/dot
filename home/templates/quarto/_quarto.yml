@@ -1,0 +1,89 @@
+project:
+  render:
+    - index.md
+  output-dir: _output
+
+toc: true
+number-sections: false
+lang: en
+
+format:
+  # https://quarto.org/docs/reference/formats/pdf.html
+  # https://quarto.org/docs/output-formats/pdf-basics.html
+  pdf:
+    filters:
+      - ascii-replacer
+      - compact-list
+    hyperrefoptions:
+      - linktoc=all  # also link page numbers in TOC
+    documentclass: scrbook  # scrreport, scrarticle
+    classoption:
+      - headings=standardclasses  # serif headings
+      - oneside  # default: twoside for scrbook
+      # - afterindent=false
+      # - chapterprefix=false
+      - headsepline=true  # show separator under header
+    papersize: a4
+    pdf-engine: lualatex
+    fontsize: 12pt
+    geometry: [top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, heightrounded]
+    colorlinks: true
+    links-as-notes: true
+    csquotes: true  # localized quotation marks
+    mainfont: Erewhon
+    mathfont: Erewhon-Math
+    include-in-header:
+      # wrap code
+      - text: |
+          \usepackage{fvextra}
+          \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+
+      # better than builtin "-V linestretch", because it also affects TOC
+      - text: |
+          \usepackage{setspace}\setstretch{1.25}
+
+      # reduce spacing above chapter
+      - text: |
+          \RedeclareSectionCommand[beforeskip=-1sp]{chapter}
+
+      # make section headers bigger
+      - text: |
+          \addtokomafont{chapterprefix}{\Huge}
+          \RedeclareSectionCommand[font=\LARGE]{section}
+          \RedeclareSectionCommand[font=\Large]{subsection}
+          \RedeclareSectionCommand[font=\large]{subsubsection}
+
+      # better bullet points after 2nd level
+      - text: |
+          \usepackage{enumitem}
+          \setlist[itemize,3]{label=$\circ$}
+          \setlist[itemize,4]{label=$\circ$}
+          \setlist[itemize,5]{label=$\circ$}
+
+      # rotate pages with \blandscape/\elandscape
+      - text: |
+          \usepackage{pdflscape}
+          \newcommand{\blandscape}{\begin{landscape}}
+          \newcommand{\elandscape}{\end{landscape}}
+
+  html:
+    embed-resources: true
+    filters:
+      - ascii-replacer
+      - compact-list
+
+    # 'mathml' looks better in Firefox, needs no dependencies
+    # 'mathjax'/'katex' looks more like LaTeX (serif) and looks better in Chrome, has JS CDN dependency
+    # 'plain' also works well usually (utf8 symbols, no dependencies)
+    html-math-method: mathml
+    theme: default  # alternative (lighter fonts): lumen
+
+  latex: default
+
+  markdown:
+    wrap: preserve
+    filters:
+      - ascii-replacer
+      - compact-list
+
+format-links: [html, pdf, markdown]

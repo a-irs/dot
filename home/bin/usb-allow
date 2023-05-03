@@ -7,6 +7,10 @@ devices=$(usbguard list-devices --blocked \
     | sed -E 's/ ?(with-connect-type|parent-hash|hash) "[^"]*"//g' \
     | sed -E 's/^[0-9]+: //' \
     | sed -E 's/^block/allow/')
+if [[ -z "$devices" ]]; then
+    echo "No blocked USB devices detected."
+    exit
+fi
 selection=$(echo "$devices" | fzf)
 
 

@@ -1,0 +1,4 @@
+title: Always Compact Lists
+contributes:
+  filters:
+    - compact-list.lua
