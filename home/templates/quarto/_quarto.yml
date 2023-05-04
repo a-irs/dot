@@ -1,6 +1,6 @@
 project:
   render:
-    - main.qmd
+    - main.md
   output-dir: _output
 
 toc: true

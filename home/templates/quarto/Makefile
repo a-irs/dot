@@ -9,7 +9,7 @@ pdf: $(dest)/main.pdf
 html: $(dest)/main.html
 md: $(dest)/main.md
 
-src := *.qmd content/* assets/* _extensions/*/* _quarto.yml
+src := *.md content/* assets/* _extensions/*/* _quarto.yml
 $(dest)/main.pdf: $(src)
 	quarto render --to pdf
 $(dest)/main.html: $(src)
