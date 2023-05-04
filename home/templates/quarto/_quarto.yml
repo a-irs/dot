@@ -1,6 +1,6 @@
 project:
   render:
-    - index.md
+    - main.qmd
   output-dir: _output
 
 toc: true
@@ -77,8 +77,6 @@ format:
     # 'plain' also works well usually (utf8 symbols, no dependencies)
     html-math-method: mathml
     theme: default  # alternative (lighter fonts): lumen
-
-  latex: default
 
   markdown:
     wrap: preserve
