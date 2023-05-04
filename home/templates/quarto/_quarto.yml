@@ -73,7 +73,8 @@ format:
       - compact-list
 
     # 'mathml' looks better in Firefox, needs no dependencies
-    # 'mathjax'/'katex' looks more like LaTeX (serif) and looks better in Chrome, has JS CDN dependency
+    # 'mathjax': looks more like LaTeX (serif) and looks better in Chrome, has JS CDN dependency
+    # 'katex' similar to mathjax, but faster (?)
     # 'plain' also works well usually (utf8 symbols, no dependencies)
     html-math-method: mathml
     theme: default  # alternative (lighter fonts): lumen
