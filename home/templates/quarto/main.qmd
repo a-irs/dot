@@ -1,0 +1,16 @@
+---
+title: Title
+subtitle: Subtitle
+engine: jupyter
+---
+
+{{< include content/page.md >}}
+
+```{python}
+import sys
+
+for x in range(10):
+    print(x * 3)
+
+print("ERROR", file=sys.stderr)
+```
