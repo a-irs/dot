@@ -47,9 +47,6 @@
     keepBackup = false  # do not generate .orig files
     keepTemporaries = false
 
-[init]
-    defaultBranch = master
-
 [push]
     # avoid "To push the current branch and set the remote as upstream, use: git push --set-upstream origin master"
     autoSetupRemote = true

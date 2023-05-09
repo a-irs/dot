@@ -2,9 +2,11 @@ project:
   render: [main.md]
   output-dir: .output
 
+lang: en
+
 toc: true
 number-sections: false
-lang: en
+# number-depth: 2
 
 format:
   # https://quarto.org/docs/reference/formats/pdf.html
