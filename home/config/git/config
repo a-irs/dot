@@ -11,19 +11,21 @@
     ui = 1
 
 [alias]
-    subup = submodule update --remote --merge
+    a = add
+    s = status -sb
     r = reset
+    co = checkout
+    cm = commit
+    d = diff
+
+    subup = submodule update --remote --merge
     p = !git add -A && git commit && git push
     pp = !git add -A && git commit -m 'Update' && git push 2>/dev/null
     clone1 = clone --depth=1
-    d = diff
     wd = diff --word-diff=color
     wdiff = diff --word-diff=color
     wlog = log --word-diff=color -p
-    co = checkout
-    cm = commit
     l = log -p
-    s = status -sb
     c = !git add --intent-to-add -A && git add --patch && git commit
     ca = !git add --intent-to-add -A && git add --patch && git commit --amend
     trash = !git stash push --include-untracked -m "trash-$(date +%F_%T)"
