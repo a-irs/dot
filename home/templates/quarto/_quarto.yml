@@ -1,7 +1,6 @@
 project:
-  render:
-    - main.md
-  output-dir: _output
+  render: [main.md]
+  output-dir: .output
 
 toc: true
 number-sections: false
@@ -79,10 +78,11 @@ format:
     html-math-method: mathml
     theme: default  # alternative (lighter fonts): lumen
 
-  markdown:
+  # renders more nicely than pandoc markdown
+  commonmark_x:
     wrap: preserve
     filters:
       - ascii-replacer
       - compact-list
 
-format-links: [html, pdf, markdown]
+format-links: [html, pdf, commonmark_x]
