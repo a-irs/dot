@@ -118,8 +118,8 @@ globalkeys = awful.util.table.join(
 
     -- useless gaps
 
-    awful.key({ win }, "#35", function() awful.tag.incgap(-1) end), -- plus +
-    awful.key({ win }, "#61", function() awful.tag.incgap( 1) end), -- minus -
+    awful.key({ win }, "#35", function() awful.tag.incgap(-2) end), -- plus +
+    awful.key({ win }, "#61", function() awful.tag.incgap( 2) end), -- minus -
 
     -- window size
 

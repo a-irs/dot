@@ -1,6 +1,6 @@
 configuration {
 	show-icons: true;
-	font: "InputMonoCondensed 16";
+	font: "InputMonoCondensed 18";
 	modi: "drun,run";
 	width: -50;
 	lines: 5;

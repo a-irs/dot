@@ -152,8 +152,8 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 nnoremap <silent> <C-n> :set number!<CR>
 
 " buffer on <Leader>1-9/left/right
-nnoremap <silent> <leader><left> :bprev<CR>
-nnoremap <silent> <leader><right> :bnext<CR>
+nnoremap <silent> <tab> :bnext<CR>
+nnoremap <silent> <S-tab> :bprev<CR>
 nnoremap <silent> <leader>1 :buffer 1<CR>
 nnoremap <silent> <leader>2 :buffer 2<CR>
 nnoremap <silent> <leader>3 :buffer 3<CR>

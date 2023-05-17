@@ -8,6 +8,9 @@ local gears   = require 'gears'
 
 local markup = lain.util.markup
 
+systray = wibox.widget.systray()
+-- systray.visible = false
+
 local function bg_wrap(widget, color, left, right)
     return wibox.widget {
         {
@@ -83,9 +86,10 @@ if is_mobile then
             widget:set_markup(stdout)
         end
     )
-    netwidget_t = awful.tooltip({
+    awful.tooltip({
         objects = { netwidget },
         timer_function = function()
+            systray.visible = not systray.visible
             local handle = io.popen(gears.filesystem.get_configuration_dir() .. "/statusbar/net-tooltip")
             local result = handle:read("*a")
             handle:close()
@@ -159,7 +163,7 @@ audiowidget, audiowidget_timer = awful.widget.watch(
 
         local limit = 100
         if is_mobile then
-            limit = 120
+            limit = 130
         end
 
         if tonumber(volume) == nil then
@@ -199,6 +203,15 @@ audiowidget:buttons(awful.util.table.join(
     end)
 ))
 audiowidget_wrap = bg_wrap(audiowidget, theme.widget_pulse_bg, theme.statusbar_margin, theme.statusbar_margin)
+
+awful.tooltip({
+    objects = { audiowidget },
+    timer_function = function()
+        systray.visible = not systray.visible
+    end,
+    timeout = 10,
+})
+
 
 -- DATE, TIME
 
@@ -257,7 +270,7 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = taglist_buttons
     }
 
-    systray_wrap = bg_wrap(wibox.widget.systray(), nil, theme.statusbar_margin, theme.statusbar_margin)
+    systray_wrap = bg_wrap(systray, nil, theme.statusbar_margin, theme.statusbar_margin)
 
     -- layouts
 

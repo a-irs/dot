@@ -42,7 +42,7 @@ opensnitch-ui &
 nitrogen --restore &
 lxpolkit &
 picom &
-redshift &
+redshift-gtk &
 dunst &
 keepassxc &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
@@ -62,6 +62,7 @@ parcellite --no-icon &
 
 if [[ $HOSTNAME == x1 ]]; then
     usbguard-notifier --wait &
+    cbatticon &
 fi
 
 if [[ $HOSTNAME == desk ]]; then

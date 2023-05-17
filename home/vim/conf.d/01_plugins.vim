@@ -6,24 +6,8 @@ command PluginsLoad
 
 call plug#begin()
 
-if has('nvim')
-    " magit clone
-    Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit'
-    nn <leader>gg :Neogit<cr>
-
-    Plug 'nvim-lua/plenary.nvim' | Plug 'sindrets/diffview.nvim'
-    nn <leader>gd :DiffviewOpen<cr>
-    nn <leader>gm :DiffviewOpen master<cr>
-    nn <leader>gh :DiffviewFileHistory<cr>
-
-    Plug 'folke/which-key.nvim'
-    set timeoutlen=500
-endif
-
-Plug 'Yggdroot/indentLine'
-let g:indentLine_char = '¦'
-" indentLine feature needs concealing, but we don't want that for those file types
-let g:indentLine_fileTypeExclude = ['json', 'dockerfile', 'haskell']  " haskell has different indentation rules
+Plug 'folke/which-key.nvim'
+set timeoutlen=500
 
 Plug 'preservim/nerdtree'
 nnoremap <leader>t :NERDTreeToggle<CR>:wincmd p<CR>
@@ -229,10 +213,12 @@ inoremap <silent> <C-p> <C-\><C-O>:call CocActionAsync('showSignatureHelp')<cr>
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 nmap <silent> K         :call <SID>show_documentation()<CR>
 nmap <silent> <leader>k :call <SID>show_documentation()<CR>
-nmap <leader>cr <Plug>(coc-rename)
-nmap <leader>cd :CocDiagnostics<CR>
-xmap <leader>cf <Plug>(coc-format-selected)
-nmap <leader>cf :call CocActionAsync('format')<CR>
+nmap <silent> <leader>cr <Plug>(coc-rename)
+xmap <silent> <leader>cf <Plug>(coc-format-selected)
+nmap <silent> <leader>cf :call CocActionAsync('format')<CR>
+nmap <silent> <leader>ca  <Plug>(coc-codeaction-cursor)
+nmap <silent> <leader>cd  :<C-u>CocList diagnostics<cr>
+nmap <silent> <leader>cs  <Plug>(coc-codeaction-source)
 
 " Use <tab> and <S-tab> to navigate completion list:
 function! s:check_back_space() abort
@@ -330,16 +316,6 @@ Plug 'rakr/vim-colors-rakr'
 call plug#end()
 
 lua << EOF
-require("neogit").setup{
-    disable_commit_confirmation = true,
-    disable_insert_on_commit = false,
-    integrations = {
-        diffview = true
-    }
-}
-require("diffview").setup{
-    use_icons = false
-}
 require("which-key").setup {
 }
 EOF

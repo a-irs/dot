@@ -33,6 +33,18 @@ awful.rules.rules = {
     },
 
     { rule_any = {
+        class = { "Steam" }
+    },
+        properties = {
+            titlebars_enabled = false,
+            floating = true,
+            border_width = 0,
+            border_color = 0,
+            size_hints_honor = false
+        }
+    },
+
+    { rule_any = {
         class = { "Kodi" }
     },
         properties = { fullscreen = true, placement = awful.placement.restore }
@@ -217,7 +229,7 @@ end)
 -- client exits
 client.connect_signal("unmanage", function(c)
 
-    if c.class == "Steam" then
+    if c.class == "Steam" or c.class == "jetbrains-idea" then
         return
     end
 
@@ -266,7 +278,13 @@ if theme.border_focus or theme.border_normal then
 end
 
 tag.connect_signal("property::layout", function(t)
-    naughty.notify({ text = awful.tag.getproperty(t, "layout").name, timeout = 2, position = "top_middle" })
+    naughty.notify({ text = "Window layout: " .. awful.tag.getproperty(t, "layout").name, timeout = 2})
+
+    if awful.tag.getproperty(t, "layout").name == "magnifier" then
+        t.master_width_factor = 0.8
+    else
+        t.master_width_factor = theme.master_width_factor
+    end
 end)
 
 -- set focus to client under mouse cursor when switching tags
