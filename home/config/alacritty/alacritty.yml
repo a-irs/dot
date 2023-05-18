@@ -1,3 +1,6 @@
+env:
+  TERM: xterm-256color  # needed so termguicolors in neovim are shown properly
+
 font:
   normal:
     family: Input Mono Condensed
@@ -7,7 +10,8 @@ draw_bold_text_with_bright_colors: true
 
 colors:
   primary:
-    background: '#17263f'
+    # background: '#17263f'
+    background: '#132132'
     foreground: '#ffffff'
 
   hints:

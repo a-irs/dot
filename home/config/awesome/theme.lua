@@ -9,7 +9,8 @@ theme.statusbar_bottom_pixel        = "#3f4e60"
 
 -- FG, BG COLORS
 
-theme.bg_normal                     = "#17263f"
+-- theme.bg_normal                     = "#17263f"
+theme.bg_normal                     = "#132132"
 theme.bg_focus                      = "#364b73"
 theme.bg_focus2                     = "#2F4163"
 theme.bg_urgent                     = "#d9304f"

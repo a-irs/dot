@@ -27,7 +27,7 @@
     // https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources#completion-sources
     "coc.source.around.priority": 2,
     "coc.source.buffer.priority": 1,
-    "coc.source.file.ignoreHidden": false,
+
     "coc.source.word.filetypes": ["markdown"],
     "coc.source.word.priority": 0,
     "coc.source.word.shortcut": "dict",
