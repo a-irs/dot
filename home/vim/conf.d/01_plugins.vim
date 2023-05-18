@@ -108,7 +108,7 @@ highlight link javaDelimiter NONE
 highlight link javaIdentifier NONE
 
 Plug 'chrisbra/Colorizer'
-let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini'
+let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini,yaml'
 let g:colorizer_colornames = 0  "do not colorize simple 'red', 'yellow', ...
 
 Plug 'tpope/vim-commentary'
@@ -146,7 +146,7 @@ let g:ale_python_flake8_options='--config ~/.config/flake8'
 let g:ale_solidity_solc_options='--base-path / --include-path node_modules'
 
 " disable some linters - done with coc
-let g:ale_linters_ignore = ['hls', 'javac']
+let g:ale_linters_ignore = ['hls', 'javac', 'shellcheck']
 let g:ale_linters = {'python': []}
 
 " ALE appearance  ▸▪

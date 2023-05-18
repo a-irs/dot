@@ -51,18 +51,17 @@ awful.rules.rules = {
     },
 
     { rule_any = {
-        class = { "Arandr", "Gpick", "pinentry", "Lampe-gtk", "KeePassXC" },
-        role = { "AlarmWindow", "pop-up" }
+        instance = { "pinentry" },
+        class = { "Arandr", "Gpick", "pinentry", "Lampe-gtk", "KeePassXC", "Event Tester" },
+        role = { "AlarmWindow", "ConfigManager", "pop-up" }
     },
-        properties = { floating = true }
+        properties = { floating = true, titlebars_enabled = true }
     },
 
-    -- { rule_any = {
-    --     class = { "firefox", "Chromium" }
-    -- },
-    --     properties = { maximized = false, maximized_vertical = false, maximized_horizontal = false, floating = false }
-    -- },
-    --
+    -- Add titlebars to dialogs
+    { rule_any = {type = { "dialog" }
+      }, properties = { floating = true, titlebars_enabled = true }
+    },
 }
 
 local function make_name(existing_clients, client, wanted_name)

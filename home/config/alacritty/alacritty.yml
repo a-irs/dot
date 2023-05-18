@@ -54,9 +54,9 @@ colors:
     - index: 214
       color: '#fbdc74'
     - index: 237
-      color: '#314366'
-    - index: 238
       color: '#3b507a'
+    - index: 238
+      color: '#314366'
 
 bell:
   duration: 10
