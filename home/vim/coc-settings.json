@@ -1,19 +1,15 @@
 {
+    // enables semantic tokens for highlighting, see :CocCommand semanticTokens.checkCurrent
+    "semanticTokens.enable": true,
+
     "suggest.noselect": true,
     "diagnostic.errorSign": "▪",
     "diagnostic.warningSign": "▪",
     "diagnostic.hintSign": "▪",
+    "diagnostic.infoSign": "▪",
 
-    // whole line insteaf of just broken chars
+    // show error on whole line insteaf of just on broken chars
     "diagnostic.checkCurrentLine": true,
-
-    "markdownlint.config": {
-      "default": true,
-      "line_length": false,
-      "header-style": false,
-      "no-multiple-blanks": false,
-      "ul-indent": false
-    },
 
     "python.linting.ruffEnabled": true,
     "pyright.inlayHints.variableTypes": false,
