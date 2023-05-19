@@ -14,6 +14,9 @@ set hlsearch  " highlight search results
 set incsearch  " search during input
 set fillchars+=vert:│  " prettier split separator
 
+" remember more history files (default: 100)
+set viminfo=!,'300,h
+
 " disable swap file completely:
 " - on concurrent writes, VIM warns accordingly anyway (and undo file helps as well)
 " - backup is not needed as :w is used often enough
