@@ -29,11 +29,8 @@ Plug 'LnL7/vim-nix'
 " filetype ps1
 Plug 'PProvost/vim-ps1'
 
-" disabled for now, to slow compared to builtin markdown ft
-" let g:pandoc#syntax#conceal#use = g:markdown_syntax_conceal
-" let g:pandoc#syntax#codeblocks#embeds#langs = g:markdown_fenced_languages
-" autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
-" Plug 'vim-pandoc/vim-pandoc-syntax'
+" filetype jsonc
+Plug 'neoclide/jsonc.vim'
 
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_no_default_key_mappings = 1
@@ -48,7 +45,6 @@ let g:vim_markdown_strikethrough = 1
 " enable math syntax highlight, but disable concealing
 let g:vim_markdown_math = 1
 let g:tex_conceal = ''
-
 
 Plug 'preservim/vim-markdown'
 
@@ -86,10 +82,10 @@ Plug 'Konfekt/vim-CtrlXA'
 Plug 'jaxbot/semantic-highlight.vim'
 " curl -s https://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html | grep '<td.*><code>' | sed -E "s|.*<code>(.+)</code>.*|\'\1\'|" | sort | tr '\n' ','
 let g:semanticBlacklistOverride = {
-	\ 'java': [
+    \ 'java': [
     \ 'abstract','assert','boolean','break','byte','case','catch','char','class','const','continue','default','do','double','else','enum','extends','final','finally','float','for','goto','if','implements','import','instanceof','int','interface','long','native','new','package','private','protected','public','return','short','static','strictfp','super','switch','synchronized','this','throw','throws','transient','try','void','volatile','while',
-	\ 'Boolean', 'Double', 'Float', 'Char', 'Long', 'Int', 'Short', 'Byte', 'String','true','false','null','var','List','ArrayList','LinkedList','Map','HashMap',
-	\ ],
+    \ 'Boolean', 'Double', 'Float', 'Char', 'Long', 'Int', 'Short', 'Byte', 'String','true','false','null','var','List','ArrayList','LinkedList','Map','HashMap',
+    \ ],
     \ 'nim': [
     \ 'if', 'elif', 'else', 'for', 'while', 'in', 'proc', 'type', 'let', 'import', 'const', 'var', 'assert', 'string', 'int', 'seq', 'object', 'bool'
     \ ]
