@@ -33,7 +33,5 @@
   "vim-regex-syntax": { "branch": "master", "commit": "4e36eff79aa40956ae17ee143e518556865ce818" },
   "vim-sh": { "branch": "master", "commit": "cebda390c56654a4c9f96f66727e9be076a7aee3" },
   "vim-signify": { "branch": "master", "commit": "7d538b77a5a8806e344b057f8846f6d0c035efa9" },
-  "vim-terraform": { "branch": "master", "commit": "2bbc5f65a80c79a5110494a2ba1b869075fcf7a0" },
-  "vim-toml": { "branch": "main", "commit": "d36caa6b1cf508a4df1c691f915572fc02143258" },
-  "which-key.nvim": { "branch": "main", "commit": "5a6c954a5a46023c19acc03a8b6d7c3e57964fc5" }
+  "vim-terraform": { "branch": "master", "commit": "2bbc5f65a80c79a5110494a2ba1b869075fcf7a0" }
 }

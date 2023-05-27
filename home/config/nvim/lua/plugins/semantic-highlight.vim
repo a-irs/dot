@@ -5,8 +5,12 @@ let g:semanticBlacklistOverride = {
     \ 'Boolean', 'Double', 'Float', 'Char', 'Long', 'Int', 'Short', 'Byte', 'String','true','false','null','var','List','ArrayList','LinkedList','Map','HashMap',
     \ ],
     \ 'nim': [
-    \ 'if', 'elif', 'else', 'for', 'while', 'in', 'proc', 'type', 'let', 'import', 'const', 'var', 'assert', 'string', 'int', 'seq', 'object', 'bool'
-    \ ]
+    \   'if', 'elif', 'else', 'for', 'while', 'in', 'proc', 'type', 'let', 'import', 'const', 'var', 'assert', 'string', 'int', 'seq', 'object', 'bool'
+    \ ],
+    \ 'lua': [
+    \ 'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while',
+    \ 'require'
+    \ ],
 \ }
 
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]

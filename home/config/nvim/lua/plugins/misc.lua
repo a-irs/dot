@@ -1,7 +1,7 @@
 return {
   {
     "chrisbra/Colorizer",
-    setup = function()
+    config = function()
       vim.cmd [[
         let g:colorizer_auto_filetype='css,html,conf,lua,sh,dosini,yaml'
         let g:colorizer_colornames = 0  "do not colorize simple 'red', 'yellow', ...
@@ -16,7 +16,7 @@ return {
 
   {
     "tpope/vim-dispatch",
-    setup = function()
+    config = function()
       vim.cmd [[
         map <silent> <C-y> :Make<CR>
         set errorformat=%m  " anything is shown in quickfix window instead of errors only
@@ -25,13 +25,13 @@ return {
   },
 
   {
-    "folke/which-key.nvim",
-    setup = function()
+    "ap/vim-buftabline",
+    config = function()
       vim.cmd [[
-        set timeoutlen=500
+        set hidden
+        let g:buftabline_show = 1
       ]]
     end
   },
 
 }
-

@@ -6,30 +6,22 @@ return {
                 highlight link javaDelimiter NONE
                 highlight link javaIdentifier NONE
             ]]
-        end
+        end,
+        ft = "java",
     }, {
         "eiginn/iptables-vim",
         config = function()
             vim.cmd [[
                 autocmd BufNewFile,BufFilePre,BufRead *.rules set filetype=iptables
             ]]
-        end
+        end,
     }, {
         "tolecnal/icinga2-vim",
         config = function()
             vim.cmd [[
                 autocmd BufNewFile,BufFilePre,BufRead */icinga/*/*.conf set filetype=icinga2
             ]]
-        end
-    }, {
-        -- PCRE/PYRE
-        'Galicarnax/vim-regex-syntax',
-    }, {
-        'LnL7/vim-nix'
-    }, {
-        'PProvost/vim-ps1'
-    }, {
-        'neoclide/jsonc.vim'
+        end,
     }, {
         "preservim/vim-markdown",
         config = function()
@@ -49,7 +41,8 @@ return {
                 let g:vim_markdown_math = 1
                 let g:tex_conceal = ''
             ]]
-        end
+        end,
+        ft = "markdown",
     }, {
         "pearofducks/ansible-vim",
         config = function()
@@ -62,10 +55,14 @@ return {
             ]]
         end
     },
-    "cespare/vim-toml",
     "hashivim/vim-terraform",
     "mtdl9/vim-log-highlighting",
     "zah/nim.vim",
     -- CSV filetype, for :Select queries see https://github.com/mechatroner/rainbow_csv#examples-of-rbql-queries
-    "mechatroner/rainbow_csv"
+    "mechatroner/rainbow_csv",
+    -- PCRE/PYRE
+    'Galicarnax/vim-regex-syntax',
+    'LnL7/vim-nix',
+    'PProvost/vim-ps1',
+    'neoclide/jsonc.vim',
 }

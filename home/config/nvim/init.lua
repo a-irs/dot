@@ -4,6 +4,7 @@ let &packpath = &runtimepath
 source ~/.vimrc
 ]]
 
+-- bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -15,24 +16,17 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local opts = {
+  -- no auto-reload on config change
   change_detection = {
     enabled = false,
   },
   ui = {
     icons = {
-      cmd = "⌘",
-      config = "🛠",
-      event = "📅",
-      ft = "📂",
-      init = "⚙",
-      keys = "🗝",
-      plugin = "🔌",
-      runtime = "💻",
-      source = "📄",
-      start = "🚀",
-      task = "📌",
-      lazy = "💤 ",
+      -- unicode instead of nerdfont
+      cmd = "⌘", config = "🛠", event = "📅", ft = "📂", init = "⚙", keys = "🗝", plugin = "🔌", runtime = "💻", source = "📄", start = "🚀", lazy = "💤 ",
     },
   },
 }
+
+-- load plugins from ./lua/plugins
 require("lazy").setup("plugins", opts)
