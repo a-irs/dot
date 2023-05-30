@@ -7,6 +7,7 @@ let g:coc_global_extensions = [
     \ 'coc-sh',
     \ 'coc-java',
     \ 'coc-tsserver',
+    \ 'coc-solidity',
     \ 'coc-word'
     \ ]
 

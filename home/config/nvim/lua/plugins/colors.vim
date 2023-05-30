@@ -48,12 +48,14 @@ augroup my_highlight
     autocmd ColorScheme * highlight FoldColumn guifg=#8888aa
     autocmd ColorScheme * highlight Folded cterm=bold gui=bold guibg=#3a4b5c
 
+    " ALE
     autocmd ColorScheme * highlight clear ALEError
     autocmd ColorScheme * highlight clear ALEWarning
     autocmd ColorScheme * highlight clear ALEInfo
-    autocmd ColorScheme * highlight ALEError term=underline gui=underline
-    autocmd ColorScheme * highlight ALEWarning term=underline gui=underline
-    autocmd ColorScheme * highlight ALEInfo term=underline gui=underline
+    autocmd ColorScheme * highlight! CocWarningHighlight cterm=NONE gui=NONE
+    autocmd ColorScheme * highlight! CocErrorHighlight cterm=NONE gui=NONE
+    autocmd ColorScheme * highlight! CocHintHighlight cterm=NONE gui=NONE
+    autocmd ColorScheme * highlight! CocInfoHighlight cterm=NONE gui=NONE
 
     " set coc and ale colors
     autocmd ColorScheme * highlight! link CocErrorSign diffRemoved

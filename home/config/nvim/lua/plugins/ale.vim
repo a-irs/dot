@@ -8,7 +8,7 @@ let g:ale_solidity_solc_options='--base-path / --include-path node_modules'
 
 " disable some linters - done with coc
 let g:ale_linters_ignore = ['hls', 'javac', 'shellcheck']
-let g:ale_linters = {'python': []}
+let g:ale_linters = {'python': [], 'solidity': []}
 
 " ALE appearance  ▸▪
 let g:ale_sign_warning = '▪'
