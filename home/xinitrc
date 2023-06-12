@@ -63,6 +63,7 @@ parcellite --no-icon &
 if [[ $HOSTNAME == x1 ]]; then
     usbguard-notifier --wait &
     cbatticon &
+    nm-applet &
 fi
 
 if [[ $HOSTNAME == desk ]]; then

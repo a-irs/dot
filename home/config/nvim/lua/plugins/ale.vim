@@ -16,4 +16,4 @@ let g:ale_sign_style_warning = '▪'
 let g:ale_sign_error = '▪'
 let g:ale_sign_style_error = '▪'
 let g:ale_echo_msg_format = '[%linter%] %severity%% code%: %s'
-let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+let g:ale_virtualtext_cursor = 0

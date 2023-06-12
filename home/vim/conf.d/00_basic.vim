@@ -14,6 +14,10 @@ set hlsearch  " highlight search results
 set incsearch  " search during input
 set fillchars+=vert:│  " prettier split separator
 
+" When switching buffers, preserve window view.
+au BufLeave * if !&diff | let b:winview = winsaveview() | endif
+au BufEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
+
 " remember more history files (default: 100)
 set viminfo=!,'300,h
 
