@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+OLD_DIR=$PWD
+SRC=$1
+
+# prepare build environment
+TMP="$(mktemp -d)"
+trap "rm -rf "$TMP"" EXIT
+cp -rf ~/.templates/quarto/* "$TMP"
+cp -af "$SRC" "$TMP"
+
+cd "$TMP"
+
+# build
+make
+mkdir -p "$OLD_DIR/.output"
+cp -r .output/* "$OLD_DIR/.output"

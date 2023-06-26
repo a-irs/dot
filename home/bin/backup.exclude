@@ -91,6 +91,7 @@ R /home
 - home/*/videos/
 - home/*/data/ios-backup/
 - home/*/data/vm/*.log
+- home/*/data/battery.log
 - home/*/data/vm/*.log.*
 - home/*/data/vm/*.vdi
 - home/*/data/vm/*.vmdk

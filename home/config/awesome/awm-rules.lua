@@ -228,7 +228,7 @@ end)
 -- client exits
 client.connect_signal("unmanage", function(c)
 
-    if c.class == "Steam" or c.class == "jetbrains-idea" then
+    if c.class:lower() == "steam" or c.class == "jetbrains-idea" then
         return
     end
 

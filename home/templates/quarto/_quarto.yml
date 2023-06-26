@@ -19,14 +19,16 @@ format:
       - linktoc=all  # also link page numbers in TOC
     documentclass: scrbook  # scrreport, scrarticle
     classoption:
-      - headings=standardclasses  # serif headings
       - oneside  # default: twoside for scrbook
+      - headsepline=true  # show separator under header
+
+      # optional
+      # - headings=standardclasses  # serif headings
       # - afterindent=false
       # - chapterprefix=false
-      - headsepline=true  # show separator under header
     papersize: a4
     pdf-engine: lualatex
-    fontsize: 12pt
+    fontsize: 11pt
     geometry: [top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, heightrounded]
     colorlinks: true
     links-as-notes: true
@@ -67,6 +69,8 @@ format:
           \newcommand{\blandscape}{\begin{landscape}}
           \newcommand{\elandscape}{\end{landscape}}
 
+  # https://quarto.org/docs/reference/formats/html.html
+  # https://quarto.org/docs/output-formats/html-basics.html
   html:
     embed-resources: true
     filters:
@@ -80,11 +84,8 @@ format:
     html-math-method: mathml
     theme: default  # alternative (lighter fonts): lumen
 
+  # https://quarto.org/docs/reference/formats/markdown/commonmark.html
   # renders more nicely than pandoc markdown
   commonmark_x:
+    toc: false
     wrap: preserve
-    filters:
-      - ascii-replacer
-      - compact-list
-
-format-links: [html, pdf, commonmark_x]

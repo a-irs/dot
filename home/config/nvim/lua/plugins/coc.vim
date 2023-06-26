@@ -8,8 +8,14 @@ let g:coc_global_extensions = [
     \ 'coc-java',
     \ 'coc-tsserver',
     \ 'coc-solidity',
-    \ 'coc-word'
+    \ 'coc-word',
+    \ 'coc-css',
+    \ '@yaegassy/coc-ansible'
     \ ]
+autocmd FileType scss setl iskeyword+=@-@
+let g:coc_filetype_map = {
+  \ 'yaml.ansible': 'ansible',
+  \ }
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
