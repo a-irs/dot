@@ -17,7 +17,7 @@ action=${1:-status}; shift || true
 case "$action" in
     status)
         timew "$@" || true
-        timew summary :ids :week "$@"
+        timew summary :ids sopw - now "$@"
         ;;
     help)
         help
