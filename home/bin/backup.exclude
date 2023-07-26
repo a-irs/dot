@@ -13,6 +13,7 @@ R /home
 - **/Cache
 - **/Caches
 - **/ShaderCache
+- **/ScriptCache
 - **/GPUCache
 - **/CacheStorage
 - **/cache
@@ -84,6 +85,7 @@ R /home
 - home/*/dropbox/media/wallpapers
 - home/*/Dropbox/.dropbox.cache
 - home/*/dropbox/.dropbox.cache
+- home/*/.config/chromium/hyphen-data
 - **/.maestral.cache
 - home/*/.dropbox
 - home/*/downloads/

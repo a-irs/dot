@@ -228,6 +228,10 @@ end)
 -- client exits
 client.connect_signal("unmanage", function(c)
 
+    if c.floating then
+        return
+    end
+
     if c.class == nil and c.name == nil then
         return
     end
