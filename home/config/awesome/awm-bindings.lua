@@ -150,7 +150,7 @@ globalkeys = awful.util.table.join(
     awful.key({ alt }, "t",          function() run_or_raise("thunderbird", "thunderbird") end),
     awful.key({ alt, "Shift" }, "c", function() run_gui("firefox --private-window") end),
     awful.key({ alt }, "k",          function() run_or_raise("keepassxc", "keepassxc") end),
-    awful.key({ alt }, "s",          function() run_or_raise("emacsclient -c -a=''", "Emacs") end),
+    awful.key({ alt }, "s",          function() run("rofi -show calc -modi calc -no-show-match -no-sort -no-history -lines 0 -calc-command \"echo -n '{result}' | xclip -selection clipboard\"") end),
     awful.key({ alt, ctrl }, "1",    function() run_script("dpitog 1 apply") end),
     awful.key({ alt, ctrl }, "2",    function() run_script("dpitog 2 apply") end),
     awful.key({ alt, ctrl }, "3",    function() run_script("dpitog 3 apply") end),

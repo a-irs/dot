@@ -41,8 +41,7 @@ check_ping_gateway() {
 
 check_traceroute() {
     local dest=$1
-
-    sudo traceroute -q 1 -M tcp -4 "$dest"
+    traceroute -q 1 "$dest"
 }
 
 check_dns() {
@@ -95,24 +94,29 @@ get_ip_whois() {
     echo "$ip (name: $ext_ip_name, whois: $ext_whois)"
 }
 
-command -v nmcli > /dev/null 2>&1 && { echo ""; nmcli -c yes dev status | grep -v 'unmanaged'; }
 echo ""
-check_ip_set wg0
-check_ip_set wlan0
-check_ip_set eth0
+echo "NetworkManager connectivity: $(nmcli --color yes networking connectivity check)"
+echo ""
+nmcli --color yes device status | grep -v 'unmanaged'
+echo ""
+for device in $(nmcli --terse --fields device,state device status | grep -v :unmanaged | cut -d: -f 1); do
+    check_ip_set $device
+done
 echo ""
 check_ping_gateway
 echo ""
 check_traceroute 1.0.0.1
 echo ""
-check_dns example.com
-check_dns google.at 1.0.0.1
-check_dns mozilla.org 8.8.8.8
+check_dns example.com &
+check_dns google.com 1.0.0.1 &
+check_dns mozilla.org 8.8.8.8 &
+wait
 echo ""
-check_http http://1.0.0.1
-check_http https://8.8.8.8
-check_http https://www.example.com/
-check_http https://news.ycombinator.com/
+check_http http://1.0.0.1 &
+check_http https://8.8.8.8 &
+check_http https://www.example.com/ &
+check_http https://news.ycombinator.com/ &
+wait
 echo ""
 echo "External IP: $(get_ip_whois "$(curl -s icanhazip.com)")"
 echo "External DNS IP: $(get_ip_whois "$(dig +short whoami.akamai.net)")"

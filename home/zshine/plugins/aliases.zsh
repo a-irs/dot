@@ -343,8 +343,19 @@ alias lS="$ls -lhSr"
 [[ "$commands[dropbox-cli]" ]] && alias ds='dropbox-cli status'
 [[ "$commands[dropbox-cli]" ]] && alias dstop='dropbox-cli stop'
 [[ "$commands[dropbox-cli]" ]] && alias dstart='dropbox-cli start'
-[[ "$commands[nmcli]" ]] && alias nu='nmcli connection up'
-[[ "$commands[nmcli]" ]] && alias nd='nmcli connection down'
+
+if [[ "$commands[nmcli]" ]]; then
+    alias nd='nmcli connection down'
+    nu() {
+        if [[ -n "$1" ]]; then
+            nmcli connection up "$1"
+        else
+            local last_connected=$(nmcli --wait 1 --terse --colors no --fields name,timestamp,type,active connection show | grep ':no$' | grep 'wireless:' | sort --field-separator=: -k 2 | tail -1 | cut -d: -f 1)
+            echo "Switching to '$last_connected'"
+            nmcli connection up "$last_connected"
+        fi
+    }
+fi
 
 if [[ "$commands[tmux]" ]]; then
     # capture tmux pane and edit in vim
@@ -497,18 +508,25 @@ psg() {
 
 if [[ "$commands[pacman]" ]]; then
     toggle-testing() {
-        grep '^\[testing\]' /etc/pacman.conf &> /dev/null
-        if [[ $? == 0 ]]; then
-            sudo perl -0777 -pi -e 's/\[testing\]\nInclude = \/etc\/pacman.d\/mirrorlist/\#\[testing\]\n\#Include = \/etc\/pacman.d\/mirrorlist/igs' /etc/pacman.conf
-            sudo perl -0777 -pi -e 's/\[community-testing\]\nInclude = \/etc\/pacman.d\/mirrorlist/\#\[community-testing\]\n\#Include = \/etc\/pacman.d\/mirrorlist/igs' /etc/pacman.conf
-            echo -e "\n${YELLOW}! disabled testing repos${RESET}"
+        if [[ -e /etc/pacman.d/conf.d/testing.conf ]]; then
+            sudo rm /etc/pacman.d/conf.d/testing.conf
+            echo -e "${YELLOW}! disabled testing repos${RESET}"
         else
-            sudo perl -0777 -pi -e 's/\#\[testing\]\n\#Include = \/etc\/pacman.d\/mirrorlist/\[testing\]\nInclude = \/etc\/pacman.d\/mirrorlist/igs' /etc/pacman.conf
-            sudo perl -0777 -pi -e 's/\#\[community-testing\]\n\#Include = \/etc\/pacman.d\/mirrorlist/\[community-testing\]\nInclude = \/etc\/pacman.d\/mirrorlist/igs' /etc/pacman.conf
+            echo '[core-testing]
+Include = /etc/pacman.d/mirrorlist
+
+[extra-testing]
+Include = /etc/pacman.d/mirrorlist
+' | sudo tee /etc/pacman.d/conf.d/testing.conf
+            if [[ -e /etc/pacman.d/conf.d/multilib.conf ]]; then
+            echo '[multilib-testing]
+Include = /etc/pacman.d/mirrorlist'
+            fi | sudo tee -a /etc/pacman.d/conf.d/testing.conf
+            sudo chmod 0644 /etc/pacman.d/conf.d/testing.conf
             echo -e "\n${RED}! enabled testing repos${RESET}\n"
             sudo pacman -Sy
             echo ""
-            LC_ALL=C pacman -Sl testing | cut -d " " -f 2- | grep "\[installed" | awk 'function r(s){return "\033[1;31m" s "\033[0m"}function y(s){return "\033[1;33m" s "\033[0m"}{gsub("]","",$4); printf("%-35s %s -> %s\n", y($1), $4, r($2))}'
+            LC_ALL=C pacman -Sl core-testing extra-testing multilib-testing | cut -d " " -f 2- | grep "\[installed" | awk 'function r(s){return "\033[1;31m" s "\033[0m"}function y(s){return "\033[1;33m" s "\033[0m"}{gsub("]","",$4); printf("%-35s %s -> %s\n", y($1), $4, r($2))}'
         fi
     }
     alias pi='sudo pacman -S'

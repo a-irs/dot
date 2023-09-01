@@ -111,6 +111,10 @@ R /home
 + home/*/.local/share/Steam/steamapps/compatdata/
 - home/*/.local/share/Steam/*
 
+- home/*/.local/share/yuzu/nand/user/Contents/registered
+- home/*/.local/share/yuzu/shader
+- home/*/.local/share/yuzu/log
+
 - srv/docker/grafana/sessions
 - srv/docker/nzbget/drop
 - srv/docker/nzbget/queue
@@ -129,6 +133,8 @@ R /home
 
 - efi/EFI/Linux/archlinux_*2022*.efi
 - efi/EFI/Linux/archlinux_*2023*.efi
+- efi/EFI/Linux/archlinux_*2024*.efi
+- efi/EFI/Linux/archlinux_*2025*.efi
 
 - etc/mtab
 - etc/adjtime

@@ -64,6 +64,20 @@ awful.rules.rules = {
     },
 }
 
+-- automatically focusing back to the previous client on window close (unmanage) or minimize.
+-- https://github.com/basaran/awesomewm-backham
+local function backham()
+    local s = awful.screen.focused()
+    local c = awful.client.focus.history.get(s, 0)
+    if c then
+        client.focus = c
+        c:raise()
+    end
+end
+client.connect_signal("property::minimized", backham)
+client.connect_signal("unmanage", backham)
+tag.connect_signal("property::selected", backham)
+
 local function make_name(existing_clients, client, wanted_name)
     if client.minimized then
         wanted_name = "[" .. wanted_name .. "]"
@@ -151,6 +165,17 @@ local function dynamic_tagging()
         end
     end)
 end
+for _, signal in ipairs({
+    "tagged",
+    "untagged",
+    "unmanage",
+    "property::name",
+    "property::minimized",
+    "property::fullscreen",
+    "property::floating"
+}) do
+    client.connect_signal(signal, dynamic_tagging)
+end
 
 -- client appears
 client.connect_signal("manage", function(c)
@@ -158,48 +183,54 @@ client.connect_signal("manage", function(c)
     c.maximized_horizontal = false
     c.maximized_vertical = false
 
-    -- FIXME: only apply when single window visible
-    -- also: slow rendering
-    -- c.shape = function(cr, w, h)
-    --     gears.shape.rounded_rect(cr, w, h, dpi(14))
-    -- end
-
-    -- titlebar
-
-    if c.type == "normal" or c.type == "dialog" then
-        local buttons = awful.util.table.join(
-                awful.button({ }, 1, function()
-                    c:emit_signal("request::activate", "titlebar", {raise = true})
-                    awful.mouse.client.move(c)
-                end),
-                awful.button({ }, 3, function()
-                    c:emit_signal("request::activate", "titlebar", {raise = true})
-                    awful.mouse.client.resize(c)
-                end)
-        )
-
-        local layout1 = wibox.layout.fixed.horizontal()
-        layout1:add(awful.titlebar.widget.closebutton(c))
-        layout1:add(awful.titlebar.widget.floatingbutton(c))
-        layout1:add(awful.titlebar.widget.stickybutton(c))
-
-        local layout2 = wibox.layout.flex.horizontal()
-        local title = awful.titlebar.widget.titlewidget(c)
-        title:set_font(theme.titlebar_font)
-        layout2:add(title)
-        layout2:buttons(buttons)
-
-        local layout = wibox.layout.align.horizontal()
-        layout:set_expand("none")
-        layout:set_left(layout1)
-        layout:set_middle(layout2)
-
-        awful.titlebar(c, { size = theme.titlebar_height }):set_widget(layout)
+    if awesome.startup
+      and not c.size_hints.user_position
+      and not c.size_hints.program_position then
+        -- Prevent clients from being unreachable after screen count changes.
+        awful.placement.no_offscreen(c)
     end
 
     if not c.floating then
         awful.titlebar.hide(c)
     end
+
+    -- FIXME: only apply when single window visible
+    -- also: slow rendering
+    -- c.shape = function(cr, w, h)
+    --     gears.shape.rounded_rect(cr, w, h, dpi(14))
+    -- end
+end)
+
+-- Add a titlebar if titlebars_enabled is set to true in the rules.
+client.connect_signal("request::titlebars", function(c)
+    local buttons = awful.util.table.join(
+            awful.button({ }, 1, function()
+                c:emit_signal("request::activate", "titlebar", {raise = true})
+                awful.mouse.client.move(c)
+            end),
+            awful.button({ }, 3, function()
+                c:emit_signal("request::activate", "titlebar", {raise = true})
+                awful.mouse.client.resize(c)
+            end)
+    )
+
+    local layout1 = wibox.layout.fixed.horizontal()
+    layout1:add(awful.titlebar.widget.closebutton(c))
+    layout1:add(awful.titlebar.widget.floatingbutton(c))
+    layout1:add(awful.titlebar.widget.stickybutton(c))
+
+    local layout2 = wibox.layout.flex.horizontal()
+    local title = awful.titlebar.widget.titlewidget(c)
+    title:set_font(theme.titlebar_font)
+    layout2:add(title)
+    layout2:buttons(buttons)
+
+    local layout = wibox.layout.align.horizontal()
+    layout:set_expand("none")
+    layout:set_left(layout1)
+    layout:set_middle(layout2)
+
+    awful.titlebar(c, { size = theme.titlebar_height }):set_widget(layout)
 end)
 
 -- sloppy focus
@@ -208,6 +239,12 @@ client.connect_signal("mouse::enter", function(c)
 end)
 
 client.connect_signal("property::floating", function(c)
+    if not c.floating then
+        awful.titlebar.hide(c)
+    else
+        awful.titlebar.show(c)
+    end
+
     if c.floating and not c.fullscreen then
         if c.class == "mpv" then
             c.size_hints_honor = true
@@ -261,22 +298,6 @@ client.connect_signal("unmanage", function(c)
             if tag then tag:view_only() end
         end
     end
-
-    dynamic_tagging()
-end)
-
-client.connect_signal("tagged",   dynamic_tagging)
-client.connect_signal("untagged", dynamic_tagging)
-client.connect_signal("property::name", dynamic_tagging)
-
--- never minimize keepassxc
-client.connect_signal("property::minimized", function(c)
-    if c.class == "keepassxc" then
-        c.minimized = false
-        client.focus = c
-        c:raise()
-    end
-    dynamic_tagging()
 end)
 
 if theme.border_focus or theme.border_normal then

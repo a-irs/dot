@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+pactl list | grep -A 4 '^Source' | sed 's/^--//' | sed 's/\t/    /'

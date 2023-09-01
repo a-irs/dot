@@ -2,7 +2,7 @@ local gears = require("gears")
 
 theme                               = {}
 
-theme.statusbar_height              = dpi(20)
+theme.statusbar_height              = dpi(22)
 theme.statusbar_top_pixel           = "#586779"
 theme.statusbar_bottom_pixel        = "#3f4e60"
 
@@ -48,8 +48,8 @@ theme.naughty_critical_border_color = theme.naughty_critical_bg
 
 -- WIDGETS
 
-theme.font = "InputMonoCondensed Bold 7"
-theme.taglist_font = "InputMonoCondensed Bold 7"
+theme.font = "InputMonoCondensed Medium 8"
+theme.taglist_font = "InputMonoCondensed Bold 8"
 theme.taglist_empty_tag = "☐"  -- ○
 theme.taglist_nonempty_tag = "■"  -- ●
 
@@ -58,9 +58,14 @@ theme.tasklist_fg                   = theme.fg_focus
 theme.tasklist_bg                   = theme.bg_normal
 theme.tasklist_disable_icon         = true
 
-theme.statusbar_margin              = dpi(6)
+theme.statusbar_margin              = dpi(8)
 theme.bg_systray                    = theme.bg_normal
-theme.systray_icon_spacing          = dpi(2)
+theme.systray_icon_spacing          = dpi(4)
+theme.systray_icon_size             = dpi(12)
+theme.systray_margin_left           = dpi(12)
+theme.systray_margin_top            = dpi(4)
+theme.systray_margin_bottom         = dpi(4)
+theme.systray_margin_right          = dpi(12)
 
 theme.widget_music_fg               = theme.fg_focus
 theme.widget_music_bg               = theme.bg_focus2
@@ -81,7 +86,7 @@ theme.widget_pulse_fg_mute          = "#aaaaaa"
 
 -- TITLEBAR
 
-theme.titlebar_height                          = dpi(24)
+theme.titlebar_height                          = dpi(22)
 theme.titlebar_font                            = "InputMonoCondensed Medium 8"
 
 theme.titlebar_fg_normal                       = theme.fg_normal
