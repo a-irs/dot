@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TIMEOUT=${1:-2}
+TIMEOUT=2
 
 ok() { echo "$1: $(tput setaf 2)$2$(tput sgr0)"; }
 die() { echo "$1: $(tput setaf 1)$2$(tput sgr0)"; }
@@ -28,7 +28,7 @@ check_ip_set() {
 
 check_ping_gateway() {
     local default_gateway ping_output ping_rc
-    default_gateway=$(ip -4 route show 0/0 | grep -oP 'via \S+' | grep -oP '[\d\.]+' | tail -1)
+    default_gateway=$(ip -4 route show default | grep -oP 'via \S+' | grep -oP '[\d\.]+' | tail -1)
     ping_output=$(ping -w "$TIMEOUT" -c 1 "$default_gateway")
     ping_rc=$?
 
@@ -94,6 +94,16 @@ get_ip_whois() {
     echo "$ip (name: $ext_ip_name, whois: $ext_whois)"
 }
 
+if [[ "$1" == speed ]]; then
+    echo "DOWNLOAD"
+    timeout 5 curl -o /dev/null "https://speed.cloudflare.com/__down?bytes=$(python3 -c 'print(10000000000)')"
+    echo ""
+    echo "UPLOAD:"
+    timeout 5 curl -X POST -o /dev/null 'https://speed.cloudflare.com/__up' --data-binary @<(python3 -c 'print("0"*1024*1024*100)')
+    echo ""
+    exit
+fi
+
 echo ""
 echo "NetworkManager connectivity: $(nmcli --color yes networking connectivity check)"
 echo ""
@@ -105,8 +115,6 @@ done
 echo ""
 check_ping_gateway
 echo ""
-check_traceroute 1.0.0.1
-echo ""
 check_dns example.com &
 check_dns google.com 1.0.0.1 &
 check_dns mozilla.org 8.8.8.8 &
@@ -115,8 +123,9 @@ echo ""
 check_http http://1.0.0.1 &
 check_http https://8.8.8.8 &
 check_http https://www.example.com/ &
-check_http https://news.ycombinator.com/ &
 wait
+echo ""
+check_traceroute 1.0.0.1
 echo ""
 echo "External IP: $(get_ip_whois "$(curl -s icanhazip.com)")"
 echo "External DNS IP: $(get_ip_whois "$(dig +short whoami.akamai.net)")"
