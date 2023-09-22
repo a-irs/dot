@@ -57,6 +57,7 @@ R /home
 - home/*/.kodi/userdata/Thumbnails/*
 - home/*/.local/state/nvim/
 - home/*/.local/share/Trash/
+- home/*/.local/share/vifm/Trash/
 - home/*/.local/share/yay/*/src
 - home/*/.local/share/yay/**/*.deb
 - home/*/.local/share/yay/**/*.rpm

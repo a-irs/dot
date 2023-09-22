@@ -2,6 +2,18 @@
 
 export BAT_THEME=ansi
 
+v() {
+    local before=$PWD
+    local dest="$(command vifm --choose-dir - "$@")"
+    if [[ -n "$dest" ]] && [[ "$before" != "$dest" ]]; then
+        # unset and re-set "auto-ls" chpwd hook
+        local chpwd_before=$(which chpwd); chpwd() {}
+        cd "$dest"
+        eval $chpwd_before
+    fi
+}
+alias vifm=v
+
 _url() {
     local func=$1; shift
     local args=$@
@@ -286,7 +298,7 @@ if [[ "$commands[fd]" || "$commands[fdfind]" ]]; then
     fd=fd
     [[ "$commands[fdfind]" ]] && fd=fdfind
 
-    fd="$fd --hidden --no-ignore"
+    fd="$fd --hidden --no-ignore --no-ignore-vcs"
 
     alias fd="$fd"
     alias fdf="$fd --type f"

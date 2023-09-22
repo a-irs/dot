@@ -5,13 +5,10 @@ set -uo pipefail
 path=$1
 path=${path/#\~/~}  # expand a literal tilde at the beginning
 
-width="${2:-$(tput cols)}"
-height="${3:-$(tput lines)}"
+# width="${2:-$(tput cols)}"
+# height="${3:-$(tput lines)}"
 
 filename="${path##*/}"
-
-wrap() { cut -c 1-"$width"; }
-trim() { head -n "$height"; }
 
 [[ -e /usr/local/bin/gls ]] && ls() { gls "$@"; }
 
@@ -19,16 +16,16 @@ remove_blank() { sed '/./,$!d'; } # remove blank lines at top of file
 remove_double_blank() { cat -s; } # remove multiple blank lines
 highlight_dirs() { GREP_COLOR='mt=1;33' grep -E --color=always '(.)*/|$'; } # TODO: not working in ranger
 cleanup_openssl() {
-    local reset=$(tput sgr0)
-    local bold=$(tput bold)
-    local blue=$(tput setaf 4)
-    local cyan=$(tput setaf 6)
-    local red=$(tput setaf 1)
+    local reset=$(tput -T ansi sgr0)
+    local bold=$(tput -T ansi bold)
+    local blue=$(tput -T ansi setaf 4)
+    local cyan=$(tput -T ansi setaf 6)
+    local red=$(tput -T ansi setaf 1)
     # `# also show serial number as decimal, not only hex` \
     # | python3 -c 'import re, sys; s = sys.stdin.read(); i = int(re.search(r"Serial Number:.\s+([0-9a-zA-Z:]+)", s, flags=re.S)[1].replace(":", ""), 16); print(re.sub(r"Serial Number:(.\s+)", rf"Serial Number: \1DEC: {i}\1HEX: ", s, flags=re.S))' \
     perl \
     `# truncate long fingerprints` \
-        -0pe 's/((\s+)(([a-zA-Z0-9][a-zA-Z0-9]:){15,})\n)+\s*/\n\2\..:/gm;' \
+        -0pe 's/((\s+)(([a-zA-Z0-9][a-zA-Z0-9]:){15,})\n)+\s*/\n\2…:/gm;' \
     | perl \
         `# colorize everything with a colon at the end - level 0` \
         -pe "s/(^\S(\w|\s)+:(\s|$))/${bold}${cyan}\1${reset}/g;" \
@@ -46,47 +43,46 @@ cleanup_openssl() {
     | awk NF
 }
 
-preview_elf() { readelf -sh --wide "$path" | trim | wrap; }
-preview_binary() { zcat "$path" 2> /dev/null || cat "$path" | xxd -autoskip | trim | wrap; }
+preview_elf() { readelf -sh --wide "$path"; }
+preview_binary() { xxd -R always -autoskip "$path"; }
 
 preview_sqlite() {
     local t
     for t in $(sqlite3 "$path" .tables); do
         sqlite3 "$path" < <(echo -e ".mode json\nSELECT '$t' AS 'TABLE', * FROM $t")
-    done | jq --color-output | trim | wrap
+    done | jq --color-output
 }
-preview_tar() { tar tf "$path" | trim | highlight_dirs | wrap; }
-preview_zip() { zipinfo -2tz "$path" | trim | highlight_dirs | wrap; }
-preview_htm() { elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank | trim | wrap; }
-preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank | trim | wrap; }
-preview_txt() { cat "$path" | remove_blank | remove_double_blank | trim | wrap; }
-preview_media() { mediainfo "$path" | remove_blank | remove_double_blank | trim | sed 's/  \+:/ --/;' | wrap; }
-preview_json() { jsn "$path" | trim | wrap; }
-preview_markdown() { bat --force-colorization --style=snip --no-pager --theme=ansi "$path"; }
-preview_sshkey() { file -Lb -- "$path"; ssh-keygen -l -f "$path"; echo ""; cat "$path" | trim; }
-preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; cat "$temp" | trim | wrap; rm -f "$temp"; }
-preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl | trim | wrap; }
-preview_pkcs() { keytool -v -list -keystore "$path" -storepass '' | trim | wrap; }
-preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl | trim | wrap; }
-preview_csr() { openssl req -in "$path" -noout -text | cleanup_openssl | trim | wrap; }
+preview_tar() { tar tf "$path" | highlight_dirs; }
+preview_zip() { zipinfo -2tz "$path" | highlight_dirs; }
+preview_htm() { elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
+preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
+preview_txt() { cat "$path" | remove_blank | remove_double_blank; }
+preview_media() { exiftool -canon "$path"; }
+preview_json() { jsn "$path"; }
+preview_bat() { bat --force-colorization --style=snip --no-pager --theme=ansi "$path"; }
+preview_sshkey() { ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
+preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; cat "$temp"; rm -f "$temp"; }
+preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
+preview_pkcs() { keytool -v -list -keystore "$path" -storepass ''; }
+preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
+preview_csr() { openssl req -in "$path" -noout -text | cleanup_openssl; }
 preview_crl() { openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
-preview_csv() { column -t -s\;, "$path" | trim | wrap; }
-preview_rrd() { rrdinfo "$path" | trim | wrap; }
-preview_pkg() { pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort | trim | wrap; }
+preview_csv() { column -t -s\;, "$path"; }
+preview_rrd() { rrdinfo "$path"; }
+preview_pkg() { pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort; }
 preview_pgp() { gpg --keyid-format long --list-options show-keyring "$path" 2>/dev/null; }
 preview_pgp_sig() { pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"; }
 
-file_type=$(file -Lb -- "$path")
+file_type=$(file -b -- "$path")
 mime_type=$(file --mime-type -Lb -- "$path")
 
-tput bold; tput setaf 5
+tput -T ansi bold; tput -T ansi setaf 5
 len=$(printf '%s' "$file_type ($mime_type)" | wc -c)
-printf '%s\n' "$file_type ($mime_type)" | wrap
-printf '\n'
-tput sgr0
+printf '%s\n' "$file_type ($mime_type)"
+tput -T ansi sgr0
 
 if [[ -d "$path" ]]; then
-    ls -lhF --color=always "$path"; exit
+    tree --filesfirst --metafirst -F -C --filelimit=1000 -x "$path"; exit
 fi
 
 case "$file_type" in
@@ -100,20 +96,20 @@ case "$file_type" in
 esac
 
 extension="${filename##*.}"
-# extension="${extension,,}" # lower case - bash4
+extension="${extension,,}" # lower case - bash4
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
         preview_tar; exit ;;
     zip|jar)
         preview_zip; exit ;;
     md)
-        preview_markdown; exit ;;
+        preview_bat; exit ;;
     gpg)
         preview_pgp; exit ;;
     rrd)
         preview_rrd; exit ;;
-    html|xhtml)
-        preview_htm; exit ;;
+    # html|xhtml)
+    #     preview_htm; exit ;;
     json)
         preview_json; exit ;;
     padl|plist|mom|strings)
@@ -130,6 +126,8 @@ case "$extension" in
         preview_crl | cleanup_openssl; exit ;;
     crt|pem)
         preview_cert; exit ;;
+    rw2)
+        preview_media; exit ;;
 esac
 
 case "$mime_type" in
@@ -144,7 +142,7 @@ case "$mime_type" in
     application/zip )
         preview_zip; exit ;;
     text/* | */xml | application/postscript )
-        preview_txt; exit ;;
+        preview_bat; exit ;;
     video/* | audio/* | image/* )
         preview_media; exit ;;
 esac

@@ -21,6 +21,9 @@ au BufEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | e
 " remember more history files (default: 100)
 set viminfo=!,'300,h
 
+" ignore temp/removable paths for viminfo/history etc.
+set viminfo+=r/tmp,r/run/user,r/mnt
+
 " disable swap file completely:
 " - on concurrent writes, VIM warns accordingly anyway (and undo file helps as well)
 " - backup is not needed as :w is used often enough
@@ -157,6 +160,8 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>
 
 " toggle line numbers
 nnoremap <silent> <C-n> :set number!<CR>
+
+nnoremap <silent> <leader>w :set wrap!<CR>
 
 " buffer on <Leader>1-9/left/right
 nnoremap <silent> <tab> :bnext<CR>
