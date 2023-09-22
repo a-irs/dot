@@ -132,6 +132,8 @@ autocmd BufNewFile,BufFilePre,BufRead Dockerfile* set filetype=dockerfile
 autocmd BufNewFile,BufFilePre,BufRead dircolors* set filetype=dircolors
 autocmd BufNewFile,BufFilePre,BufRead */.dot/setup.conf set filetype=dosini
 autocmd BufNewFile,BufFilePre,BufRead *.asm set filetype=nasm
+autocmd BufNewFile,BufFilePre,BufRead vifmrc set filetype=vim
+autocmd BufNewFile,BufFilePre,BufRead *.vifm set filetype=vim
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab

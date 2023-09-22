@@ -1,0 +1,38 @@
+highlight clear
+
+highlight Win cterm=none ctermfg=248 ctermbg=234
+highlight Selected cterm=bold ctermfg=255 ctermbg=238
+highlight CurrLine cterm=bold ctermfg=255 ctermbg=237
+highlight TopLine cterm=bold ctermfg=black ctermbg=235
+highlight TopLineSel cterm=bold ctermfg=black ctermbg=default
+highlight StatusLine cterm=bold ctermfg=black ctermbg=235
+highlight WildMenu cterm=underline,reverse ctermfg=white ctermbg=black
+highlight CmdLine cterm=none ctermfg=white ctermbg=black
+highlight ErrorMsg cterm=none ctermfg=red ctermbg=black
+highlight Border cterm=none ctermfg=black ctermbg=234
+highlight JobLine cterm=bold,reverse ctermfg=black ctermbg=white
+highlight SuggestBox cterm=bold ctermfg=default ctermbg=default
+
+if $USER == 'root'
+    highlight Border ctermbg=red
+endif
+
+" generic file types
+highlight BrokenLink cterm=none ctermfg=red ctermbg=default
+highlight Device cterm=none ctermfg=yellow ctermbg=black
+highlight Directory cterm=bold ctermfg=green ctermbg=default
+highlight Executable cterm=none ctermfg=default ctermbg=default
+highlight Fifo cterm=none ctermfg=yellow ctermbg=black
+highlight Link cterm=none ctermfg=cyan ctermbg=default
+highlight Socket cterm=none ctermfg=magenta ctermbg=default
+
+" file name specific highlight
+highlight /^.*\.(DS_Store|cache|corrupt|old|part|pyc|temp|tmp|zwc)$/I cterm=bold ctermfg=black ctermbg=default
+highlight /^.*(\.bin|\.class|\.dat|\.efi|\.exe|\.nro|\.nsp|\.o|\.pak|\.so|\.xci|a.out)$/I cterm=none ctermfg=red ctermbg=default
+highlight /^.*\.(7z|Z|ace|alz|apk|arc|arj|bz|bz2|cab|cpgz|cpio|deb|dmg|dz|ear|gz|hc|iso|jar|kdbx|lha|lrz|lz|lz4|lzh|lzma|lzo|mozlz4|ova|ovf|pcap|pkg|rar|rpm|rz|sar|sublime-package|t7z|tar|taz|tbz|tbz2|tgz|tlz|txz|tz|tzo|war|whl|xz|z|zip|zoo|zst)$/I cterm=none ctermfg=green ctermbg=default
+highlight /^.*\.(db|doc|docx|dot|epub|mobi|ods|odt|pdf|potx|ppt|pptx|sqlite|sqlite-shm|sqlite-wal|xls|xlsm|xlsx|xmind)$/I cterm=none ctermfg=yellow ctermbg=default
+highlight /^.*(CHANGELOG|CODEOWNERS|Gemfile|LICENSE|MD5SUMS|NOTICE|README|SHA128SUMS|SHA1SUMS|SHA256SUMS|SHA512SUMS|TODO|\.asciidoc|\.changelog|\.commonmark|\.eml|\.gpx|\.ics|\.list|\.log|\.lst|\.m3u|\.markdown|\.md|\.md5|\.mf|\.ml|\.nfo|\.org|\.rst|\.sha1|\.sha128|\.sha256|\.sha512|\.snippets|\.taskpaper|\.txt|\.xml|hosts|rc)$/I cterm=none ctermfg=blue ctermbg=default
+highlight /^.*\.(HEIC|JPG|ORF|RAW|aac|asf|au|avi|bmp|cgm|dl|emf|flac|flc|fli|flv|gif|gl|heic|jpeg|jpg|m2v|m4a|m4v|mid|midi|mka|mkv|mng|mov|mp3|mp4|mp4v|mpc|mpeg|mpg|nuv|ogg|ogm|orf|pbm|pcx|pgm|png|ppm|qt|ra|raw|rm|rmvb|svg|svgz|tga|tif|tiff|vob|wav|webm|wmv|xbm|xcf|xpm|xwd|yuv)$/I cterm=none ctermfg=magenta ctermbg=default
+highlight /^.*(Dockerfile|MIB|Makefile|Rakefile|\.c|\.cat|\.cc|\.cfg|\.conf|\.cpp|\.css|\.csv|\.el|\.epp|\.gitignore|\.hs|\.html|\.icc|\.icm|\.inf|\.ini|\.java|\.js|\.json|\.lhs|\.lua|\.nim|\.pl|\.pp|\.ps1|\.py|\.rb|\.sh|\.tex|\.toml|\.tpl|\.vbox|\.vim|\.vmx|\.yaml|\.yml|\.zsh)$/I cterm=none ctermfg=cyan ctermbg=default
+highlight /^.*\.(asc|cert|crl|csr|der|gpg|key|p12|pem|pgp|pub|sig)$/I cterm=reverse ctermfg=black ctermbg=magenta
+highlight /^.*\.(img|qcow2|vdi)$/I cterm=reverse ctermfg=green ctermbg=default

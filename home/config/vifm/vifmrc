@@ -76,7 +76,7 @@ set incsearch
 set scrolloff=5
 
 " List of color schemes to try (picks the first one supported by the terminal)
-colorscheme ph Default-256 Default
+colorscheme custom Default-256 Default
 
 " ------------------------------------------------------------------------------
 " Bookmarks -- goto with 'x
