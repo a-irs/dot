@@ -8,7 +8,7 @@ local gears   = require 'gears'
 
 local markup = lain.util.markup
 
-local systray = wibox.widget.systray()
+systray = wibox.widget.systray()
 local systray_positioner = wibox.widget {
     {
         systray,
@@ -225,6 +225,10 @@ awful.tooltip({
     end,
     timeout = 10,
 })
+
+traytimer = timer({ timeout = 10 })
+traytimer:connect_signal("timeout", function() systray.visible = false end)
+traytimer:start()
 
 
 -- DATE, TIME
