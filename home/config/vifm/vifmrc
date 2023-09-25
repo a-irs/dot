@@ -37,6 +37,9 @@ set dotdirs=
 " Natural sort of (version) numbers within text.
 set sortnumbers
 
+" disable dd confirmation
+set confirm-=delete
+
 " Maximum number of changes that can be undone.
 set undolevels=500
 
@@ -85,6 +88,8 @@ colorscheme custom Default-256 Default
 mark h ~/
 mark t ~/tmp
 mark T /tmp
+
+autocmd DirEnter ~/downloads setlocal sort=-mtime
 
 " ------------------------------------------------------------------------------
 " Commands
@@ -280,6 +285,9 @@ nnoremap q :q<cr>
 
 " toggle hidden
 nnoremap <space>. za
+
+" toggle view mode
+qnoremap e q
 
 " Toggle visibility of preview window
 nnoremap w :view<cr>

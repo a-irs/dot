@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 
-if [ -d /etc/X11/xinit/xinitrc.d ]; then
+if [[ -d /etc/X11/xinit/xinitrc.d ]]; then
     for f in /etc/X11/xinit/xinitrc.d/*; do
         source "$f"
     done
     unset f
 fi
 
-[[ "$HOSTNAME" == desk ]] && ~/.bin/dpitog 2
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+
+if [[ $HOSTNAME == x1 ]]; then
+    xrandr --output eDP --mode 3072x1920 --rate 120 &
+    blueman-applet &
+    pactl set-sink-mute @DEFAULT_SINK@ true &
+    yubikey-touch-detector --libnotify &
+    ~/.bin/x1/track-battery &
+fi
 
 if [[ $HOSTNAME == desk ]]; then
     xrandr --output DP-1 --mode 2560x1440 --auto --primary --rate 69.93
@@ -18,12 +25,15 @@ if [[ $HOSTNAME == desk ]]; then
 fi
 
 # make some cache persistent, some in tmpfs
-rm -f ~/.cache && ln -s /tmp ~/.cache
-mkdir -p ~/.local/share/ansible-lint && ln -sfn ~/.local/share/ansible-lint ~/.cache/ansible-lint
-mkdir -p ~/.local/share/yay && ln -sfn ~/.local/share/yay ~/.cache/yay
-mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/keepassxc
-mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails
-mkdir -p ~/.local/share/thumbnails/darktable && ln -sfn ~/.local/share/thumbnails/darktable ~/.cache/darktable
+if [[ "$(findmnt -no fstype -T /tmp)" == tmpfs ]]; then
+    mkdir -p "/tmp/$UID"
+    rm -rf ~/.cache && ln -sf "/tmp/$UID" ~/.cache
+    mkdir -p ~/.local/share/ansible-lint && ln -sfn ~/.local/share/ansible-lint ~/.cache/ansible-lint
+    mkdir -p ~/.local/share/yay && ln -sfn ~/.local/share/yay ~/.cache/yay
+    mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/keepassxc
+    mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails
+    mkdir -p ~/.local/share/thumbnails/darktable && ln -sfn ~/.local/share/thumbnails/darktable ~/.cache/darktable
+fi
 
 # cleanup history
 rm -rf ~/.local/share/recently-used.xbel ~/.local/share/RecentDocuments
@@ -81,7 +91,6 @@ if [[ $HOSTNAME == desk ]]; then
     sleep 5
     timeout 10 xdotool search --sync --class "Portfolio Performance" | xargs -I {} xdotool set_desktop_for_window {} 5
 EOF
-
 fi
 
 
