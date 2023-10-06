@@ -16,7 +16,7 @@ awful.rules.rules = {
                      border_color = theme.border_normal,
                      focus = awful.client.focus.filter,
                      screen = awful.screen.preferred,
-                     placement = awful.placement.centered + awful.placement.no_overlap + awful.placement.no_offscreen,
+                     placement = awful.placement.centered + awful.placement.no_offscreen,
                      honor_workarea = true,
                      raise = true,
                      keys = clientkeys,
@@ -47,12 +47,12 @@ awful.rules.rules = {
     { rule_any = {
         class = { "Kodi" }
     },
-        properties = { fullscreen = true, placement = awful.placement.restore }
+        properties = { fullscreen = true, placement = awful.placement.restore, titlebars_enabled = false, size_hints_honor = false, border_width = 0 }
     },
 
     { rule_any = {
         instance = { "pinentry" },
-        class = { "Arandr", "Gpick", "pinentry", "Lampe-gtk", "KeePassXC", "Event Tester" },
+        class = { "Arandr", "Gpick", "pinentry", "Lampe-gtk", "KeePassXC", "Event Tester", "Blueman-manager", "Pavucontrol" },
         role = { "AlarmWindow", "ConfigManager", "pop-up" }
     },
         properties = { floating = true, titlebars_enabled = true }
@@ -61,6 +61,9 @@ awful.rules.rules = {
     -- Add titlebars to dialogs
     { rule_any = {type = { "dialog" }
       }, properties = { floating = true, titlebars_enabled = true }
+    },
+
+    { class = { "Kupfer.py" }, properties = { floating = true, titlebars_enabled = false }
     },
 }
 
@@ -199,6 +202,15 @@ client.connect_signal("manage", function(c)
     -- c.shape = function(cr, w, h)
     --     gears.shape.rounded_rect(cr, w, h, dpi(14))
     -- end
+
+    -- try to move new client to same tag and screen as parent
+    parent = c.transient_for
+    if parent then
+        tag = parent.first_tag
+        screen = parent.screen
+        c:move_to_tag(tag)
+        c:move_to_screen(screen)
+    end
 end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
@@ -239,17 +251,17 @@ client.connect_signal("mouse::enter", function(c)
 end)
 
 client.connect_signal("property::floating", function(c)
-    if not c.floating then
-        awful.titlebar.hide(c)
-    else
-        awful.titlebar.show(c)
-    end
+    -- if not c.floating then
+    --     awful.titlebar.hide(c)
+    -- else
+    --     awful.titlebar.show(c)
+    -- end
 
     if c.floating and not c.fullscreen then
         if c.class == "mpv" then
             c.size_hints_honor = true
         end
-        awful.titlebar.show(c)
+        -- awful.titlebar.show(c)
         awful.placement.no_offscreen(c)
         awful.placement.no_overlap(c)
         c.ontop = true

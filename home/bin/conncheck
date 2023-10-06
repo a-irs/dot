@@ -105,8 +105,8 @@ if [[ "$1" == speed ]]; then
 fi
 
 echo ""
-echo "NetworkManager connectivity: $(nmcli --color yes networking connectivity check)"
-echo ""
+# echo "NetworkManager connectivity: $(nmcli --color yes networking connectivity check)"
+# echo ""
 nmcli --color yes device status | grep -v 'unmanaged'
 echo ""
 for device in $(nmcli --terse --fields device,state device status | grep -v :unmanaged | cut -d: -f 1); do

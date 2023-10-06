@@ -196,6 +196,7 @@ globalkeys = awful.util.table.join(
     awful.key({},        "XF86AudioLowerVolume", volume.decrease),
     awful.key({"Shift"}, "XF86AudioLowerVolume", volume.decrease_10),
     awful.key({},        "XF86AudioMute",        volume.toggle),
+    awful.key({"Ctrl"},        "XF86AudioMute",        function() run("pavucontrol") end),
 
     awful.key({}, "XF86AudioPlay",   function() audio("toggle") end),
     awful.key({}, "XF86AudioPrev",   function() audio("prev") end),

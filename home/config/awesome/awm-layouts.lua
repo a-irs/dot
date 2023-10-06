@@ -3,7 +3,7 @@ local lain = require 'lain'
 
 awful.layout.layouts = {
     awful.layout.suit.tile.right,
-    lain.layout.centerwork,
+    -- lain.layout.centerwork,
     -- lain.layout.centerwork.horizontal,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.left,

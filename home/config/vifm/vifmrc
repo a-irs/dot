@@ -156,6 +156,8 @@ command! take  :mkdir! %a | cd %a
 " file preview
 fileviewer *,.* s %c
 
+" do not launch e.g. .exe/.efi files
+filetype <application/*executable> echo "not launching automatically" %m
 " file open - text inside editor, rest with xdg-open
 filetype <text/*>,<application/*json*> nvim
 filetype *,.* xdg-open 2>&1 &

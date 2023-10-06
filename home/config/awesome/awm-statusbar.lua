@@ -73,13 +73,15 @@ if is_mobile then
             end
         end
     })
-    batterywidget_t = awful.tooltip({
+    batterywidget_tooltip_result = ""
+    batterywidget_tooltip = awful.tooltip({
         objects = { batterywidget.widget },
         timer_function = function()
-            local handle = io.popen(gears.filesystem.get_configuration_dir() .. "/statusbar/battery-tooltip")
-            local result = handle:read("*a")
-            handle:close()
-            return result
+            awful.spawn.easy_async_with_shell(gears.filesystem.get_configuration_dir() .. "/statusbar/battery-tooltip", function(result)
+                batterywidget_tooltip_result = result:gsub("\n$", "")
+                batterywidget_tooltip:set_markup(batterywidget_tooltip_result)
+            end)
+            return batterywidget_tooltip_result
         end,
         timeout = 1,
     })
@@ -97,13 +99,16 @@ if is_mobile then
             widget:set_markup(string.gsub(stdout, "\n", ""))
         end
     )
-    awful.tooltip({
+
+    netwidget_tooltip_result = ""
+    netwidget_tooltip = awful.tooltip({
         objects = { netwidget },
         timer_function = function()
-            local handle = io.popen(gears.filesystem.get_configuration_dir() .. "/statusbar/net-tooltip")
-            local result = handle:read("*a")
-            handle:close()
-            return result
+            awful.spawn.easy_async_with_shell(gears.filesystem.get_configuration_dir() .. "/statusbar/net-tooltip", function(result)
+                netwidget_tooltip_result = result:gsub("\n$", "")
+                netwidget_tooltip:set_markup(netwidget_tooltip_result)
+            end)
+            return netwidget_tooltip_result
         end,
         timeout = 2,
     })
@@ -214,14 +219,16 @@ audiowidget:buttons(awful.util.table.join(
 ))
 audiowidget_wrap = bg_wrap(audiowidget, theme.widget_pulse_bg, theme.statusbar_margin, theme.statusbar_margin)
 
-awful.tooltip({
+audiowidget_tooltip_result = ""
+audiowidget_tooltip = awful.tooltip({
     objects = { audiowidget },
     timer_function = function()
         systray.visible = not systray.visible
-        local handle = io.popen(gears.filesystem.get_configuration_dir() .. "/statusbar/audio-tooltip")
-        local result = handle:read("*a")
-        handle:close()
-        return result
+        awful.spawn.easy_async_with_shell(gears.filesystem.get_configuration_dir() .. "/statusbar/audio-tooltip", function(result)
+            audiowidget_tooltip_result = result:gsub("\n$", "")
+            audiowidget_tooltip:set_markup(audiowidget_tooltip_result)
+        end)
+        return audiowidget_tooltip_result
     end,
     timeout = 10,
 })
