@@ -160,7 +160,11 @@ fileviewer *,.* s %c
 filetype <application/*executable> echo "not launching automatically" %m
 " file open - text inside editor, rest with xdg-open
 filetype <text/*>,<application/*json*> nvim
-filetype *,.* xdg-open 2>&1 &
+if $LC_TERMINAL == "iTerm2"
+    filetype *,.* open 2>&1 &
+else
+    filetype *,.* xdg-open 2>&1 &
+endif
 
 " Web
 filextype {*.xhtml,*.html,*.htm},<text/html>

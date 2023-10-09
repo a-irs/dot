@@ -61,7 +61,7 @@ preview_media() { exiftool -canon "$path"; }
 preview_json() { jsn "$path"; }
 preview_bat() { bat --force-colorization --style=snip --no-pager --theme=ansi "$path"; }
 preview_sshkey() { ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
-preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; cat "$temp"; rm -f "$temp"; }
+preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; bat --force-colorization --style=snip --no-pager --theme=ansi -l xml "$temp"; rm -f "$temp"; }
 preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
 preview_pkcs() { keytool -v -list -keystore "$path" -storepass ''; }
 preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
@@ -96,7 +96,9 @@ case "$file_type" in
 esac
 
 extension="${filename##*.}"
-extension="${extension,,}" # lower case - bash4
+if (( BASH_VERSINFO >= 4 )); then
+    extension="${extension,,}" # lower case - bash4
+fi
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
         preview_tar; exit ;;

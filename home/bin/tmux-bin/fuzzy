@@ -35,7 +35,7 @@ selected=$(tmux capture-pane -pJS - |
     awk 'length($0) >= 6' |  # make sure entries are still long enough after going through the pipeline
     tac |  # show last entries first in fzf
     awk '{ if (!seen[$0]++) print }' |  # dedup
-    fzf-tmux -p 70% -- --no-sort --no-mouse --cycle --ansi --color=16 --tiebreak=end,begin,length --inline-info --tiebreak=length)
+    fzf-tmux -p 70% -- --no-sort --no-mouse --cycle --ansi --color=16 --inline-info)
 
 if [[ -n "$selected" ]]; then
     action "$selected"

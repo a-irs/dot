@@ -22,13 +22,13 @@ for x in \
 done
 unset x
 
-export FZF_DEFAULT_OPTS='--no-mouse --cycle --ansi --color=16 --tiebreak=end,begin,length --inline-info'
+export FZF_DEFAULT_OPTS='--no-mouse --cycle --ansi --color=16 --inline-info'
 
 export FZF_CTRL_R_OPTS='--exact'
 export FZF_ALT_C_OPTS='--preview="s {}" --preview-window "~2"'
 export FZF_CTRL_T_OPTS='--preview="s {}" --preview-window "~2"'
 
 export FZF_COMPLETION_TRIGGER='#'
-export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2"'
+export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2" --delimiter / --nth -1'
 
 fzf() { fzf-tmux -d 50% "$@"; }
