@@ -52,7 +52,6 @@ inoremap <silent><expr> <TAB>
     \ <SID>check_back_space() ? "\<Tab>" :
     \ coc#refresh()
 let g:coc_snippet_next = '<tab>'
-let g:UltiSnipsSnippetDirectories = ['snip']
 
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 

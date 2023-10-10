@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu
+action=$1
+
+date=$(date +%F)
+time=$(date +%H-%M)
+
+case $action in
+    date) tmux send-keys "${date}" ;;
+    time) tmux send-keys "${date}_${time}" ;;
+esac

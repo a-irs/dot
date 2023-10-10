@@ -11,6 +11,9 @@ LISTMAX=1000
 # disable flow control keys (ctrl+s, ctrl+q)
 unsetopt flowcontrol
 
+# completion lists are tighter
+setopt LIST_PACKED
+
 # setopt complete_in_word
 # setopt always_to_end
 

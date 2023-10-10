@@ -1,4 +1,7 @@
 {
+
+    "snippets.ultisnips.directories": ["~/.vim/snip"],
+
     // enables semantic tokens for highlighting, see :CocCommand semanticTokens.checkCurrent
     "semanticTokens.enable": true,
 
