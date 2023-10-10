@@ -53,6 +53,8 @@ preview_sqlite() {
     done | jq --color-output
 }
 preview_tar() { tar tf "$path" | highlight_dirs; }
+preview_rar() { unrar lb "$path" | highlight_dirs; }
+preview_7z() { 7z l -ba "$path" | grep -oP '\S+$' | highlight_dirs; }
 preview_zip() { zipinfo -2tz "$path" | highlight_dirs; }
 preview_htm() { elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
 preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
@@ -102,6 +104,10 @@ fi
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
         preview_tar; exit ;;
+    rar)
+        preview_rar; exit ;;
+    7z)
+        preview_7z; exit ;;
     zip|jar)
         preview_zip; exit ;;
     md)

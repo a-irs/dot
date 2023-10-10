@@ -10,8 +10,8 @@ endif
 set milleroptions=csize:1,rsize:1,rpreview:all
 set millerview
 
-" start in single-pane mode
-:only
+" start in horizontal split mode
+:split
 
 " disable line wrapping initially
 set nowrap
