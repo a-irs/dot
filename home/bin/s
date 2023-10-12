@@ -2,6 +2,8 @@
 
 set -uo pipefail
 
+export BAT_THEME=1337  # alternatives: ansi,base16
+
 path=$1
 path=${path/#\~/~}  # expand a literal tilde at the beginning
 
@@ -43,6 +45,10 @@ cleanup_openssl() {
     | awk NF
 }
 
+b() {
+  bat --force-colorization --style=snip --no-pager "$@"
+}
+
 preview_elf() { readelf -sh --wide "$path"; }
 preview_binary() { xxd -R always -autoskip "$path"; }
 
@@ -52,6 +58,7 @@ preview_sqlite() {
         sqlite3 "$path" < <(echo -e ".mode json\nSELECT '$t' AS 'TABLE', * FROM $t")
     done | jq --color-output
 }
+preview_applescript() { osadecompile "$path" | b -l AppleScript; }
 preview_tar() { tar tf "$path" | highlight_dirs; }
 preview_rar() { unrar lb "$path" | highlight_dirs; }
 preview_7z() { 7z l -ba "$path" | grep -oP '\S+$' | highlight_dirs; }
@@ -61,9 +68,9 @@ preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_do
 preview_txt() { cat "$path" | remove_blank | remove_double_blank; }
 preview_media() { exiftool -canon "$path"; }
 preview_json() { jsn "$path"; }
-preview_bat() { bat --force-colorization --style=snip --no-pager --theme=ansi "$path"; }
+preview_bat() { b "$path"; }
 preview_sshkey() { ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
-preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; bat --force-colorization --style=snip --no-pager --theme=ansi -l xml "$temp"; rm -f "$temp"; }
+preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; b -l xml "$temp"; rm -f "$temp"; }
 preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
 preview_pkcs() { keytool -v -list -keystore "$path" -storepass ''; }
 preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
@@ -95,6 +102,7 @@ case "$file_type" in
     *" certificate") preview_cert; exit ;;
     *" certificate request") preview_csr; exit ;;
     ELF*) preview_elf; exit ;;
+    AppleScript*) preview_applescript; exit ;;
 esac
 
 extension="${filename##*.}"
