@@ -29,3 +29,12 @@ venv() {
     fi
     source "$venv/bin/activate"
 }
+
+venv-delete() {
+    if [[ -z "$VIRTUAL_ENV" ]]; then
+        return 1
+    fi
+    deactivate
+
+    rm -rf "$(pipenv --venv)"
+}
