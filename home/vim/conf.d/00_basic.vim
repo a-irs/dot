@@ -141,7 +141,7 @@ autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
 " do not auto-hardwrap git commit messages
 autocmd Filetype gitcommit setlocal formatoptions-=t
 
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'sh', 'shell=sh', 'ini=dosini', 'ocaml', 'rust', 'css', 'erb=eruby', 'ruby', 'c', 'cpp', 'dockerfile', 'js=javascript', 'yaml', 'jinja2', 'sql', 'ps1', 'config', 'asm', 'json', 'patch=diff', 'diff', 'go', 'nim', 'log', 'haskell', 'sol=solidity']
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'sh', 'shell=sh', 'ini=dosini', 'ocaml', 'rust', 'css', 'erb=eruby', 'ruby', 'c', 'cpp', 'dockerfile', 'js=javascript', 'yaml', 'jinja2', 'sql', 'ps1', 'config', 'asm', 'json', 'patch=diff', 'diff', 'go', 'nim', 'log', 'haskell', 'sol=solidity', 'splunk=spl']
 let g:markdown_syntax_conceal = 0
 let g:markdown_enable_mappings = 0
 let g:markdown_enable_spell_checking = 0

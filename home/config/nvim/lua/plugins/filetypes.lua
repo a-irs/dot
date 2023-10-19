@@ -65,4 +65,5 @@ return {
     'LnL7/vim-nix',
     'PProvost/vim-ps1',
     'neoclide/jsonc.vim',
+    'lilyinstarlight/vim-spl',  -- splunk search language
 }
