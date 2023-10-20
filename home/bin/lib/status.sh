@@ -31,7 +31,7 @@ awk '{print $1 " " $2 " " $3}' /proc/loadavg
 echo ""
 if [[ $HOSTNAME == srv1 ]]; then
     sstatus cronie.service
-    sstatus dhcpcd@eth0.service
+    sstatus dhcpcd.service
     sstatus docker.service
     sstatus iptables.service
     sstatus qemu-guest-agent.service
@@ -51,7 +51,7 @@ elif [[ $HOSTNAME =~ srv(2|3) ]]; then
     exclude_df='(/var/lib/docker|/media/data)'
 elif [[ $HOSTNAME == desk ]]; then
     sstatus cronie.service
-    sstatus dhcpcd@eth0.service
+    sstatus dhcpcd.service
     sstatus docker.service
     sstatus hd-idle.service
     sstatus iptables.service

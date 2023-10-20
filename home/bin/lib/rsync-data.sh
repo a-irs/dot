@@ -19,8 +19,6 @@ trap control_c SIGINT
 
 BACKUP=(
 	/media/data/photos
-	/media/data/photos_google
-	/media/data/photos_print
 	/media/data/videos/kids
 	/media/data/crypto.enc
 	/media/data/apps
