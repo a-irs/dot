@@ -39,6 +39,7 @@
     back-to-master = !git checkout master && git pull && git cleanup
     btm = back-to-master
     b2m = back-to-master
+    unpushed = log -p @{u}..
 
 [merge]
     tool = nvimdiff

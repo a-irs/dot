@@ -77,6 +77,7 @@ git_get_branch() {
     if [[ "$git_out" == gitstatus ]]; then
         local s=$VCS_STATUS_LOCAL_BRANCH
         [[ "$s" == master || "$s" == main ]] && s=""
+        [[ -z "$s" ]] && s="$VCS_STATUS_ACTION"  # e.g. during rebase
         printf '%s' "$s"
         return
     fi

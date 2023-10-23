@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+alias reload-aliases="source $0"
+
 export BAT_THEME=ansi
 
 v() {
@@ -59,7 +61,7 @@ digt() {
     command dig +trace +nodnssec "$@" | _color_dig
 }
 
-calc() {
+function calc() {
     [[ "$#" == 0 ]] && local args="-i"
     python3 -B $args -c "from math import *; from statistics import *; print($*)"
 }
@@ -148,11 +150,11 @@ web() {
 
 if [[ "$commands[docker]" ]]; then
     alias do-r="docker run --rm -it"
-    do-rp() { docker run --rm -it -v "$PWD:/work" -w /work "$@"; }
+    function do-rp() { docker run --rm -it -v "$PWD:/work" -w /work "$@"; }
     alias do-rm="docker run --rm -it"
     alias do-ps="docker ps"
     alias do-i="docker images"
-    do-rm() { docker rm "$@" || docker rmi "$@"; }
+    function do-rm() { docker rm "$@" || docker rmi "$@"; }
 fi
 
 mac() { curl -q "https://api.macvendors.com/${1:0:8}" && printf "\n"; }
@@ -393,7 +395,7 @@ if [[ "$commands[xdg-open]" ]]; then
         [[ -z "$1" || ! -e "$1" ]] && return 1
         mimeopen --ask-default "$1"
     }
-    o() {
+    function o() {
         if [[ ! "$1" ]]; then
             nohup xdg-open . < /dev/null &> /dev/null &
         else
@@ -401,7 +403,6 @@ if [[ "$commands[xdg-open]" ]]; then
         fi
     }
 fi
-
 [[ "$commands[open]" ]] && alias o=open
 
 cd() {
@@ -491,20 +492,27 @@ if [[ "$commands[git]" ]]; then
     }
 
     gop() {
-        # change protocol to https, remove port, remove .git
-        local repo_url=$(git config remote.origin.url | perl -pe 's/^ssh:\/\/.*@/https:\/\//; s/:[0-9]+\//\//g; s/\.git$//')
-        if [[ -n "$1" ]]; then
-            local branch=$(git rev-parse --abbrev-ref HEAD)
-            local path=$(git rev-parse --show-prefix "$@" | tr '\n' '/')
-            # TODO: resolve links/.. etc.
-            local url="$repo_url/tree/$branch/$path"
-        else
-            local url="$repo_url"
+        local remote_url=$(git config remote.origin.url)
+        if [[ "$?" -ne 0 || "$remote_url" == "" ]]; then
+            echo "fatal: not a git repository (or any of the parent directories): .git"
+            return
         fi
+
+        local branch=$(git rev-parse --abbrev-ref HEAD)
+        [[ -n "$1" ]] && local file=$(git rev-parse --show-prefix "$1" | tr '\n' '/')
+        local url=https://$(
+            echo "$remote_url" \
+            `# remove protocol://, username@ etc.` \
+            | perl -pe 's|^(.*://\|.*@)||' \
+            `# replace : with / inside` \
+            | perl -pe 's|:|/|' \
+            `# remove .git` \
+            | perl -pe 's|\.git$||'
+        )/-/tree/$branch/$file
 
         printf '%s\n' "opening: $url"
         if [[ "$os" == darwin* ]]; then
-            /usr/bin/open "$url"
+            open "$url"
         else
             xdg-open "$url"
         fi

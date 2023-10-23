@@ -68,7 +68,7 @@ preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_do
 preview_txt() { cat "$path" | remove_blank | remove_double_blank; }
 preview_media() { exiftool -canon "$path"; }
 preview_json() { jsn "$path"; }
-preview_bat() { b "$path"; }
+preview_bat() { b "$path" "$@"; }
 preview_sshkey() { ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
 preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; b -l xml "$temp"; rm -f "$temp"; }
 preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
@@ -79,7 +79,18 @@ preview_crl() { openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || 
 preview_csv() { column -t -s\;, "$path"; }
 preview_rrd() { rrdinfo "$path"; }
 preview_pkg() { pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort; }
-preview_pgp() { gpg --keyid-format long --list-options show-keyring "$path" 2>/dev/null; }
+preview_pgp() {
+    gpg --keyid-format 0xlong --show-keys --fingerprint --list-options show-keyring "$path" \
+        | perl \
+        `# colorize uid` \
+        -pe "s|^uid(.*)|$(tput -T ansi setaf 3)uid$(tput -T ansi setaf 6)\1$(tput -T ansi sgr0)|;" \
+        `# colorize pub, sub etc. at the beginning` \
+        -pe "s|^(\w+)(.*)|$(tput -T ansi setaf 3)\1$(tput -T ansi sgr0)\2|;" \
+        `# colorize fingerprints` \
+        -pe "s|([A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g;" \
+        `# colorize keyID` \
+        -pe "s|(0x[A-F0-9]{6,})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g"
+    }
 preview_pgp_sig() { pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"; }
 
 file_type=$(file -b -- "$path")
@@ -87,8 +98,7 @@ mime_type=$(file --mime-type -Lb -- "$path")
 
 tput -T ansi bold; tput -T ansi setaf 5
 len=$(printf '%s' "$file_type ($mime_type)" | wc -c)
-printf '%s\n' "$file_type ($mime_type)"
-tput -T ansi sgr0
+printf '%s\n' "$file_type ($mime_type)$(tput -T ansi sgr0)"
 
 if [[ -d "$path" ]]; then
     tree --filesfirst --metafirst -F -C --filelimit=1000 -x "$path"; exit
@@ -119,7 +129,7 @@ case "$extension" in
     zip|jar)
         preview_zip; exit ;;
     md)
-        preview_bat; exit ;;
+        preview_bat -l Markdown; exit ;;
     gpg)
         preview_pgp; exit ;;
     rrd)
@@ -147,6 +157,8 @@ case "$extension" in
 esac
 
 case "$mime_type" in
+    message/*)
+        preview_bat -l Email; exit ;;
     application/x-sqlite* )
         preview_sqlite; exit ;;
     application/vnd.sqlite* )
@@ -158,7 +170,7 @@ case "$mime_type" in
     application/zip )
         preview_zip; exit ;;
     text/* | */xml | application/postscript )
-        preview_bat; exit ;;
+        preview_bat -l xml; exit ;;
     video/* | audio/* | image/* )
         preview_media; exit ;;
 esac
