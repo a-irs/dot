@@ -88,6 +88,7 @@ R /home
 - home/*/dropbox/.dropbox.cache
 - home/*/.config/chromium/hyphen-data
 - **/.maestral.cache
+- home/*/.avfs
 - home/*/.dropbox
 - home/*/downloads/
 - home/*/media/

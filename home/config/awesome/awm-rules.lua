@@ -204,13 +204,13 @@ client.connect_signal("manage", function(c)
     -- end
 
     -- try to move new client to same tag and screen as parent
-    parent = c.transient_for
-    if parent then
-        tag = parent.first_tag
-        screen = parent.screen
-        c:move_to_tag(tag)
-        c:move_to_screen(screen)
-    end
+    -- parent = c.transient_for
+    -- if parent then
+    --     tag = parent.first_tag
+    --     screen = parent.screen
+    --     c:move_to_tag(tag)
+    --     c:move_to_screen(screen)
+    -- end
 end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.

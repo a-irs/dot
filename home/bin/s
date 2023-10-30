@@ -169,10 +169,12 @@ case "$mime_type" in
         preview_pdf; exit ;;
     application/zip )
         preview_zip; exit ;;
-    text/* | */xml | application/postscript )
+    */xml | application/postscript )
         preview_bat -l xml; exit ;;
     video/* | audio/* | image/* )
         preview_media; exit ;;
+    text/* )
+        preview_bat; exit ;;
 esac
 
 preview_binary

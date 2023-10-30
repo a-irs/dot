@@ -1,0 +1,3 @@
+[lint]
+# Never enforce `E501` (line length violations).
+ignore = ["E501"]

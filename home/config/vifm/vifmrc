@@ -86,8 +86,9 @@ colorscheme custom Default-256 Default
 " ------------------------------------------------------------------------------
 
 mark h ~/
-mark t ~/tmp
-mark T /tmp
+mark d ~/downloads
+mark u ~/doc/tu
+mark U ~/projects/tu
 
 autocmd DirEnter ~/downloads setlocal sort=-mtime
 
@@ -155,6 +156,9 @@ command! take  :mkdir! %a | cd %a
 
 " file preview
 fileviewer *,.* s %c
+
+filetype *.gz,*.tgz,*.tar,*.tar.bz2,*.bz2,*.tbz2,*.tbz,*.rar,*.zip,*.jar,*.war,*.apk,*.7z,*.deb,*.tar.lz,*.tar.zst,*.tar.xz
+  \ FUSE_MOUNT3|mount-avfs %DESTINATION_DIR %SOURCE_FILE
 
 " do not launch e.g. .exe/.efi files
 filetype <application/*executable> echo "not launching automatically" %m

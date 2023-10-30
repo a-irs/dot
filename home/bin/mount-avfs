@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+mountavfs
+
+dest=$1
+file=$2
+
+rmdir "$dest"
+ln -s "$HOME/.avfs$file#/" "$dest"
