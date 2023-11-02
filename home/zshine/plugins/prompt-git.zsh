@@ -76,17 +76,14 @@ git_get_branch() {
     local git_out=$1
     if [[ "$git_out" == gitstatus ]]; then
         local s=$VCS_STATUS_LOCAL_BRANCH
-        [[ "$s" == master || "$s" == main ]] && s=""
         [[ -z "$s" ]] && s="$VCS_STATUS_ACTION"  # e.g. during rebase
-        printf '%s' "$s"
-        return
+        [[ -z "$s" ]] && s="(detached)"
+    else
+        local s match
+        pcre_compile -m -- "^# branch.head (.*)$"
+        pcre_match -- "$git_out"
+        s=$match[1]
     fi
-
-    local s match
-    pcre_compile -m -- "^# branch.head (.*)$"
-    pcre_match -- "$git_out"
-    s=$match[1]
-
     [[ "$s" == master || "$s" == main ]] && s=''
     printf "%s" "$s"
 }
