@@ -65,6 +65,7 @@ R /home
 - home/*/.local/share/yay/**/*.tgz
 - home/*/.local/share/yay/**/*.tar.*
 - home/*/.local/share/gvfs-metadata/*
+- home/*/.local/share/virtualenv
 - home/*/.local/share/virtualenvs
 - home/*/.local/share/xorg/*.old
 - home/*/.mozilla/firefox/Crash Reports
@@ -81,6 +82,7 @@ R /home
 - home/*/.thumbnails/*
 - home/*/thumbnails/*
 - home/*/.cargo/registry
+- home/*/.cargo/git
 - home/*/.opam
 - home/*/Dropbox/media/wallpapers
 - home/*/dropbox/media/wallpapers

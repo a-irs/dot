@@ -7,7 +7,7 @@ elseif executable('vim')
 endif
 
 " set miller view (multi column dirs)
-set milleroptions=csize:1,rsize:1,rpreview:all
+set milleroptions=csize:2,rsize:3,rpreview:all
 set millerview
 
 " start in single-pane mode
@@ -157,7 +157,7 @@ command! take  :mkdir! %a | cd %a
 " file preview
 fileviewer *,.* s %c
 
-filetype *.gz,*.tgz,*.tar,*.tar.bz2,*.bz2,*.tbz2,*.tbz,*.rar,*.zip,*.jar,*.war,*.apk,*.7z,*.deb,*.tar.lz,*.tar.zst,*.tar.xz
+filetype *.gz,*.tgz,*.tar,*.tar.bz2,*.bz2,*.tbz2,*.tbz,*.rar,*.zip,*.jar,*.war,*.apk,*.7z,*.deb,*.tar.lz,*.tar.zst,*.tar.xz,<application/*archive>
   \ FUSE_MOUNT3|mount-avfs %DESTINATION_DIR %SOURCE_FILE
 
 " do not launch e.g. .exe/.efi files

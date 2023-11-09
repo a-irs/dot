@@ -14,6 +14,7 @@ zle -N bracketed-paste bracketed-paste-magic
 # no duplicate entries for path arrays
 typeset -gU cdpath fpath mailpath path
 [ -d "$HOME/.bin" ] && path=("$HOME/.bin" $path)
+[ -d "$HOME/.cargo/bin" ] && path=("$HOME/.cargo/bin" $path)
 [ -d "$HOME/.bin/$HOST" ] && path=("$HOME/.bin/$HOST" $path)
 [ -d /usr/share/bcc/tools ] && path=(/usr/share/bcc/tools $path)
 
