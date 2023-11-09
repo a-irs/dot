@@ -4,6 +4,12 @@ set -eu
 
 git fetch -p
 echo
-git branch -r | awk '{print $1}' \
-    | grep -Ev -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' \
-    | xargs --no-run-if-empty git branch -D
+
+stale_branches=$(git branch --remotes | awk '{print $1}' \
+    | grep -Ev -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}')
+
+while IFS= read -r branch; do
+    [[ -n "$branch" ]] && git branch --delete --force "$branch"
+done <<< "$stale_branches"
+
+exit 0

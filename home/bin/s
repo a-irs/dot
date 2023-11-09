@@ -2,7 +2,7 @@
 
 set -uo pipefail
 
-export BAT_THEME=1337  # alternatives: ansi,base16
+export BAT_THEME=ansi  # alternatives: ansi,base16
 
 path=$1
 path=${path/#\~/~}  # expand a literal tilde at the beginning
