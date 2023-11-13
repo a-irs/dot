@@ -70,7 +70,6 @@ def main():
         print(dye(name, colors['prefix']) + ": " + dye(json.dumps(value), color))
 
     if is_ndjson:
-        print(file=sys.stderr)
         print("WARNING: file was implicitly parsed as NDJSON (newline-delimited JSON) and shown as a list.", file=sys.stderr)
 
 
