@@ -221,3 +221,46 @@ function! XTermPasteBegin()
   set paste
   return ''
 endfunction
+
+
+" MAN PAGES
+let g:no_man_maps = 1
+
+" inspired by https://github.com/jez/vim-superman
+function! SuperMan(...)
+  if exists(":Man") != 2 " No :Man command defined
+    source $VIMRUNTIME/ftplugin/man.vim
+  endif
+
+  " Build and pass off arguments to Man command
+  execute 'Man' join(a:000, ' ')
+
+  " Quit with error code if there is only one line in the buffer (i.e., manpage not found)
+  if line('$') == 1 | cquit | endif
+
+  bw 1
+  silent only
+
+  " Set options appropriate for viewing manpages
+  setlocal readonly
+  setlocal nomodifiable
+  setlocal noswapfile
+
+  setlocal noexpandtab
+  setlocal tabstop=4
+  setlocal softtabstop=4
+  setlocal shiftwidth=4
+  setlocal nolist
+  set showbreak=
+  if exists('+colorcolumn')
+    setlocal colorcolumn=0
+  endif
+
+  noremap q :q!<CR>
+
+  " from /usr/share/nvim/runtime/ftplugin/man.vim
+  nnoremap <silent> gO :lua require'man'.show_toc()<CR>
+  nnoremap <silent> <2-LeftMouse> :Man<CR>
+endfunction
+
+command! -nargs=+ SuperMan call SuperMan(<f-args>)

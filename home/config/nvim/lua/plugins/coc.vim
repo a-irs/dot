@@ -20,6 +20,8 @@ let g:coc_filetype_map = {
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
+  elseif (index(['man'], &filetype) >= 0)
+    execute ':Man ' . expand('<cword>')
   elseif (coc#rpc#ready())
     call CocActionAsync('doHover')
   else
@@ -30,6 +32,7 @@ endfunction
 inoremap <silent> <C-p> <C-\><C-O>:call CocActionAsync('showSignatureHelp')<cr>
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 nmap <silent> K         :call <SID>show_documentation()<CR>
+nmap <silent> <CR>      :call <SID>show_documentation()<CR>
 nmap <silent> <leader>k :call <SID>show_documentation()<CR>
 nmap <silent> <leader>cr <Plug>(coc-rename)
 xmap <silent> <leader>cf <Plug>(coc-format-selected)
