@@ -92,6 +92,7 @@ preview_pgp() {
         -pe "s|(0x[A-F0-9]{6,})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g"
     }
 preview_pgp_sig() { pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"; }
+preview_pgp_keybox() { gpg -k --ignore-time-conflict --no-options --no-default-keyring --keyring "$path"; }
 
 file_type=$(file -b -- "$path")
 mime_type=$(file --mime-type -Lb -- "$path")
@@ -108,6 +109,8 @@ case "$file_type" in
     "Certificate, Version=3"*) preview_cert -inform der; exit ;;
     "PGP public "*) preview_pgp; exit ;;
     "PGP private "*) preview_pgp; exit ;;
+    "GPG keybox"*) preview_pgp_keybox; exit ;;
+    "GPG key trust database"*) preview_binary; exit ;;
     *" private key") preview_sshkey; exit ;;
     *" public key") preview_sshkey; exit ;;
     *" certificate") preview_cert; exit ;;
