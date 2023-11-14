@@ -29,7 +29,7 @@ autoload -U zmv
 zstyle ':completion:*' rehash true # always rehash on completion
 
 export GREP_COLOR='mt=1;32'
-export TZ='Europe/Berlin'
+export TZ='Europe/Vienna'
 export REPORTTIME=5
 
 [[ $commands[less] ]] && export PAGER=less
