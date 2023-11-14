@@ -90,6 +90,7 @@ preview_pgp() {
         -pe "s|([A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g;" \
         `# colorize keyID` \
         -pe "s|(0x[A-F0-9]{6,})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g"
+    cat "$path"
     }
 preview_pgp_sig() { pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"; }
 preview_pgp_keybox() { gpg -k --ignore-time-conflict --no-options --no-default-keyring --keyring "$path"; }
@@ -128,7 +129,7 @@ case "$extension" in
         preview_tar; exit ;;
     rar)
         preview_rar; exit ;;
-    7z)
+    7z|dmg)
         preview_7z; exit ;;
     zip|jar)
         preview_zip; exit ;;
