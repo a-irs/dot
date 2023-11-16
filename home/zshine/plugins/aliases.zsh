@@ -492,6 +492,7 @@ if [[ "$commands[git]" ]]; then
     }
 
     gop() {
+        local arg=$1
         local remote_url=$(git config remote.origin.url)
         if [[ "$?" -ne 0 || "$remote_url" == "" ]]; then
             echo "fatal: not a git repository (or any of the parent directories): .git"
@@ -499,7 +500,7 @@ if [[ "$commands[git]" ]]; then
         fi
 
         local branch=$(git rev-parse --abbrev-ref HEAD)
-        [[ -n "$1" ]] && local file=$(git rev-parse --show-prefix "$1" | tr '\n' '/')
+        [[ -n "$arg" ]] && local file=$(git rev-parse --show-prefix "$arg" | tr '\n' '/')
         local url=https://$(
             echo "$remote_url" \
             `# remove protocol://, username@ etc.` \
@@ -508,7 +509,7 @@ if [[ "$commands[git]" ]]; then
             | perl -pe 's|:|/|' \
             `# remove .git` \
             | perl -pe 's|\.git$||'
-        )/-/tree/$branch/$file
+        )/tree/$branch/$file
 
         printf '%s\n' "opening: $url"
         if [[ "$os" == darwin* ]]; then

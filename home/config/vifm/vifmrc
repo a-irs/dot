@@ -170,39 +170,19 @@ else
     filetype *,.* xdg-open 2>&1 &
 endif
 
-" Web
-filextype {*.xhtml,*.html,*.htm},<text/html>
-        \ {Open with qutebrowser}
-        \ qutebrowser %f %i,
-        \ {Open with firefox}
-        \ firefox %f &,
-filetype {*.xhtml,*.html,*.htm},<text/html> links, lynx
+filetype *
+   \ {binwalk} binwalk %f   %m,
+   \ {exiftool} exiftool -canon %f   %m,
+   \ {file} file --brief --mime-type %f; file --brief %f   %m,
+   \ {sha1} sha1sum %f   %m,
+   \ {sha256} sha256sum %f   %m,
+   \ {sha512} sha512sum %f   %m,
+   \ {md5} md5sum %f   %m,
+   \ {tar.gz} bash -c "read -p 'Name: ' -r -e -i '%d:t.tar.gz' file; tar caf \$file %f" %N,
+   \ {tar.bz2} bash -c "read -p 'Name: ' -r -e -i '%d:t.tar.bz2' file; tar caf \$file %f" %N,
+   \ {tar.zst} bash -c "read -p 'Name: ' -r -e -i '%d:t.tar.zst' file; tar caf \$file %f" %N,
+   \ {zip} bash -c "read -p 'Name: ' -r -e -i '%d:t.zip' file; zip -r \$file %f >/dev/null" %N,
 
-" Man page
-filetype {*.[1-8]},<text/troff> man ./%c
-fileviewer {*.[1-8]},<text/troff> man ./%c | col -b
-
-" SshMount
-filetype *.ssh
-       \ {Mount with sshfs}
-       \ FUSE_MOUNT2|sshfs %PARAM %DESTINATION_DIR %FOREGROUND,
-
-" FtpMount
-filetype *.ftp
-       \ {Mount with curlftpfs}
-       \ FUSE_MOUNT2|curlftpfs -o ftp_port=-,,disable_eprt %PARAM %DESTINATION_DIR %FOREGROUND,
-
-" Office files
-filextype {*.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx,*.ppt},
-         \<application/vnd.openxmlformats-officedocument.*,
-          \application/msword,
-          \application/vnd.ms-excel>
-        \ libreoffice %f &
-fileviewer {*.doc},<application/msword> catdoc %c
-fileviewer {*.docx},
-          \<application/
-           \vnd.openxmlformats-officedocument.wordprocessingml.document>
-         \ docx2txt.pl %f -
 
 " Syntax highlighting in preview
 "
@@ -274,6 +254,7 @@ nnoremap cc cw<c-u>
 nnoremap A cw
 
 nnoremap o :file<cr>
+vnoremap o :file<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
 nnoremap <space>c :write | edit $MYVIFMRC | restart full<cr>

@@ -9,6 +9,9 @@ fi
 
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
+echo 'Net/ThemeName "Arc"' > ~/.xsettingsd
+xsettingsd &
+
 if [[ $HOSTNAME == x1 ]]; then
     xrandr --output eDP --mode 3072x1920 --rate 120 &
     blueman-applet &
