@@ -10,6 +10,7 @@ let g:coc_global_extensions = [
     \ 'coc-solidity',
     \ 'coc-word',
     \ 'coc-css',
+    \ 'coc-diagnostic',
     \ '@yaegassy/coc-ansible'
     \ ]
 autocmd FileType scss setl iskeyword+=@-@

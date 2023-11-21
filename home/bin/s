@@ -130,6 +130,7 @@ case "$file_type" in
     "Certificate, Version=3"*) preview_cert -inform der; exit ;;
     "PGP public "*) preview_pgp; exit ;;
     "PGP private "*) preview_pgp; exit ;;
+    "PGP "*"encrypted"*) preview_pgp_sig; exit ;;
     "GPG keybox"*) preview_pgp_keybox; exit ;;
     "GPG key trust database"*) preview_binary; exit ;;
     *" private key") preview_sshkey; exit ;;
@@ -156,7 +157,7 @@ case "$extension" in
     md)
         preview_bat -l Markdown; exit ;;
     gpg)
-        preview_pgp; exit ;;
+        preview_pgp; preview_pgp_sig; exit ;;
     rrd)
         preview_rrd; exit ;;
     # html|xhtml)

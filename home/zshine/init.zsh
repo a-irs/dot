@@ -29,6 +29,9 @@ autoload -U zmv
 zstyle ':completion:*' rehash true # always rehash on completion
 
 export GREP_COLOR='mt=1;32'
+if [[ "$os" == darwin* ]]; then
+    export GREP_COLOR='1;32'
+fi
 export TZ='Europe/Vienna'
 export REPORTTIME=5
 

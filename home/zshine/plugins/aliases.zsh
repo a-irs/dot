@@ -45,16 +45,18 @@ dig() {
 
     # empty or error result
     if [[ -z "$result" ]]; then
-        local err_code=$(command dig +noall +comments +stats "$@" | grep -E '(^;;.*status:|^;; SERVER|^;; Query time)' | sed -E 's/.*status: ([^,]+).*/\1/g')
-        echo "$err_code" | _color_dig
+        local dig_output=$(command dig +noall +comments +identify +question "$@")
+        local err=$(printf "%s" "$dig_output" | grep -E '^;;.*status:' | sed -E 's/.*status: ([^,]+).*/\1/g')
+        local comments=$(printf "%s" "$dig_output" | grep -E '^;; Received')
+        local question=$(printf "%s" "$dig_output" | grep -A1 -E '^;; QUESTION' | tail -1)
+        { echo "$question"; echo "$comments"; echo; echo "$err"; } | _color_dig
         return
     fi
 
-    local dig_full=$(command dig +noclass +nocomments +nocmd "$@")
+    local dig_full=$(command dig +noall +identify +question +answer "$@")
     local dig_content=$(echo "$dig_full" | grep -vE '^;')
     local dig_comment=$(echo "$dig_full" | grep -E '^;')
-    echo "$dig_content" | column -ts $'\t'
-    echo "$dig_comment" | _color_dig
+    { echo "$dig_comment"; echo; echo "$dig_content" | column -t; } | _color_dig
 }
 
 digt() {
