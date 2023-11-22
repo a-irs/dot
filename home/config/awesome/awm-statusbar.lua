@@ -147,7 +147,7 @@ local musicwidget = awful.widget.watch(
 musicwidget_wrap = bg_wrap(musicwidget, theme.widget_music_bg, 0, 0)
 
 local timewarriorwidget, timewarriorwidget_timer = awful.widget.watch(
-    "timew", 10,
+    "timew", 60,
     function(widget, stdout)
         color = theme.widget_pulse_fg_mute
         if string.match(stdout, "no active time tracking") then
@@ -155,8 +155,7 @@ local timewarriorwidget, timewarriorwidget_timer = awful.widget.watch(
         else
             tags = string.match(stdout, "Tracking (.*)")
             tags = string.gsub(tags, "\"", "")
-            time = string.match(stdout, "Total %s+(%g+)")
-            time = string.gsub(time, "^0:", "")
+            time = string.match(stdout, "Total %s+(%g+):%g")
             widget:set_markup(
                 markup.bold(markup("#ff79c6", time)) .. " " ..
                 markup.bold(markup("#d7d7d7", tags))

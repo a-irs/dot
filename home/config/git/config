@@ -44,6 +44,7 @@
 [merge]
     tool = nvimdiff
     conflictstyle = diff3
+    ; ff = false  # disable fast forward by default (always make a merge commit instead, even if a fast forward would be possible)
 
 [mergetool]
     prompt = false

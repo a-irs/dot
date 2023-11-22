@@ -82,6 +82,9 @@ urld() { _url 'urllib.parse.unquote(line)' "$@"; }
 urlep() { _url 'urllib.parse.quote_plus(line)' "$@"; }
 urldp() { _url 'urllib.parse.unquote_plus(line)' "$@"; }
 
+alias diff="diff --color=auto"
+alias ip='ip -color=auto'
+
 sshfp() {
     local output=$(ssh-keyscan "$@" 2>&1)
     local rc=$?

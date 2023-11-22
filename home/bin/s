@@ -33,15 +33,17 @@ filename="${path##*/}"
 
 [[ -e /usr/local/bin/gls ]] && ls() { gls "$@"; }
 
+reset=$(tput -T ansi sgr0)
+bold=$(tput -T ansi bold)
+blue=$(tput -T ansi setaf 4)
+cyan=$(tput -T ansi setaf 6)
+yellow=$(tput -T ansi setaf 3)
+red=$(tput -T ansi setaf 1)
+
 remove_blank() { sed '/./,$!d'; } # remove blank lines at top of file
 remove_double_blank() { cat -s; } # remove multiple blank lines
 highlight_dirs() { GREP_COLOR='mt=1;33' grep -E --color=always '(.)*/|$'; } # TODO: not working in ranger
 cleanup_openssl() {
-    local reset=$(tput -T ansi sgr0)
-    local bold=$(tput -T ansi bold)
-    local blue=$(tput -T ansi setaf 4)
-    local cyan=$(tput -T ansi setaf 6)
-    local red=$(tput -T ansi setaf 1)
     # `# also show serial number as decimal, not only hex` \
     # | python3 -c 'import re, sys; s = sys.stdin.read(); i = int(re.search(r"Serial Number:.\s+([0-9a-zA-Z:]+)", s, flags=re.S)[1].replace(":", ""), 16); print(re.sub(r"Serial Number:(.\s+)", rf"Serial Number: \1DEC: {i}\1HEX: ", s, flags=re.S))' \
     perl \
@@ -64,81 +66,96 @@ cleanup_openssl() {
     | awk NF
 }
 
+run1() { printf "${yellow}[%s]$reset\n" "$1"; "$@"; }
+run2() { printf "${yellow}[%s %s]$reset\n" "$1" "$2"; "$@"; }
+run3() { printf "${yellow}[%s %s %s]$reset\n" "$1" "$2"; "$3"; }
+
 _bat() {
-  bat --force-colorization --style=snip --no-pager "$@"
+  run1 bat "$@" --force-colorization --style=snip --no-pager
 }
 
-preview_elf() { readelf -sh --wide "$path"; }
-preview_binary() { xxd -R always -autoskip "$path"; }
+preview_elf() { run2 readelf -sh --wide "$path"; }
+preview_binary() { run1 xxd -R always -autoskip "$path" | head -n 1000; }
 
 preview_sqlite() {
+    printf "${yellow}[sqlite3]$reset\n"
     local t
     for t in $(sqlite3 -readonly "$path" .tables); do
         sqlite3 -readonly "$path" < <(echo -e ".mode json\nSELECT '$t' AS 'TABLE', * FROM $t")
     done | jq --color-output
 }
-preview_applescript() { osadecompile "$path" | _bat -l AppleScript; }
-preview_tar() { tar tf "$path" | highlight_dirs; }
-preview_rar() { unrar lb "$path" | highlight_dirs; }
-preview_7z() { 7z l -ba "$path" | grep -oP '\S+$' | highlight_dirs; }
-preview_zip() { zipinfo -2tz "$path" | highlight_dirs; }
-preview_htm() { elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
-preview_pdf() { pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
-preview_txt() { cat "$path" | remove_blank | remove_double_blank; }
-preview_image() { exiftool -canon "$path"; }
-preview_video() { mediainfo "$path"; }
-preview_json() { jsn "$path"; }
+
+preview_applescript() { run1 osadecompile "$path" | _bat -l AppleScript; }
+preview_tar() { run2 tar tf "$path" | highlight_dirs; }
+preview_rar() { run2 unrar lb "$path" | highlight_dirs; }
+preview_7z() { run2 7z l -ba "$path" | highlight_dirs; }
+preview_zip() { run2 zipinfo -2tz "$path" | highlight_dirs; }
+preview_htm() { run1 elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
+preview_pdf() { run1 pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
+preview_txt() { run1 cat "$path" | remove_blank | remove_double_blank; }
+preview_image() { run2 exiftool -canon "$path"; }
+preview_video() { run1 mediainfo "$path"; }
+preview_json() { run1 jsn "$path"; }
 preview_bat() { _bat "$path" "$@"; }
-preview_sshkey() { ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
-preview_plist() { temp=$(mktemp); plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
-preview_cert() { openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
-preview_pkcs() { keytool -v -list -keystore "$path" -storepass ''; }
-preview_pkcs_openssl() { openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
-preview_csr() { openssl req -in "$path" -noout -text | cleanup_openssl; }
-preview_crl() { openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
-preview_csv() { column -t -s\;, "$path"; }
-preview_rrd() { rrdinfo "$path"; }
-preview_pkg() { pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort; }
+preview_sshkey() { run1 ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
+preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
+preview_cert() { run2 openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
+preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass ''; }
+preview_pkcs_openssl() { run2 openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
+preview_csr() { run2 openssl req -in "$path" -noout -text | cleanup_openssl; }
+preview_crl() { run2 openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
+preview_csv() { run2 column -t -s\;, "$path"; }
+preview_rrd() { run1 rrdinfo "$path"; }
+preview_pkg() { run1 pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort; }
 preview_pgp() {
-    gpg --keyid-format 0xlong --show-keys --fingerprint --list-options show-keyring "$path" \
+    run1 gpg --keyid-format 0xlong --show-keys --fingerprint --list-options show-keyring "$path" \
         | perl \
         `# colorize uid` \
         -pe "s|^uid(.*)|$(tput -T ansi setaf 3)uid$(tput -T ansi setaf 6)\1$(tput -T ansi sgr0)|;" \
         `# colorize pub, sub etc. at the beginning` \
-        -pe "s|^(\w+)(.*)|$(tput -T ansi setaf 3)\1$(tput -T ansi sgr0)\2|;" \
+        -pe "s|^(\S+)(.*)|$(tput -T ansi setaf 3)\1$(tput -T ansi sgr0)\2|;" \
         `# colorize fingerprints` \
         -pe "s|([A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4}\s[A-F0-9]{4})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g;" \
         `# colorize keyID` \
         -pe "s|(0x[A-F0-9]{6,})|$(tput -T ansi setaf 4)\1$(tput -T ansi sgr0)|g"
-    cat "$path"
+
+    run1 pgpdump "$path"
+
+    local mime_encoding=$(file --mime-encoding -Lb -- "$path")
+    [[ "$mime_encoding" != binary ]] && { echo; cat "$path"; }
     }
-preview_pgp_sig() { pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"; }
-preview_pgp_keybox() { gpg -k --ignore-time-conflict --no-options --no-default-keyring --keyring "$path"; }
+preview_pgp_sig() {
+    run1 pgpdump "$path" 2>/dev/null || gpg --list-packets "$path"
+    local mime_encoding=$(file --mime-encoding -Lb -- "$path")
+    [[ "$mime_encoding" != binary ]] && { echo; cat "$path"; }
+}
+preview_pgp_keybox() { run1 gpg -k --ignore-time-conflict --no-options --no-default-keyring --keyring "$path"; }
 
 file_type=$(file -b -- "$path")
 mime_type=$(file --mime-type -Lb -- "$path")
 
 tput -T ansi bold; tput -T ansi setaf 5
-len=$(printf '%s' "$file_type ($mime_type)" | wc -c)
+# len=$(printf '%s' "$file_type ($mime_type)" | wc -c)
 printf '%s\n' "$file_type ($mime_type)$(tput -T ansi sgr0)"
 
 if [[ -d "$path" ]]; then
-    tree --filesfirst --metafirst -F -C --filelimit=1000 -x "$path"; exit
+    run1 tree --filesfirst --metafirst -F -C --filelimit=1000 -x "$path"; exit
 fi
 
 case "$file_type" in
-    "Certificate, Version=3"*) preview_cert -inform der; exit ;;
-    "PGP public "*) preview_pgp; exit ;;
-    "PGP private "*) preview_pgp; exit ;;
-    "PGP "*"encrypted"*) preview_pgp_sig; exit ;;
-    "GPG keybox"*) preview_pgp_keybox; exit ;;
-    "GPG key trust database"*) preview_binary; exit ;;
-    *" private key") preview_sshkey; exit ;;
-    *" public key") preview_sshkey; exit ;;
-    *" certificate") preview_cert; exit ;;
-    *" certificate request") preview_csr; exit ;;
-    ELF*) preview_elf; exit ;;
-    AppleScript*) preview_applescript; exit ;;
+    "Certificate, Version=3"*) preview_cert -inform der ;;
+    "PGP public "*) preview_pgp ;;
+    "PGP signature "*) preview_pgp_sig ;;
+    "PGP "*"encrypted"*) preview_pgp_sig ;;
+    "PGP private "*) preview_pgp ;;
+    "GPG keybox"*) preview_pgp_keybox ;;
+    "GPG key trust database"*) preview_binary ;;
+    *" private key") preview_sshkey ;;
+    *" public key") preview_sshkey ;;
+    *" certificate") preview_cert ;;
+    *" certificate request") preview_csr ;;
+    ELF*) preview_elf ;;
+    AppleScript*) preview_applescript ;;
 esac
 
 extension="${filename##*.}"
@@ -147,62 +164,71 @@ if (( BASH_VERSINFO >= 4 )); then
 fi
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
-        preview_tar; exit ;;
+        preview_tar ;;
     rar)
-        preview_rar; exit ;;
+        preview_rar ;;
     7z|dmg)
-        preview_7z; exit ;;
+        preview_7z ;;
     zip|jar)
-        preview_zip; exit ;;
+        preview_zip ;;
     md)
-        preview_bat -l Markdown; exit ;;
+        preview_bat -l Markdown ;;
     gpg)
-        preview_pgp; preview_pgp_sig; exit ;;
+        preview_pgp; preview_pgp_sig ;;
     rrd)
-        preview_rrd; exit ;;
+        preview_rrd ;;
     # html|xhtml)
-    #     preview_htm; exit ;;
+    #     preview_htm ;;
     json)
-        preview_json; exit ;;
+        preview_json ;;
     padl|plist|mom|strings)
-        preview_plist; exit ;;
+        preview_plist ;;
     csv)
-        preview_csv; exit ;;
+        preview_csv ;;
     p12|pfx|pkcs12)
-        preview_pkcs; exit ;;
+        preview_pkcs ;;
     pkg)
-        preview_pkg; exit ;;
+        preview_pkg ;;
     sig|sign)
-        preview_pgp_sig; exit ;;
+        preview_pgp_sig ;;
     crl)
-        preview_crl | cleanup_openssl; exit ;;
+        preview_crl | cleanup_openssl ;;
     crt|pem)
-        preview_cert; exit ;;
+        preview_cert ;;
     rw2)
-        preview_image; exit ;;
+        preview_image ;;
 esac
 
 case "$mime_type" in
     message/*)
-        preview_bat -l Email; exit ;;
+        preview_bat -l Email ;;
     application/x-sqlite* )
-        preview_sqlite; exit ;;
+        preview_sqlite ;;
     application/vnd.sqlite* )
-        preview_sqlite; exit ;;
+        preview_sqlite ;;
     application/json )
-        preview_json; exit ;;
+        preview_json ;;
     application/pdf )
-        preview_pdf; exit ;;
+        preview_pdf ;;
     application/zip )
-        preview_zip; exit ;;
+        preview_zip ;;
+    application/*-compressed )
+        preview_7z ;;
     */xml | application/postscript )
-        preview_bat -l xml; exit ;;
+        preview_bat -l xml ;;
     video/* | audio/* )
-        preview_video; exit ;;
+        preview_video ;;
     image/* )
-        preview_image; exit ;;
+        preview_image ;;
     text/* )
-        preview_bat; exit ;;
+        preview_bat ;;
 esac
 
-preview_binary
+mime_encoding=$(file --mime-encoding -Lb -- "$path")
+if [[ "$mime_encoding" == binary ]]; then
+    preview_binary
+else
+    preview_bat
+fi
+
+exit 0
