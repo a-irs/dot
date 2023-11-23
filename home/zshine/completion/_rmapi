@@ -1,35 +1,33 @@
 #compdef rmapi
 
 _rmapi_remote() {
-    local remfiles remdispf remdispd ret=1 pfx='\^/' sub='^/' suf expl
-    curdir=${words[CURRENT]%/*} # current string up to before /*
+    local expl remfiles remdispf remdispd ret=1
 
-    remfiles=(${(f)"$(_call_program files rmapi ls $IPREFIX${${PREFIX%%[^/]#}/#$pfx/$sub} | grep -E '^\[(d|f)]' | sed -E 's|^(\S+)\s+(.+)|\2\1|;s|\[d]$|/|;s|\[f]$||' | sort)"})
-    remdispf=(${remfiles:#*/})     # all files
-    remdispd=(${(M)remfiles:#*/})  # all directories
+    if zstyle -T ":completion:${curcontext}:files" remote-access; then
+        remfiles=(${(f)"$(_call_program files rmapi ls $IPREFIX${PREFIX%%[^/]} | grep -E '^\[(d|f)]' | sed -E 's|^(\S+)\s+(.+)|\2\1|;s|\[d]$|/|;s|\[f]$||' | sort)"})
+        remdispf=(${remfiles:#*/})
+        remdispd=(${(M)remfiles:#*/})
 
-    compset -P '*/'
-    compset -S '/*' || suf=file
+        compset -P '*/'
+        compset -S '/*'
 
-    _tags files
-    while _tags; do
-      while _next_label files expl ${suf:-directory}; do
-        # add files, unless there is a '/' immediately to the right
-        if [[ -n $suf ]]; then
-            compadd -S ' ' "$@" "$expl[@]" -d remdispf -- $remdispf && ret=0
-        fi
-        # add directories; use empty suffix if there is a '/' immediately to the right
-        compadd "${suf:+-S/}" "$@" "$expl[@]" -d remdispd -- ${remdispd%/} && ret=0
-      done
-      (( ret )) || return 0
-    done
-    return 1
+        _tags remote-files
+        while _tags; do
+            while _next_label remote-files expl "remote-path"; do
+                compadd     -d remdispf -- ${remdispf} && ret=0
+                compadd -S/ -d remdispd -- ${remdispd%/} && ret=0
+            done
+            (( ret )) || return 0
+        done
+        return ret
+    else
+        _message -e remote-files 'remote file'
+    fi
 }
 
 _rmapi() {
   local context state line
   typeset -A opt_args
-  # -C allows to change curcontext
   _arguments -C \
     '1:cmd:->cmds' \
     '*:: :->args' \
@@ -51,9 +49,9 @@ _rmapi() {
   (args)
     case $words[1] in
       ls) _rmapi_remote ;;
-      get|geta) _alternative "files:file:_rmapi_remote" ;;
+      get|geta) _rmapi_remote ;;
       stat|ls|rm|find) _rmapi_remote ;;
-      mkdir) _alternative "directories:file:_rmapi_remote" ;;
+      mkdir) _alternative "files:file:_rmapi_remote" ;;
       mget) _arguments "-o[output directory]:file:_files -/" "-i[incremental]" "*:: :_rmapi_remote" ;;
       put) _files -g "*.(pdf|epub|PDF|EPUB)" ;;
     esac
