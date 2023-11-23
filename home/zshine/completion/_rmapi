@@ -1,0 +1,60 @@
+#compdef rmapi
+
+_rmapi_remote_files() {
+    local remfiles remdispf remdispd ret=1 pfx='\^/' sub='^/' suf expl
+    curdir=${words[CURRENT]%/*} # current string up to before /*
+    remfiles=(${(f)"$(_call_program files rmapi ls $IPREFIX${${PREFIX%%[^/]#}/#$pfx/$sub} | grep -E '^\[(d|f)]' | sed -E 's|^(\S+)\s+(.+)|\2\1|;s|\[d]$|/|;s|\[f]$||' | sort)"})
+    compset -P '*/'
+    compset -S '/*' || suf=file
+
+    remdispf=(${remfiles:#*/})
+    remdispd=(${(M)remfiles:#*/})
+    _tags files
+    while _tags; do
+      while _next_label files expl ${suf:-directory}; do
+        # add files, unless there is a '/' immediately to the right
+        if [[ -n $suf ]]; then
+            compadd -S ' ' "$@" "$expl[@]" -d remdispf -- $remdispf && ret=0
+        fi
+        # add directories; use empty suffix if there is a '/' immediately to the right
+        compadd "${suf:+-S/}" "$@" "$expl[@]" -d remdispd -- ${remdispd%/} && ret=0
+      done
+      (( ret )) || return 0
+    done
+    return 1
+}
+
+_rmapi() {
+  local context state line
+  typeset -A opt_args
+  # -C allows to change curcontext
+  _arguments -C \
+    '1:cmd:->cmds' \
+    '*:: :->args' \
+  && ret=0
+
+  case "$state" in
+    (cmds)
+       local commands; commands=(
+         'find:find dir [regexp]'
+         'get:download'
+         'ls:list'
+         'mget:download directory'
+         'put:upload'
+         'rm:remove'
+         'stat:show information'
+       )
+       _describe -t commands 'command' commands && ret=0
+  ;;
+  (args)
+    case $words[1] in
+      ls) _rmapi_remote_files ;;
+      get) _alternative "files:file:_rmapi_remote_files" ;;
+      stat|ls|rm|find) _rmapi_remote_files ;;
+      mget) _arguments "-o[output directory]:file:_files -/" "*:: :_rmapi_remote_files" ;;
+      put) _files -g "*.(pdf|epub|PDF|EPUB)" ;;
+    esac
+esac
+}
+
+_rmapi "$@"
