@@ -1,14 +1,16 @@
 #compdef rmapi
 
-_rmapi_remote_files() {
+_rmapi_remote() {
     local remfiles remdispf remdispd ret=1 pfx='\^/' sub='^/' suf expl
     curdir=${words[CURRENT]%/*} # current string up to before /*
+
     remfiles=(${(f)"$(_call_program files rmapi ls $IPREFIX${${PREFIX%%[^/]#}/#$pfx/$sub} | grep -E '^\[(d|f)]' | sed -E 's|^(\S+)\s+(.+)|\2\1|;s|\[d]$|/|;s|\[f]$||' | sort)"})
+    remdispf=(${remfiles:#*/})     # all files
+    remdispd=(${(M)remfiles:#*/})  # all directories
+
     compset -P '*/'
     compset -S '/*' || suf=file
 
-    remdispf=(${remfiles:#*/})
-    remdispd=(${(M)remfiles:#*/})
     _tags files
     while _tags; do
       while _next_label files expl ${suf:-directory}; do
@@ -48,10 +50,11 @@ _rmapi() {
   ;;
   (args)
     case $words[1] in
-      ls) _rmapi_remote_files ;;
-      get) _alternative "files:file:_rmapi_remote_files" ;;
-      stat|ls|rm|find) _rmapi_remote_files ;;
-      mget) _arguments "-o[output directory]:file:_files -/" "*:: :_rmapi_remote_files" ;;
+      ls) _rmapi_remote ;;
+      get|geta) _alternative "files:file:_rmapi_remote" ;;
+      stat|ls|rm|find) _rmapi_remote ;;
+      mkdir) _alternative "directories:file:_rmapi_remote" ;;
+      mget) _arguments "-o[output directory]:file:_files -/" "-i[incremental]" "*:: :_rmapi_remote" ;;
       put) _files -g "*.(pdf|epub|PDF|EPUB)" ;;
     esac
 esac
