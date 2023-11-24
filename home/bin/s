@@ -68,7 +68,7 @@ cleanup_openssl() {
 
 run1() { printf "${yellow}[%s]$reset\n" "$1"; "$@"; }
 run2() { printf "${yellow}[%s %s]$reset\n" "$1" "$2"; "$@"; }
-run3() { printf "${yellow}[%s %s %s]$reset\n" "$1" "$2"; "$3"; }
+run3() { printf "${yellow}[%s %s %s]$reset\n" "$1" "$2" "$3"; "$@"; }
 
 _bat() {
   run1 bat "$@" --force-colorization --style=snip --no-pager
@@ -97,7 +97,7 @@ preview_image() { run2 exiftool -canon "$path"; }
 preview_video() { run1 mediainfo "$path"; }
 preview_json() { run1 jsn "$path"; }
 preview_bat() { _bat "$path" "$@"; }
-preview_sshkey() { run1 ssh-keygen -l -f "$path"; echo ""; cat "$path"; }
+preview_sshkey() { run3 ssh-keygen -l -v -f "$path"; echo ""; cat "$path"; }
 preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
 preview_cert() { run2 openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
 preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass ''; }

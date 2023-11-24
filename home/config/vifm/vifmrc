@@ -224,6 +224,9 @@ nnoremap <space>e :touch<space>
 nnoremap <space>m :mkdir!<Space>
 nnoremap <space>M :take<Space>
 
+" like VIM (quit window)
+nnoremap <C-w>q <c-w>p<c-w>o
+
 " reload config
 nnoremap <space>r :restart full | echo 'config reloaded'<cr>
 

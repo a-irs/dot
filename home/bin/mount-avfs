@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+export AVFSBASE=/run/user/$UID/avfs
+mkdir -p "$AVFSBASE"
+
 mountavfs
 
 dest=$1
 file=$2
 
 rmdir "$dest"
-ln -s "$HOME/.avfs$file#/" "$dest"
+ln -s "${AVFSBASE}$file#/" "$dest"

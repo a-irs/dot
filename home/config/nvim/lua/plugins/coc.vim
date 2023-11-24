@@ -9,6 +9,7 @@ let g:coc_global_extensions = [
     \ 'coc-tsserver',
     \ 'coc-solidity',
     \ 'coc-word',
+    \ 'coc-dictionary',
     \ 'coc-css',
     \ 'coc-diagnostic',
     \ '@yaegassy/coc-ansible'

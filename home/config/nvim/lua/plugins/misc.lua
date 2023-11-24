@@ -34,4 +34,6 @@ return {
     end
   },
 
+  -- readline mappings: CTRL-A, CTRL-E etc. in insert and command mode
+  "tpope/vim-rsi",
 }

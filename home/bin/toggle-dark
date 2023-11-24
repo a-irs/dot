@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+get_current() {
+    local theme=$(grep '^Net/ThemeName' ~/.xsettingsd | awk '{print $NF}' | tr -d '"')
+    if [[ "$theme" == *-Dark ]]; then
+        echo dark
+    else
+        echo light
+    fi
+}
+
+set_light() {
+    sed -Ei 's|(Net/ThemeName.*)-Dark"|\1"|' ~/.xsettingsd
+}
+
+set_dark() {
+    sed -Ei 's|(Net/ThemeName.*)"|\1-Dark"|' ~/.xsettingsd
+}
+
+current=$(get_current)
+if [[ "$current" == dark ]]; then
+    set_light
+else
+    set_dark
+fi
+
+killall -e xsettingsd
+xsettingsd >/dev/null 2>&1 &

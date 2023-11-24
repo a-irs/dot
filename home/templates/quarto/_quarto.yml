@@ -17,7 +17,7 @@ format:
       - compact-list
     hyperrefoptions:
       - linktoc=all  # also link page numbers in TOC
-    documentclass: scrbook  # scrreport, scrarticle
+    documentclass: scrbook  # scrbook (based on book, e.g. only start chapters on new pages), scrartcl (based on article)
     classoption:
       - oneside  # default: twoside for scrbook
       - headsepline=true  # show separator under header
@@ -47,11 +47,15 @@ format:
 
       # reduce spacing above chapter
       - text: |
+          \ifdefined\chapter
           \RedeclareSectionCommand[beforeskip=-1sp]{chapter}
+          \fi
 
       # make section headers bigger
       - text: |
+          \ifdefined\chapter
           \addtokomafont{chapterprefix}{\Huge}
+          \fi
           \RedeclareSectionCommand[font=\LARGE]{section}
           \RedeclareSectionCommand[font=\Large]{subsection}
           \RedeclareSectionCommand[font=\large]{subsubsection}

@@ -31,6 +31,7 @@
   "vim-nix": { "branch": "master", "commit": "7d23e97d13c40fcc6d603b291fe9b6e5f92516ee" },
   "vim-ps1": { "branch": "master", "commit": "502590f90a21f0de2b7664d6d0dcc90e5bb28a9c" },
   "vim-regex-syntax": { "branch": "master", "commit": "4e36eff79aa40956ae17ee143e518556865ce818" },
+  "vim-rsi": { "branch": "master", "commit": "45540637ead22f011e8215f1c90142e49d946a54" },
   "vim-sh": { "branch": "master", "commit": "cebda390c56654a4c9f96f66727e9be076a7aee3" },
   "vim-signify": { "branch": "master", "commit": "7d538b77a5a8806e344b057f8846f6d0c035efa9" },
   "vim-spl": { "branch": "master", "commit": "f89da952dc4c08b0d830370d40cd53886d402547" },

@@ -34,8 +34,11 @@
     "outline.sortBy": "position",
 
     // https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources#completion-sources
-    "coc.source.around.priority": 2,
-    "coc.source.buffer.priority": 1,
+    "coc.source.around.priority": 3,
+    "coc.source.buffer.priority": 2,
+
+    "coc.source.dictionary.filetypes": ["markdown"],
+    "coc.source.dictionary.priority": 1,
 
     "coc.source.word.filetypes": ["markdown"],
     "coc.source.word.priority": 0,

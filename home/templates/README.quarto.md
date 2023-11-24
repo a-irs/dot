@@ -1,3 +1,16 @@
+Debugging
+=========
+
+To debug filters, run with `pandoc` e.g. like this (or `--lua-filter`):
+
+```bash
+$ pandoc --filter=_extensions/filter.py main.md
+
+# which is equivalent to the following (so you can put `jq` in between for example for debugging)
+$ pandoc -t json main.md | _extensions/filter.py | pandoc -f json
+```
+
+
 Extensions
 ===========
 
