@@ -99,7 +99,13 @@ preview_json() { run1 jsn "$path"; }
 preview_bat() { _bat "$path" "$@"; }
 preview_sshkey() { run3 ssh-keygen -l -v -f "$path"; echo ""; cat "$path"; }
 preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
-preview_cert() { run2 openssl x509 -noout -text -in "$path" "$@" | cleanup_openssl; }
+preview_openssl() {
+    {
+        run2 openssl x509 -noout -text -in "$path" "$@" 2>/dev/null || \
+        run2 openssl ec -pubin -in "$path" -noout -text "$@" 2>/dev/null || \
+        run2 openssl rsa -pubin -in "$path" -noout -text "$@"
+    } | cleanup_openssl
+}
 preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass ''; }
 preview_pkcs_openssl() { run2 openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
 preview_csr() { run2 openssl req -in "$path" -noout -text | cleanup_openssl; }
@@ -143,7 +149,7 @@ if [[ -d "$path" ]]; then
 fi
 
 case "$file_type" in
-    "Certificate, Version=3"*) preview_cert -inform der ;;
+    "Certificate, Version=3"*) preview_openssl -inform der ;;
     "PGP public "*) preview_pgp ;;
     "PGP signature "*) preview_pgp_sig ;;
     "PGP "*"encrypted"*) preview_pgp_sig ;;
@@ -152,7 +158,7 @@ case "$file_type" in
     "GPG key trust database"*) preview_binary ;;
     *" private key") preview_sshkey ;;
     *" public key") preview_sshkey ;;
-    *" certificate") preview_cert ;;
+    *" certificate") preview_openssl ;;
     *" certificate request") preview_csr ;;
     ELF*) preview_elf ;;
     AppleScript*) preview_applescript ;;
@@ -194,7 +200,7 @@ case "$extension" in
     crl)
         preview_crl | cleanup_openssl ;;
     crt|pem)
-        preview_cert ;;
+        preview_openssl || preview_key ;;
     rw2)
         preview_image ;;
 esac
@@ -228,7 +234,8 @@ mime_encoding=$(file --mime-encoding -Lb -- "$path")
 if [[ "$mime_encoding" == binary ]]; then
     preview_binary
 else
-    preview_bat
+    # fallback bat should show non-printable characters with unicode symbols
+    preview_bat || preview_bat --show-all
 fi
 
 exit 0

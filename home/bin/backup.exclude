@@ -57,7 +57,9 @@ R /home
 - home/*/.kodi/userdata/Thumbnails/*
 - home/*/.local/pipx/
 - home/*/.local/state/nvim/
+- home/*/.vim/undo
 - home/*/.local/share/Trash/
+- home/*/.local/share/okular/docdata
 - home/*/.local/share/vifm/Trash/
 - home/*/.local/share/yay/*/src
 - home/*/.local/share/yay/**/*.deb

@@ -1,5 +1,5 @@
 project:
-  render: [main.md]
+  render: ["/*.md"]
   output-dir: .output
 
 lang: en
@@ -93,3 +93,5 @@ format:
   commonmark_x:
     toc: false
     wrap: preserve
+
+format-links: false

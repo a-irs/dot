@@ -52,10 +52,10 @@ _rmapi() {
     case $words[1] in
       ls) _rmapi_remote ;;
       get|geta) _alternative "files:file:_rmapi_remote" ;;
-      stat|ls|rm|find) _rmapi_remote ;;
+      stat|ls|rm|find|mv) _rmapi_remote ;;
       mkdir) _alternative "directories:file:_rmapi_remote" ;;
       mget) _arguments "-o[output directory]:file:_files -/" "-i[incremental]" "*:: :_rmapi_remote" ;;
-      put) _files -g "*.(pdf|epub|PDF|EPUB)" ;;
+      put*) _files -g "*.(pdf|epub|PDF|EPUB)" ;;
     esac
 esac
 }

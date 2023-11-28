@@ -43,7 +43,16 @@ local function run_or_raise(cmd, class)
 end
 
 local function focus(direction)
-    awful.client.focus.bydirection(direction)
+    -- for suit.max layout, focus by index instead of direction
+    if (awful.layout.get(awful.screen.focused()) == awful.layout.suit.max) then
+        if direction == "left" or direction == "down" then
+            awful.client.focus.byidx(-1)
+        else
+            awful.client.focus.byidx(1)
+        end
+    else
+        awful.client.focus.bydirection(direction)
+    end
     if client.focus then client.focus:raise() end
 end
 

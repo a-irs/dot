@@ -6,22 +6,6 @@ import sys
 
 # converts ASCII arrows to InlineMath arrows or UTF8 characters
 rep = {
-    "->": {
-        "latex": r'\rightarrow',
-        "utf8": '→',
-    },
-    "=>": {
-        "latex": r'\Rightarrow',
-        "utf8": '⇒',
-    },
-    "<-": {
-        "latex": r'\leftarrow',
-        "utf8": '←',
-    },
-    "<=": {
-        "latex": r'\Leftarrow',
-        "utf8": '⇐',
-    },
     "<->": {
         "latex": r'\leftrightarrow',
         "utf8": '↔',
@@ -29,6 +13,22 @@ rep = {
     "<=>": {
         "latex": r'\Leftrightarrow',
         "utf8": '⇔',
+    },
+    "-> ": {
+        "latex": r'\rightarrow ',
+        "utf8": '→ ',
+    },
+    "=> ": {
+        "latex": r'\Rightarrow ',
+        "utf8": '⇒ ',
+    },
+    " <-": {
+        "latex": r' \leftarrow',
+        "utf8": ' ←',
+    },
+    " <=": {
+        "latex": r' \Leftarrow',
+        "utf8": ' ⇐',
     },
 }
 rep = dict((re.escape(k), v) for k, v in rep.items())
