@@ -94,6 +94,7 @@ R /home
 - home/*/.config/chromium/hyphen-data
 - **/.maestral.cache
 - home/*/.avfs
+- home/*/.quarto
 - home/*/.dropbox
 - home/*/downloads/
 - home/*/media/

@@ -14,38 +14,37 @@ rep = {
         "latex": r'\Leftrightarrow',
         "utf8": '⇔',
     },
-    "-> ": {
-        "latex": r'\rightarrow ',
-        "utf8": '→ ',
+    "->": {
+        "latex": r'\rightarrow',
+        "utf8": '→',
     },
-    "=> ": {
-        "latex": r'\Rightarrow ',
-        "utf8": '⇒ ',
+    "=>": {
+        "latex": r'\Rightarrow',
+        "utf8": '⇒',
     },
-    " <-": {
-        "latex": r' \leftarrow',
-        "utf8": ' ←',
+    "<-": {
+        "latex": r'\leftarrow',
+        "utf8": '←',
     },
-    " <=": {
-        "latex": r' \Leftarrow',
-        "utf8": ' ⇐',
+    "<=": {
+        "latex": r'\Leftarrow',
+        "utf8": '⇐',
     },
 }
 rep = dict((re.escape(k), v) for k, v in rep.items())
-pattern = re.compile("|".join(rep.keys()))
+pattern = re.compile("^" + "|".join(rep.keys()) + "$")
 
 def replace(key, value, format, meta):
-
     if format == 'latex':
         if key == 'Str':
             s, count = pattern.subn(lambda m: rep[re.escape(m.group(0))]["latex"], value)
             if count > 0:
                 # print(key, value, s, file=sys.stderr)
-                return Math(dict(t="InlineMath", c=[]), "$" + s + "$")
+                return Math(dict(t="InlineMath", c=[]), s)
             else:
                 return Str(s)
 
-    elif format in ['markdown', 'html']:
+    else:
         if key == 'Str':
             s = pattern.sub(lambda m: rep[re.escape(m.group(0))]["utf8"], value)
             return Str(s)

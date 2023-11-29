@@ -8,13 +8,14 @@ toc: true
 number-sections: false
 # number-depth: 2
 
+filters:
+  - compact-list
+  - ascii-replacer
+
 format:
   # https://quarto.org/docs/reference/formats/pdf.html
   # https://quarto.org/docs/output-formats/pdf-basics.html
   pdf:
-    filters:
-      - ascii-replacer
-      - compact-list
     hyperrefoptions:
       - linktoc=all  # also link page numbers in TOC
     documentclass: scrbook  # scrbook (based on book, e.g. only start chapters on new pages), scrartcl (based on article)
@@ -28,8 +29,9 @@ format:
       # - chapterprefix=false
     papersize: a4
     pdf-engine: lualatex
-    fontsize: 11pt
+    fontsize: 11pt  # rM2: 14pt
     geometry: [top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, heightrounded]
+    # rM2: [top=1cm, bottom=1cm, left=1.5cm, right=1cm, heightrounded]
     colorlinks: true
     links-as-notes: true
     csquotes: true  # localized quotation marks
@@ -77,9 +79,6 @@ format:
   # https://quarto.org/docs/output-formats/html-basics.html
   html:
     embed-resources: true
-    filters:
-      - ascii-replacer
-      - compact-list
 
     # 'mathml' looks better in Firefox, needs no dependencies
     # 'mathjax': looks more like LaTeX (serif) and looks better in Chrome, has JS CDN dependency

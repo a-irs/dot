@@ -149,6 +149,7 @@ globalkeys = awful.util.table.join(
 
     -- launch programs
 
+    awful.key({ win }, "i",          function() run_script("invert-window") end),
     awful.key({ win }, "r",          function() awful.screen.focused().myprompt:run() end),
     awful.key({ alt }, "space",      function() run("rofi -show drun") end),
     awful.key({ "Ctrl" }, "space",   function() run_script("menu-vpn") end),
