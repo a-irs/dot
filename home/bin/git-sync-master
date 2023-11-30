@@ -1,11 +1,7 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
-set -eu
+set -u
 
-git checkout master
-echo
-git pull
-echo
-git checkout -
-echo
-git merge master
+git fetch
+git merge origin/main 2>/dev/null
+git merge origin/master 2>/dev/null

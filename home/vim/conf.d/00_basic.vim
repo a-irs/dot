@@ -1,6 +1,11 @@
 set encoding=utf-8
 scriptencoding utf-8
 
+" disable NVIM providers except python
+let g:loaded_ruby_provider = 0
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+
 filetype plugin on
 syntax on
 set backspace=indent,eol,start  " when at beginning of line, pressing backspace joins with prev line
