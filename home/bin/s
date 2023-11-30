@@ -42,7 +42,7 @@ red=$(tput -T ansi setaf 1)
 
 remove_blank() { sed '/./,$!d'; } # remove blank lines at top of file
 remove_double_blank() { cat -s; } # remove multiple blank lines
-highlight_dirs() { GREP_COLOR='mt=1;33' grep -E --color=always '(.)*/|$'; } # TODO: not working in ranger
+highlight_dirs() { grep -E --color=always '(.)*/|$'; }
 cleanup_openssl() {
     # `# also show serial number as decimal, not only hex` \
     # | python3 -c 'import re, sys; s = sys.stdin.read(); i = int(re.search(r"Serial Number:.\s+([0-9a-zA-Z:]+)", s, flags=re.S)[1].replace(":", ""), 16); print(re.sub(r"Serial Number:(.\s+)", rf"Serial Number: \1DEC: {i}\1HEX: ", s, flags=re.S))' \
@@ -112,7 +112,7 @@ preview_csr() { run2 openssl req -in "$path" -noout -text | cleanup_openssl; }
 preview_crl() { run2 openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
 preview_csv() { run2 column -t -s\;, "$path"; }
 preview_rrd() { run1 rrdinfo "$path"; }
-preview_pkg() { run1 pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort; }
+preview_pkg() { run1 pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort | highlight_dirs; }
 preview_pgp() {
     run1 gpg --keyid-format 0xlong --show-keys --fingerprint --list-options show-keyring "$path" \
         | perl \
@@ -135,7 +135,7 @@ preview_pgp_sig() {
     local mime_encoding=$(file --mime-encoding -Lb -- "$path")
     [[ "$mime_encoding" != binary ]] && { echo; cat "$path"; }
 }
-preview_pgp_keybox() { run1 gpg -k --ignore-time-conflict --no-options --no-default-keyring --keyring "$path"; }
+preview_pgp_keybox() { run1 gpg -k --ignore-time-conflict --no-options --no-default-keyring --keyring "$(realpath "$path")"; }
 
 file_type=$(file -b -- "$path")
 mime_type=$(file --mime-type -Lb -- "$path")
