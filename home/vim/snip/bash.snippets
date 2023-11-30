@@ -1,0 +1,8 @@
+extends sh
+
+snippet "confirmation|sure|input|prompt" "confirmation prompt" br
+read -r -p "Are you sure? (y/N) " -n1
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    ${0:${VISUAL:# TODO}}
+fi
+endsnippet

@@ -1,1 +1,8 @@
 extends sh
+
+snippet "confirmation|sure|input|prompt" "confirmation prompt ZSH" br
+read -q "REPLY?Are you sure? (y/N) "
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    ${0:${VISUAL:# TODO}}
+fi
+endsnippet

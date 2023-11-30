@@ -163,7 +163,7 @@ filetype *.gz,*.tgz,*.tar,*.tar.bz2,*.bz2,*.tbz2,*.tbz,*.rar,*.zip,*.jar,*.war,*
 " do not launch e.g. .exe/.efi files
 filetype <application/*executable> echo "not launching automatically" %m
 " file open - text inside editor, rest with xdg-open
-filetype <text/*>,<application/*json*> nvim
+filetype <text/*>,<application/*json*>,<message/*> nvim
 if $LC_TERMINAL == "iTerm2"
     filetype *,.* open 2>&1 &
 else

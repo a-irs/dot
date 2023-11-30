@@ -24,6 +24,10 @@ venv() {
 
     local venv=$(pipenv --venv)
     if [[ -z "$venv" ]]; then
+        read -q "REPLY?No virtualenv found, create? (y/N) "
+        if ! [[ $REPLY =~ ^[Yy]$ ]]; then
+            return
+        fi
         pipenv install --site-packages --dev --ignore-pipfile
         venv=$(pipenv --venv)
     fi
