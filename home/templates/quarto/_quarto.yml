@@ -1,5 +1,5 @@
 project:
-  render: ["/*.md"]
+  render: [content/_index.md]
   output-dir: .output
 
 lang: en

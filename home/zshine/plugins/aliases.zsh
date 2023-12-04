@@ -389,8 +389,10 @@ if [[ "$commands[tmux]" ]]; then
 fi
 
 [[ "$commands[xev]" ]] && capture-keys() { xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'; }
-[[ "$commands[youtube-dl]" ]] && alias yt-audio='noglob youtube-dl -f bestaudio -x -o "%(title)s.%(ext)s"'
-[[ "$commands[youtube-dl]" ]] && alias yt='noglob youtube-dl --write-sub --sub-lang en,de --embed-subs --prefer-free-formats --write-info-json -f bestvideo+bestaudio'
+if [[ "$commands[yt-dlp]" ]]; then
+    alias yt="noglob yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --write-sub --sub-lang en,de --embed-subs --write-info-json --sponsorblock-remove default --embed-metadata --embed-chapters"
+    alias yt-audio="noglob yt-dlp -f 'bestaudio[ext=m4a]' --sponsorblock-remove default --embed-metadata --embed-chapters --extract-audio"
+fi
 [[ "$commands[journalctl]" ]] && alias j='sudo journalctl'
 
 [[ "$commands[ncdu]" ]] && alias ncdu='NO_COLOR=1 ncdu'

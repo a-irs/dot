@@ -6,29 +6,26 @@ MAKEFLAGS += -j $(shell nproc)
 
 dest := .output
 
-all: pdf html md tex docx odt
+all: pdf html md docx odt
 
 pdf: $(dest)/$(NAME).pdf
 html: $(dest)/$(NAME).html
 md: $(dest)/$(NAME).md
-tex: $(dest)/$(NAME).tex
 docx: $(dest)/$(NAME).docx
 odt: $(dest)/$(NAME).odt
 
-src := *.md content/* _extensions/*/* _quarto.yml Makefile
+src := content/* _extensions/*/* assets/* _quarto.yml Makefile
 
 $(dest)/$(NAME).pdf: $(src)
-	quarto render --to pdf --output $(NAME).pdf
+	quarto render --to pdf && mv -f $(dest)/content/_index.pdf $@
 $(dest)/$(NAME).html: $(src)
-	quarto render --to html --output $(NAME).html
+	quarto render --to html && mv -f $(dest)/content/_index.html $@
 $(dest)/$(NAME).md: $(src)
-	quarto render --to commonmark_x --output $(NAME).md
-$(dest)/$(NAME).tex: $(src)
-	quarto render --to latex --output $(NAME).tex
+	quarto render --to commonmark_x && mv -f $(dest)/content/_index.commonmark_x.md $@
 $(dest)/$(NAME).docx: $(src)
-	quarto render --to docx --output $(NAME).docx
+	quarto render --to docx && mv -f $(dest)/content/_index.docx $@
 $(dest)/$(NAME).odt: $(src)
-	quarto render --to odt --output $(NAME).odt
+	quarto render --to odt && mv -f $(dest)/content/_index.odt $@
 
 watch:
 	ls $(src) | entr make $$TARGET
