@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for file in "$@"; do
+    if [[ ! -f "$file" ]]; then
+        echo "extract: '$file' is not a valid file" 1>&2
+        continue
+    fi
+
+    file_name="${file##*/}"
+    extract_dir="${file_name%.*}"
+    extract_dir="${extract_dir%.tar}"
+
+    if [[ -e "$extract_dir" ]]; then
+        echo "extract: target directory '$extract_dir' already exists" 1>&2
+        continue
+    fi
+
+    case "$file" in
+        *.tar.gz|*.tgz|*.tar.bz2|*.tar.xz|*.tar.zst|*.tar) mkdir -p "$extract_dir" && tar xvf "$file" -C "$extract_dir" ;;
+        *.gz) gunzip "$file" ;;
+        *.bz2) bunzip2 "$file" ;;
+        *.xz) unxz "$file" ;;
+        *.lzma) unlzma "$file" ;;
+        *.Z) uncompress "$file" ;;
+        *.pax) mkdir -p "$extract_dir" && cd "$extract_dir" && pax -rf "../$file" && cd - ;;
+        *.zip|*.war|*.jar|*.sublime-package|*.ipsw|*.xpi|*.apk|*.docx|*.pptx|*.xlsx) unzip "$file" -d "$extract_dir" ;;
+        *.rar) unrar x -ad "$file" ;;
+        *.7z) 7za x "$file" -o"$extract_dir" ;;
+        *.dmg)
+            mnt=$(mktemp -d)
+            hdiutil attach -readonly -mountpoint "$mnt" "$file" >/dev/null && \
+            cp -av "$mnt" "$extract_dir" && \
+            hdiutil detach >/dev/null "$mnt"
+            ;;
+        *.pkg) pkgutil --expand-full "$file" "$extract_dir" ;;
+        *.deb)
+            mkdir -p "$extract_dir"/debian && \
+            cd "$extract_dir"; ar vx "../$file" > /dev/null && \
+            tar xvf control.tar.* -C debian && \
+            tar xvf data.tar.* -C . && \
+            rm -f ./*.tar.* && \
+            cd - >/dev/null
+            ;;
+        *) echo "extract: '$file' cannot be extracted: unknown extension" 1>&2; continue ;;
+    esac
+
+    # if we only have one subdirectory and it has the same name as the upper directory, flatten directories
+    subdirs=("$extract_dir"/*)
+    if [[ "${#subdirs[@]}" -eq 1 ]]; then
+        subdir="${subdirs[0]}"
+        subdir_name=${subdirs[0]##*/}
+        if [[ "$subdir_name" == "$extract_dir" ]]; then
+            mv -f "$subdir/"* "$extract_dir"
+            rmdir "$subdir"
+        fi
+    fi
+done

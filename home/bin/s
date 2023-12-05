@@ -86,11 +86,13 @@ preview_sqlite() {
 }
 
 preview_applescript() { run1 osadecompile "$path" | _bat -l AppleScript; }
+preview_deb() { ar -p "$path" control.tar.xz | tar --to-stdout -xf - md5sums | cut -d ' ' -f 3- | highlight_dirs; }
 preview_tar() { run2 tar tf "$path" | highlight_dirs; }
 preview_rar() { run2 unrar lb "$path" | highlight_dirs; }
-preview_7z() { run2 7z l -ba "$path" | highlight_dirs; }
-preview_zip() { run2 zipinfo -2tz "$path" | highlight_dirs; }
+preview_7z() { run2 7z l -ba "$path" 2>/dev/null || run2 7za l -ba "$path" 2>/dev/null | highlight_dirs; }
+preview_zip() { run2 zipinfo -1tz "$path" | highlight_dirs; }
 preview_htm() { run1 elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
+preview_bom() { run1 lsbom -s "$path" | highlight_dirs; }
 preview_pdf() { run1 pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
 preview_txt() { run1 cat "$path" | remove_blank | remove_double_blank; }
 preview_image() { run2 exiftool -canon "$path"; }
@@ -149,6 +151,7 @@ if [[ -d "$path" ]]; then
 fi
 
 case "$file_type" in
+    *"bill of materials"*) preview_bom ;;
     "Certificate, Version=3"*) preview_openssl -inform der ;;
     "PGP public "*) preview_pgp ;;
     "PGP signature "*) preview_pgp_sig ;;
@@ -171,6 +174,8 @@ fi
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
         preview_tar ;;
+    deb)
+        preview_deb ;;
     rar)
         preview_rar ;;
     7z|dmg)

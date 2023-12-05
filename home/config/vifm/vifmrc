@@ -158,7 +158,8 @@ command! take  :mkdir! %a | cd %a
 fileviewer *,.* s %c
 
 filetype *.gz,*.tgz,*.tar,*.tar.bz2,*.bz2,*.tbz2,*.tbz,*.rar,*.zip,*.jar,*.war,*.apk,*.7z,*.deb,*.tar.lz,*.tar.zst,*.tar.xz,<application/*archive>
-  \ FUSE_MOUNT3|mount-avfs %DESTINATION_DIR %SOURCE_FILE
+  \ FUSE_MOUNT3|mount-avfs %DESTINATION_DIR %SOURCE_FILE,
+   \ {extract} extract %f   %m,
 
 " do not launch e.g. .exe/.efi files
 filetype <application/*executable> echo "not launching automatically" %m

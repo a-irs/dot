@@ -432,48 +432,6 @@ alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 
-extract() {
-    local f=$@
-    local file
-    for file in "${f[@]}"; do
-        if [[ ! -f "$1" ]]; then
-            echo "extract: '$file' is not a valid file" 1>&2
-            continue
-        fi
-
-        file_name="${file##*/}"
-        extract_dir="${file_name%.*}"
-        extract_dir="${extract_dir%.tar}"
-        case "$file" in
-            (*.tar.gz|*.tgz|*.tar.bz2|*.tar.xz|*.tar.zst|*.tar) mkdir -p "$extract_dir" && tar xvf "$file" -C "$extract_dir" ;;
-            (*.gz) gunzip "$file" ;;
-            (*.bz2) bunzip2 "$file" ;;
-            (*.xz) unxz "$file" ;;
-            (*.lzma) unlzma "$file" ;;
-            (*.Z) uncompress "$file" ;;
-            (*.pax) mkdir -p "$extract_dir" && cd "$extract_dir" && pax -rf "../$file" && cd - ;;
-            (*.zip|*.war|*.jar|*.sublime-package|*.ipsw|*.xpi|*.apk|*.docx|*.pptx|*.xlsx) unzip "$file" -d $extract_dir ;;
-            (*.rar) unrar x -ad "$file" ;;
-            (*.7z) 7za x "$file" -o"$extract_dir" ;;
-            (*.dmg)
-                local mnt=$(mktemp -d)
-                hdiutil attach -readonly -mountpoint "$mnt" "$file" >/dev/null && \
-                cp -av "$mnt" "$extract_dir" && \
-                hdiutil detach >/dev/null "$mnt"
-                ;;
-            (*.pkg) pkgutil --expand "$file" "$extract_dir" ;;
-            (*.deb)
-                mkdir -p "$extract_dir"/{control,data} && \
-                cd "$extract_dir"; ar vx "../$file" > /dev/null && \
-                tar xvf control.tar.* -C control && \
-                tar xvf data.tar.* -C data && \
-                rm -f *.tar.* && \
-                cd -
-                ;;
-            (*) echo "extract: '$file' cannot be extracted: unknown extension" 1>&2 ;;
-        esac
-    done
-}
 alias x=extract
 
 highlight()       {
@@ -493,10 +451,6 @@ if [[ "$commands[git]" ]]; then
     alias gs="git s"
     alias gd="git d"
     alias ge="git ls-files -m --exclude-standard -z | command fzf --multi --preview='s {}' --exit-0 --read0 --print0 --height=70% --reverse --select-1 | xargs -0 -o $vim -o"
-
-    clone() {
-        git clone --depth 1 "$1" && cd $(basename ${1//.git/})
-    }
 
     gop() {
         local arg=$1

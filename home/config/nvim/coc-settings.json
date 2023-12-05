@@ -1,4 +1,8 @@
 {
+    "ltex.enabled": false,
+    "ltex.language": "en-US",
+    "ltex.completionEnabled": true,
+
     "diagnostic-languageserver.formatFiletypes": {
       "sh": "shfmt"
     },

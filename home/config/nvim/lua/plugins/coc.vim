@@ -12,11 +12,13 @@ let g:coc_global_extensions = [
     \ 'coc-dictionary',
     \ 'coc-css',
     \ 'coc-diagnostic',
-    \ '@yaegassy/coc-ansible'
+    \ '@yaegassy/coc-ansible',
+    \ 'coc-ltex',
     \ ]
 autocmd FileType scss setl iskeyword+=@-@
 let g:coc_filetype_map = {
   \ 'yaml.ansible': 'ansible',
+  \ 'tex': 'latex',
   \ }
 
 function! s:show_documentation()
