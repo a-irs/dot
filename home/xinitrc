@@ -14,7 +14,7 @@ xsettingsd &
 
 pkcs11-register &
 
-if [[ $HOSTNAME == x1 ]]; then
+if [[ $HOSTNAME == x1* ]]; then
     xrandr --output eDP --mode 3072x1920 --rate 120 &
     blueman-applet &
     pactl set-sink-mute @DEFAULT_SINK@ true &

@@ -1,5 +1,6 @@
+unset LC_ALL
 [[ -z "$LANG" ]] && export LANG=en_US.UTF-8
-[[ -z "$LC_ALL" ]] && export LC_ALL=en_US.UTF-8
+export LC_COLLATE=C  # e.g. sort _index.md at beginning
 
 # autostart tmux if available
 if [[ "$commands[tmux]" && -z "$VIM" && -z "$EMACS" && -z "$INSIDE_EMACS" && -z "$TMUX" ]]; then

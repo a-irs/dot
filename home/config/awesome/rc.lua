@@ -12,7 +12,7 @@ local xresources = require('beautiful').xresources
 local beautiful  = require 'beautiful'
 
 hostname        = awesome.hostname
-is_mobile       = hostname == "x1"
+is_mobile       = hostname:find("^x1") ~= nil
 
 -- re-set wallpaper after awesomewm reload
 awful.spawn("nitrogen --restore", false)

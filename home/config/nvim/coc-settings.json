@@ -2,6 +2,12 @@
     "ltex.enabled": false,
     "ltex.language": "en-US",
     "ltex.completionEnabled": true,
+    "ltex.disabledRules": {
+        "en-US": [
+            // https://community.languagetool.org/rule/show/ARROWS?lang=en-US
+            "ARROWS"
+        ]
+    },
 
     "diagnostic-languageserver.formatFiletypes": {
       "sh": "shfmt"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export AVFSBASE=/run/user/$UID/avfs
+export AVFSBASE=${XDG_RUNTIME_DIR:-/run/user/$UID}/avfs
 mkdir -p "$AVFSBASE"
 
 mountavfs
