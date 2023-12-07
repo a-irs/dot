@@ -6,7 +6,8 @@ export BAT_THEME=ansi
 
 v() {
     local before=$PWD
-    local dest="$(command vifm --choose-dir - "$@")"
+    cd "$1"
+    local dest="$(command vifm --choose-dir -)"
     if [[ -n "$dest" ]] && [[ "$before" != "$dest" ]]; then
         # unset and re-set "auto-ls" chpwd hook
         local chpwd_before=$(which chpwd); chpwd() {}
@@ -14,7 +15,6 @@ v() {
         eval $chpwd_before
     fi
 }
-alias vifm=v
 
 _url() {
     local func=$1; shift
