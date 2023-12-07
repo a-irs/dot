@@ -15,7 +15,7 @@ zle -N bracketed-paste bracketed-paste-magic
 typeset -gU cdpath fpath mailpath path
 
 # add external bin paths to PATH
-for p in ~/.bin ~/.cargo/bin ~/.bin/$HOST ~/.rd/bin /usr/share/bcc/tools; do
+for p (~/.bin ~/.cargo/bin ~/.bin/$HOST ~/.rd/bin /usr/share/bcc/tools); do
     [[ -d "$p" ]] && path=("$p" $path)
 done
 unset p
