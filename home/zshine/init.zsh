@@ -13,11 +13,12 @@ zle -N bracketed-paste bracketed-paste-magic
 
 # no duplicate entries for path arrays
 typeset -gU cdpath fpath mailpath path
-[ -d "$HOME/.bin" ] && path=("$HOME/.bin" $path)
-[ -d "$HOME/.cargo/bin" ] && path=("$HOME/.cargo/bin" $path)
-[ -d "$HOME/.bin/$HOST" ] && path=("$HOME/.bin/$HOST" $path)
-[ -d "$HOME/.rd/bin" ] && path=("$HOME/.rd/bin" $path)  # Rancher Desktop
-[ -d /usr/share/bcc/tools ] && path=(/usr/share/bcc/tools $path)
+
+# add external bin paths to PATH
+for p in ~/.bin ~/.cargo/bin ~/.bin/$HOST ~/.rd/bin /usr/share/bcc/tools; do
+    [[ -d "$p" ]] && path=("$p" $path)
+done
+unset p
 
 # load prompt
 fpath+=($ZSHINE_DIR/prompts)
