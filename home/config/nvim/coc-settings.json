@@ -8,6 +8,8 @@
             "ARROWS"
         ]
     },
+    "ltex.additionalRules.motherTongue": "en-US",
+    "ltex.additionalRules.enablePickyRules": true,
 
     "diagnostic-languageserver.formatFiletypes": {
       "sh": "shfmt"

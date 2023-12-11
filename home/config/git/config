@@ -36,10 +36,10 @@
     sp = stash-pull
     sm = sync-master
     nb = new-branch
-    back-to-master = !git checkout master && git pull && git cleanup
+    back-to-master = !(git checkout master || git checkout main) && git pull && git cleanup
     btm = back-to-master
     b2m = back-to-master
-    unpushed = log -p @{u}..
+    unpushed = log -p @{upstream}..
 
 [merge]
     tool = nvimdiff
