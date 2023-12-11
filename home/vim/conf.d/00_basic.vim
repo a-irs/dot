@@ -92,10 +92,6 @@ silent call system('mkdir -p ' . &undodir)
 " disable yank for single-char delete
 noremap x "_x
 
-" show relative line numbers, except in current line
-" set number
-" set relativenumber
-
 " jump to last position on VIM start
 augroup lastposition
     autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
@@ -107,10 +103,6 @@ imap <silent> <Down> <C-o>gj
 imap <silent> <Up> <C-o>gk
 nmap <silent> <Down> gj
 nmap <silent> <Up> gk
-
-" more responsive vim, really needed if relative numbers are enabled in term
-set lazyredraw
-set ttyfast
 
 " disable mouse in neovim
 if has('nvim')
@@ -163,14 +155,15 @@ let g:mapleader="\<SPACE>"
 cmap w!! w !sudo tee > /dev/null %
 
 " stop highlighting search results
-nnoremap <silent> <C-l> :nohl<CR><C-l>
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
 " toggle line numbers
 nnoremap <silent> <C-n> :set number!<CR>
 
+" toggle line wrap
 nnoremap <silent> <leader>w :set wrap!<CR>
 
-" buffer on <Leader>1-9/left/right
+" buffer on <Leader>1-9/tab
 nnoremap <silent> <tab> :bnext<CR>
 nnoremap <silent> <S-tab> :bprev<CR>
 nnoremap <silent> <leader>1 :buffer 1<CR>
@@ -185,11 +178,9 @@ nnoremap <silent> <leader>9 :buffer 9<CR>
 
 noremap <silent> <Leader>x :bd<CR>
 noremap <silent> <Leader>X :tabc<CR>
-noremap <silent> <Leader>y "+y
 
-" toggle markdown checkboxes
-nnoremap <silent> <Leader>, :execute 's/^\(\s*[-+*]\?\s*\)\[ \]/\1[x]/'<cr>
-nnoremap <silent> <Leader>. :execute 's/^\(\s*[-+*]\?\s*\)\[x]/\1[ ]/'<cr>
+" yank to system clipboard
+noremap <silent> <Leader>y "+y
 
 " surround with quotes/brackets
 nnoremap <leader>*         viw<esc>a*<esc>hbi*<esc>lel
@@ -211,7 +202,7 @@ nnoremap <leader>}         viw<esc>a}<esc>hbi{<esc>lel
 nnoremap <leader><leader>{ viW<esc>a}<esc>hBi{<esc>lel
 nnoremap <leader><leader>} viW<esc>a}<esc>hBi{<esc>lel
 
-" move up/down
+" move lines up/down
 vnoremap <silent> <leader><Down> :m '>+1<CR>gv=gv
 vnoremap <silent> <leader><Up> :m '<-2<CR>gv=gv
 nnoremap <silent> <leader><Down> :m .+1<CR>==

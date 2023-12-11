@@ -36,8 +36,6 @@ endfunction
 inoremap <silent> <C-p> <C-\><C-O>:call CocActionAsync('showSignatureHelp')<cr>
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 nmap <silent> K         :call <SID>show_documentation()<CR>
-nmap <silent> <CR>      :call <SID>show_documentation()<CR>
-nmap <silent> <leader>k :call <SID>show_documentation()<CR>
 nmap <silent> <leader>cr <Plug>(coc-rename)
 xmap <silent> <leader>cf <Plug>(coc-format-selected)
 nmap <silent> <leader>cf :call CocActionAsync('format')<CR>
@@ -91,4 +89,3 @@ function! ToggleOutline() abort
     call coc#window#close(winid)
   endif
 endfunction
-
