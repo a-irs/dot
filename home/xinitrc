@@ -30,15 +30,14 @@ if [[ $HOSTNAME == desk ]]; then
 fi
 
 # make some cache persistent, some in tmpfs
-# if [[ "$(findmnt -no fstype -T /tmp)" == tmpfs ]]; then
-#     mkdir -p "/tmp/$UID"
-#     rm -rf ~/.cache && ln -sf "/tmp/$UID" ~/.cache
-#     mkdir -p ~/.local/share/ansible-lint && ln -sfn ~/.local/share/ansible-lint ~/.cache/ansible-lint
-#     mkdir -p ~/.local/share/yay && ln -sfn ~/.local/share/yay ~/.cache/yay
-#     mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/keepassxc
-#     mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails
-#     mkdir -p ~/.local/share/thumbnails/darktable && ln -sfn ~/.local/share/thumbnails/darktable ~/.cache/darktable
-# fi
+if [[ "$(findmnt -no fstype -T /tmp)" == tmpfs ]]; then
+    mkdir -p "/tmp/$UID"
+    rm -rf ~/.cache && ln -sf "/tmp/$UID" ~/.cache
+    mkdir -p ~/.local/share/yay && ln -sfn ~/.local/share/yay ~/.cache/yay
+    mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/keepassxc
+    mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails
+    mkdir -p ~/.local/share/thumbnails/darktable && ln -sfn ~/.local/share/thumbnails/darktable ~/.cache/darktable
+fi
 
 # cleanup history
 rm -rf ~/.local/share/recently-used.xbel ~/.local/share/RecentDocuments
@@ -98,7 +97,6 @@ if [[ $HOSTNAME == desk ]]; then
     timeout 10 xdotool search --sync --class "Portfolio Performance" | xargs -I {} xdotool set_desktop_for_window {} 5
 EOF
 fi
-
 
 cat << 'EOF' | bash &
 TRIES=0

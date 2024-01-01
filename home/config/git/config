@@ -7,6 +7,10 @@
 #     name = a-irs
 #     email = a-irs@users.noreply.github.com
 
+[credential]
+    # e.g. KeePassXC
+    helper = libsecret
+
 [color]
     ui = 1
 

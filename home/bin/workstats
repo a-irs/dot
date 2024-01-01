@@ -11,7 +11,7 @@ import os
 
 TERMINAL = "alacritty"
 SHELL_TITLE = f"{os.getlogin()}@{os.uname()[1]}"
-DIR = os.path.expanduser("~/data/splunk/input/workstats")
+DIR = os.path.expanduser("~/data/workstats")
 
 
 def parse_name(window_name, window_class):
@@ -34,14 +34,6 @@ def parse_app(window_name, window_class):
 
     return window_class.lower()
 
-def get_os():
-    if os.path.exists("/etc/NIXOS"):
-        return "nixos"
-    elif os.path.exists("/etc/arch-release"):
-        return "arch"
-    else:
-        return "unknown"
-
 def get_current_window():
     root = subprocess.Popen(shlex.split("bash -c \"xprop -id $(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2) _NET_WM_NAME _NET_WM_DESKTOP WM_CLASS\""), stdout=subprocess.PIPE)
     stdout, stderr = root.communicate()
@@ -59,16 +51,21 @@ def get_current_window():
         "name": parse_name(window_name, window_class),
         "desk": desk,
         "app": parse_app(window_name, window_class),
-        "os": get_os()
     }
     return output
 
 
-while True:
-    time.sleep(1)
-    today = str(datetime.datetime.now()).split(' ')[0]
-    current_window = get_current_window()
-    if current_window:
-        with open(f'{DIR}/stats_{today}.json', 'a', encoding='utf-8') as fd:
-            json.dump(current_window, fd, ensure_ascii=False)
-            fd.write("\n")
+def main():
+    os.makedirs(DIR, exist_ok=True)
+    while True:
+        time.sleep(1)
+        today = str(datetime.datetime.now()).split(' ')[0]
+        current_window = get_current_window()
+        if current_window:
+            with open(f'{DIR}/{today}.json', 'a', encoding='utf-8') as fd:
+                json.dump(current_window, fd, ensure_ascii=False)
+                fd.write("\n")
+        print(current_window)
+
+if __name__ == "__main__":
+    main()

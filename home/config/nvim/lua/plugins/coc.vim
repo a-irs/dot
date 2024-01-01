@@ -14,6 +14,7 @@ let g:coc_global_extensions = [
     \ 'coc-diagnostic',
     \ '@yaegassy/coc-ansible',
     \ 'coc-ltex',
+    \ 'coc-lua',
     \ ]
 autocmd FileType scss setl iskeyword+=@-@
 let g:coc_filetype_map = {

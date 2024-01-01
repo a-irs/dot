@@ -33,7 +33,7 @@ ZSHINE_PLUGINS=(
   status  # server status on login
   vault  # hashicorp vault
 
-  # todo  # show ~/.todo on start
+  todo  # show ~/.todo on start
 )
 
 for _loadx in $ZSHINE_PLUGINS; do

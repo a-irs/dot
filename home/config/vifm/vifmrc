@@ -172,7 +172,10 @@ else
 endif
 
 filetype *
-   \ {binwalk} binwalk %f   %m,
+   \ {git diff} git diff --no-index --color=always 2>/dev/null %f  %n,
+   \ {git diff ignore space} git diff --no-index --color=always --ignore-all-space 2>/dev/null %f  %n,
+   \ {git diff word} git diff --no-index --color=always --word-diff=color 2>/dev/null %f  %n,
+   \ {binwalk} binwalk %f,
    \ {exiftool} exiftool -canon %f   %m,
    \ {file} file --brief --mime-type %f; file --brief %f   %m,
    \ {sha1} sha1sum %f   %m,
@@ -229,7 +232,7 @@ nnoremap <space>M :take<Space>
 nnoremap <C-w>q <c-w>p<c-w>o
 
 " reload config
-nnoremap <space>r :restart full | echo 'config reloaded'<cr>
+nnoremap <space>cr :restart full | echo 'config reloaded'<cr>
 
 " Display sorting dialog
 nnoremap s :sort<cr>
@@ -261,7 +264,10 @@ nnoremap o :file<cr>
 vnoremap o :file<cr>
 
 " Open editor to edit vifmrc and apply settings after returning to vifm
-nnoremap <space>c :write | edit $MYVIFMRC | restart full<cr>
+nnoremap <space>cc :write | edit $MYVIFMRC | restart full<cr>
+
+" run command on selected files
+vnoremap <space>r :!clear;   %f | less -XR<a-b><a-b><a-b><a-b><a-b><c-f>
 
 " Toggle wrap setting
 nnoremap <space>w :set wrap!<cr>
