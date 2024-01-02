@@ -712,3 +712,7 @@ sandbox-light() {
         --private="$HOME/tmp/sandbox/$program" --noprofile \
         "$@"
 }
+
+cdt() {
+    builtin cd "$(mktemp -d -t cdt)"
+}

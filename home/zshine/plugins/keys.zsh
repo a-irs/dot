@@ -13,7 +13,7 @@ zmodload zsh/terminfo
 # default: WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
 WORDCHARS=''
 
-# emacs bindings
+# always use emacs bindings, even if $EDITOR is e.g. vi/vim
 bindkey -e
 
 # del: remove one char
