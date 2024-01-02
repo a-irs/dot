@@ -48,15 +48,17 @@ endsnippet
 # inspired by https://castel.dev/post/lecture-notes-1/
 
 snippet '(.*)=' "header h1 line" ri
-`!p snip.rv = match.group(1)`$1
+`!p snip.rv = match.group(1)`
 `!p snip.rv = '=' * (len(match.group(1)) + len(t[1]))`
-$0
+
+${1:${VISUAL}}
 endsnippet
 
 snippet '(.*)-' "header h2 line" ri
-`!p snip.rv = match.group(1)`${1:${VISUAL}}
+`!p snip.rv = match.group(1)`
 `!p snip.rv = '-' * (len(match.group(1)) + len(t[1]))`
-$0
+
+${1:${VISUAL}}
 endsnippet
 
 snippet * "italics"
