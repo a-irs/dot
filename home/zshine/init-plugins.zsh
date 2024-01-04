@@ -25,7 +25,6 @@ ZSHINE_PLUGINS=(
   nim
   haskell
   asdf
-  emacs
 
   infra # custom
   fasd  # autocomplete paths
