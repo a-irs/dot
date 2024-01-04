@@ -8,8 +8,8 @@
 #     email = a-irs@users.noreply.github.com
 
 [credential]
-    # e.g. KeePassXC
-    helper = libsecret
+    # ~/.bin/git-credential-os
+    helper = os
 
 [color]
     ui = 1
