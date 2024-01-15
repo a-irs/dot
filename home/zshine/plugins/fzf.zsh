@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 
 if [[ $commands[fd] ]]; then
-    export FZF_DEFAULT_COMMAND="fd --hidden --ignore --color never -E .vim/undo -E .vim/plugged -E __pycache__ -E Cache -E .cache -E cache -E .gem -E .npm -E .thumbnails -E .steam -E .local/share/Steam -E .git -E .local/share/containers -E .ansible -E .gradle -E data/ios-backup -E .m2 -E .choosenim -E .stack -E .cabal -E '.local/share/yay/*/src' -E '*.zwc' -E '*.zwc.old' -E '*~' -E '*.pyc' -E node_modules -E .avfs"
+    export FZF_DEFAULT_COMMAND_BASE="fd --hidden --ignore --color never"
+    export FZF_DEFAULT_COMMAND="$FZF_DEFAULT_COMMAND_BASE -E .vim/undo -E .vim/plugged -E __pycache__ -E Cache -E .cache -E cache -E .gem -E .npm -E .thumbnails -E .steam -E .local/share/Steam -E .git -E .local/share/containers -E .ansible -E .gradle -E data/ios-backup -E .m2 -E .choosenim -E .stack -E .cabal -E '.local/share/yay/*/src' -E '*.zwc' -E '*.zwc.old' -E '*~' -E '*.pyc' -E node_modules -E .avfs"
 
     _fzf_compgen_path() {
         eval $FZF_DEFAULT_COMMAND . "$@"
@@ -29,6 +30,6 @@ export FZF_ALT_C_OPTS='--preview="s {}" --preview-window "~2"'
 export FZF_CTRL_T_OPTS='--preview="s {}" --preview-window "~2"'
 
 export FZF_COMPLETION_TRIGGER='#'
-export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2" --delimiter / --nth -1'
+export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2" --delimiter /'
 
 fzf() { fzf-tmux -d 50% "$@"; }

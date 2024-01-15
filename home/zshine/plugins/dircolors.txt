@@ -243,6 +243,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .ml 34
 *Gemfile 34
 .xml 34
+.xsd 34
 *rc 34
 .yml 36
 .yaml 36
@@ -264,6 +265,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 *Rakefile 36
 *Dockerfile 36
 .py 36
+.pm 36
 .sol 36
 .java 36
 .hs 36

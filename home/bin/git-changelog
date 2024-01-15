@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-git log --no-show-signature --pretty=$'format:- %s\n%b' master.. \
+set -euo pipefail
+
+git log --no-show-signature --pretty=$'format:- %s\n%b' master.."${1:-}" \
     | sed '/^$/d' \
     | perl -p0e 's/\n([^-])/: \1/g' \
     | tac
