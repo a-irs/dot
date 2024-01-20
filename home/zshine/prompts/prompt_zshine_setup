@@ -122,7 +122,7 @@ _prompt_ssh() {
 
 _prompt_virtualenv() {
     if [[ "$VIRTUAL_ENV" ]]; then
-        prompt_segment "$ZSHINE_VIRTUALENV_BG" "$ZSHINE_VIRTUALENV_FG" "${VIRTUAL_ENV##*/}"
+        prompt_segment "$ZSHINE_VIRTUALENV_BG" "$ZSHINE_VIRTUALENV_FG" "${${VIRTUAL_ENV%%/.venv}##*/}"
     fi
     if [[ "$IN_NIX_SHELL" ]]; then
         if [[ "$IN_NIX_SHELL" == pure ]]; then
@@ -135,7 +135,7 @@ _prompt_virtualenv() {
 
 _prompt_path() {
     [[ ! -w ./ ]] && prompt_segment $ZSHINE_PATH_BG_RO $ZSHINE_PATH_FG_RO ro
-    prompt_segment $ZSHINE_PATH_BG $ZSHINE_PATH_FG '%~'
+    prompt_segment $ZSHINE_PATH_BG $ZSHINE_PATH_FG "${PWD/$HOME/~}"
 }
 
 _prompt_user_host() {

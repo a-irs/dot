@@ -22,23 +22,26 @@ venv() {
         return
     fi
 
-    local venv=$(pipenv --venv)
-    if [[ -z "$venv" ]]; then
+    if [[ ! -d .venv ]]; then
         read -q "REPLY?No virtualenv found, create? (y/N) "
         if ! [[ $REPLY =~ ^[Yy]$ ]]; then
             return
         fi
-        pipenv install --site-packages --dev --ignore-pipfile
-        venv=$(pipenv --venv)
-    fi
-    source "$venv/bin/activate"
-}
 
-venv-delete() {
-    if [[ -z "$VIRTUAL_ENV" ]]; then
-        return 1
-    fi
-    deactivate
+        mkdir -p .venv
+        if [[ -f setup.py || -f pyproject.toml ]]; then
+            pipenv install --site-packages --dev --ignore-pipfile .
+        else
+            pipenv install --site-packages --dev --ignore-pipfile
+        fi
 
-    rm -rf "$(pipenv --venv)"
+        printf '\n%s\n' "----------"
+        printf '%s\n' "Created virtualenv in $PWD/.venv"
+        printf '%s\n' "----------"
+
+        echo '[[ -z "$VIRTUAL_ENV" ]] && source .venv/bin/activate' >> .env
+        echo '.env' >> .gitignore
+    fi
+
+    source .venv/bin/activate
 }

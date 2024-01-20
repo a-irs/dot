@@ -530,7 +530,7 @@ Include = /etc/pacman.d/mirrorlist'
     function pqlb() { pacman -Qlq "$1" | xargs ls -dlh | grep '/bin/' | grep -Ev '/usr/bin/$' || pkgfile -l "$1" -b; }
     alias pu='sudo pacman -U'
     alias pacorph='sudo pacman -Rns $(pacman -Qttdq)'
-    alias pacdiff='sudo pacdiff'
+    alias pacdiff="sudo DIFFPROG=\"$EDITOR -d\" pacdiff"
     alias pacdep='sudo pacman -D --asdeps'
     alias pacexp='sudo pacman -D --asexplicit'
     if [[ "$commands[yay]" ]]; then
@@ -716,3 +716,6 @@ sandbox-light() {
 cdt() {
     builtin cd "$(mktemp -d -t cdt)"
 }
+
+# text-to-speech from stdin
+[[ "$commands[spd-say]" ]] && alias say="spd-say --pipe-mode --wait"

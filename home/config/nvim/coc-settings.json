@@ -1,4 +1,6 @@
 {
+    "Lua.diagnostics.globals": ["vim", "awesome"],
+
     "ltex.enabled": false,
     "ltex.language": "en-US",
     "ltex.completionEnabled": true,

@@ -15,7 +15,7 @@ xsettingsd &
 pkcs11-register &
 
 if [[ $HOSTNAME == x1* ]]; then
-    xrandr --output eDP --mode 3072x1920 --rate 120 &
+    xrandr --output eDP-1 --mode 3072x1920 --rate 120 &
     blueman-applet &
     pactl set-sink-mute @DEFAULT_SINK@ true &
     yubikey-touch-detector --libnotify &
@@ -98,18 +98,8 @@ if [[ $HOSTNAME == desk ]]; then
 EOF
 fi
 
-cat << 'EOF' | bash &
-TRIES=0
-while true; do
-    let TRIES++
-    if ((TRIES > 30)); then
-        exit 0
-    else
-        setxkbmap -option caps:escape  # remap caps to escape
-        xset r rate 200 30  # faster keyboard repeat
-    fi
-    sleep 0.5
-done
-EOF
+game-mode &  # set TDP
+
+~/.bin/workstats &
 
 exec awesome

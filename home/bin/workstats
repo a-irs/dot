@@ -16,7 +16,7 @@ DIR = os.path.expanduser("~/data/workstats")
 
 def parse_name(window_name, window_class):
     # browser
-    if window_class.lower() == "firefox" and window_name.endswith("(Private Browsing)"):
+    if window_class.lower() == "firefox" and "Private Browsing" in window_name:
         return "(Private Browsing)"
 
     return window_name

@@ -1,4 +1,13 @@
 ZSHINE_PLUGINS=(
+  # dev
+  python
+  nim
+  haskell
+  asdf
+
+  auto-env  # source .env
+  projects
+
   completion # tweaks for TAB-completion
   keys # bind keys for delete, history-search etc.
 
@@ -19,12 +28,6 @@ ZSHINE_PLUGINS=(
   auto-ls # launch "ls" when entering directory
   nix # nixos, nix package manager
   # kubernetes  # aliases, autocompletion for k8s
-
-  # dev
-  python
-  nim
-  haskell
-  asdf
 
   infra # custom
   fasd  # autocomplete paths
