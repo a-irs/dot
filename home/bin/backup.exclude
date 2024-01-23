@@ -50,6 +50,8 @@ R /home
 - **/.snapshots
 - **/.texlive
 - **/.tor-browser-en
+- **/.venv
+- **/.elixir_ls
 - **/Default/Extensions/fahmaaghhglfmonjliepjlchgpgfmobi
 - **/dolphin/User/Load/Textures
 
@@ -70,7 +72,6 @@ R /home
 - home/*/.local/share/yay/**/*.tar.*
 - home/*/.local/share/gvfs-metadata/*
 - home/*/.local/share/virtualenv
-- home/*/.local/share/.venv
 - home/*/.local/share/virtualenvs
 - home/*/.local/share/xorg/*.old
 - home/*/.mozilla/firefox/Crash Reports

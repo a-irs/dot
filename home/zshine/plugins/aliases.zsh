@@ -63,7 +63,7 @@ digt() {
     command dig +trace +nodnssec "$@" | _color_dig
 }
 
-function calc() {
+calc() {
     [[ "$#" == 0 ]] && local args="-i"
     python3 -B $args -c "from math import *; from statistics import *; print($*)"
 }
@@ -155,11 +155,11 @@ web() {
 
 if [[ "$commands[docker]" ]]; then
     alias do-r="docker run --rm -it"
-    function do-rp() { docker run --rm -it -v "$PWD:/work" -w /work "$@"; }
+    do-rp() { docker run --rm -it -v "$PWD:/work" -w /work "$@"; }
     alias do-rm="docker run --rm -it"
     alias do-ps="docker ps"
     alias do-i="docker images"
-    function do-rm() { docker rm "$@" || docker rmi "$@"; }
+    do-rm() { docker rm "$@" || docker rmi "$@"; }
 fi
 
 mac() { curl -q "https://api.macvendors.com/${1:0:8}" && printf "\n"; }
@@ -402,11 +402,16 @@ if [[ "$commands[xdg-open]" ]]; then
         [[ -z "$1" || ! -e "$1" ]] && return 1
         mimeopen --ask-default "$1"
     }
-    function o() {
+    o() {
         if [[ ! "$1" ]]; then
-            nohup xdg-open . < /dev/null &> /dev/null &
+            echo xdg-open .
+            nohup xdg-open . </dev/null &>/dev/null & disown
         else
-            nohup xdg-open $* < /dev/null &> /dev/null &
+            for x in "$@"; do
+                echo xdg-open "$x"
+                nohup xdg-open "$x" </dev/null &>/dev/null & disown
+            done
+            unset x
         fi
     }
 fi
@@ -526,8 +531,8 @@ Include = /etc/pacman.d/mirrorlist'
         echo ":: pkgfile"
         pkgfile -v -s "$1"
     }
-    function pql() { pacman -Qlq "$1" | xargs ls --color -dlh || pkgfile -l "$1"; }
-    function pqlb() { pacman -Qlq "$1" | xargs ls -dlh | grep '/bin/' | grep -Ev '/usr/bin/$' || pkgfile -l "$1" -b; }
+    pql() { pacman -Qlq "$1" | xargs ls --color -dlh || pkgfile -l "$1"; }
+    pqlb() { pacman -Qlq "$1" | xargs ls -dlh | grep '/bin/' | grep -Ev '/usr/bin/$' || pkgfile -l "$1" -b; }
     alias pu='sudo pacman -U'
     alias pacorph='sudo pacman -Rns $(pacman -Qttdq)'
     alias pacdiff="sudo DIFFPROG=\"$EDITOR -d\" pacdiff"
