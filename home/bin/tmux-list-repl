@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# find REPLs to send code snippets to
+tmux list-panes -aF "#{window_id}  [#{pane_current_command}] #{pane_title}  [#{pane_current_path}]" \
+    | sed "s|\[$HOME|[~|" | sed 's/^@//' | sort -n \
+    | grep -E '(\[beam.smp]| ipython )'
