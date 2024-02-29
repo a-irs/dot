@@ -23,7 +23,11 @@ for x in \
 done
 unset x
 
-export FZF_DEFAULT_OPTS='--no-mouse --cycle --ansi --color=16 --inline-info'
+export FZF_DEFAULT_OPTS="--no-mouse --cycle --ansi --color=16 --inline-info \
+  --bind 'ctrl-d:transform:[[ ! {fzf:prompt} =~ Files ]] && \
+          echo \"change-prompt(Files> )+reload(fd --hidden --ignore --type file .)\" || \
+          echo \"change-prompt(Directories> )+reload(fd --hidden --ignore --type directory .)\"' \
+"
 
 export FZF_CTRL_R_OPTS='--exact'
 export FZF_ALT_C_OPTS='--preview="s {}" --preview-window "~2"'

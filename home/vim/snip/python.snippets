@@ -39,6 +39,11 @@ def cli_args() -> argparse.Namespace:
     p.add_argument('--multiarg_opt', nargs='*', help="can be specified multiple times, at least 0")
     p.add_argument('--file_out', type=argparse.FileType('w'), default=sys.stdout)
     p.add_argument('--file_in', type=argparse.FileType('r'), default=sys.stdin)
+
+    subparser = p.add_subparsers(dest="cmd")
+    subparser.add_parser('pull')
+    subparser.add_parser('list')
+
     return p.parse_args()
 endsnippet
 

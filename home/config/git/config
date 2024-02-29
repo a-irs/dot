@@ -48,7 +48,10 @@
 [merge]
     tool = nvimdiff
     conflictstyle = diff3
-    ; ff = false  # disable fast forward by default (always make a merge commit instead, even if a fast forward would be possible)
+    ff = true  # try fast-forward, if not possible, make a merge commit instead
+
+[pull]
+    ff = true  # try fast-forward, if not possible, make a merge commit instead
 
 [mergetool]
     prompt = false
@@ -60,4 +63,4 @@
     autoSetupRemote = true
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
