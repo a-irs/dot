@@ -252,6 +252,8 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .ini 36
 .gitignore 36
 .json 36
+.json5 36
+.jsonc 36
 .csv 36
 .js 36
 .html 36

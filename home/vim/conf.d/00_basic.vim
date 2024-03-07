@@ -131,6 +131,7 @@ autocmd BufNewFile,BufFilePre,BufRead */.dot/setup.conf set filetype=dosini
 autocmd BufNewFile,BufFilePre,BufRead *.asm set filetype=nasm
 autocmd BufNewFile,BufFilePre,BufRead vifmrc set filetype=vim
 autocmd BufNewFile,BufFilePre,BufRead *.vifm set filetype=vim
+autocmd BufNewFile,BufFilePre,BufRead *.json5 set filetype=jsonc
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
@@ -201,6 +202,7 @@ nnoremap <leader>{         viw<esc>a}<esc>hbi{<esc>lel
 nnoremap <leader>}         viw<esc>a}<esc>hbi{<esc>lel
 nnoremap <leader><leader>{ viW<esc>a}<esc>hBi{<esc>lel
 nnoremap <leader><leader>} viW<esc>a}<esc>hBi{<esc>lel
+nnoremap <leader>t         viW<esc>a><esc>hBi<<esc>lel
 
 " move lines up/down
 vnoremap <silent> <leader><Down> :m '>+1<CR>gv=gv
