@@ -15,7 +15,16 @@ let g:coc_global_extensions = [
     \ '@yaegassy/coc-ansible',
     \ 'coc-ltex',
     \ 'coc-lua',
+    \ 'coc-elixir',
+    \ '@yaegassy/coc-marksman',
     \ ]
+
+" $ fd 'language_server.sh'
+" .config/coc/extensions/node_modules/coc-elixir/els-release/language_server.sh
+" $ rm -rf .config/coc/extensions/node_modules/coc-elixir/els-release/
+" <https://github.com/elixir-lsp/elixir-ls/releases>
+" $ unzip ~/downloads/elixir-ls-v0.18.1.zip -d ~/.config/coc/extensions/node_modules/coc-elixir/els-release/
+
 autocmd FileType scss setl iskeyword+=@-@
 let g:coc_filetype_map = {
   \ 'yaml.ansible': 'ansible',

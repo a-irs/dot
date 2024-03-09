@@ -1,4 +1,5 @@
 {
+    "codeLens.enable": true,
     "Lua.diagnostics.globals": ["vim", "awesome"],
 
     "ltex.enabled": false,

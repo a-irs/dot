@@ -66,4 +66,5 @@ return {
     'PProvost/vim-ps1',
     'neoclide/jsonc.vim',
     'lilyinstarlight/vim-spl',  -- splunk search language
+    'elixir-editors/vim-elixir',
 }

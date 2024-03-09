@@ -259,6 +259,7 @@ function! SuperMan(...)
   " from /usr/share/nvim/runtime/ftplugin/man.vim
   nnoremap <silent> gO :lua require'man'.show_toc()<CR>
   nnoremap <silent> <2-LeftMouse> :Man<CR>
+  nmap <silent> <CR>:call show_documentation()<CR>
 endfunction
 
 command! -nargs=+ SuperMan call SuperMan(<f-args>)

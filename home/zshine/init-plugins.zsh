@@ -4,6 +4,7 @@ ZSHINE_PLUGINS=(
   nim
   haskell
   asdf
+  elixir
 
   auto-env  # source .env
   projects

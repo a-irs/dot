@@ -36,4 +36,4 @@ export FZF_CTRL_T_OPTS='--preview="s {}" --preview-window "~2"'
 export FZF_COMPLETION_TRIGGER='#'
 export FZF_COMPLETION_OPTS='--multi --preview="s {}" --preview-window "~2" --delimiter /'
 
-fzf() { fzf-tmux -d 50% "$@"; }
+fzf() { fzf-tmux "$@"; }

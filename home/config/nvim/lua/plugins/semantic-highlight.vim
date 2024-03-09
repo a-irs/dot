@@ -11,14 +11,20 @@ let g:semanticBlacklistOverride = {
     \ 'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while',
     \ 'require'
     \ ],
+    \ 'elixir': [
+    \ 'true', 'false', 'nil', 'if', '_',
+    \ 'when', 'and', 'or', 'not', 'in', 'case',
+    \ 'fn', 'do', 'end', 'catch', 'rescue', 'after', 'else',
+    \ 'defmodule', 'def', 'defp', 'use', 'end',
+    \ ],
 \ }
 
 let g:semanticTermColors = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
-let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim', 'java': 'java', 'haskell': 'haskell', 'ruby': 'ruby', 'javascript': 'javascript'}
+let g:semanticEnableFileTypes = {'python': 'python', 'lua': 'lua', 'css': 'css', 'nim': 'nim', 'java': 'java', 'haskell': 'haskell', 'ruby': 'ruby', 'javascript': 'javascript', 'elixir': 'elixir'}
 
 " re-highlight on save
 augroup SemanticHL
-    autocmd FileType python,lua,java,nim,haskell,ruby,javascript
+    autocmd FileType python,lua,css,java,nim,haskell,ruby,javascript,elixir
         \ autocmd! SemanticHL BufWritePost <buffer> :SemanticHighlight
 augroup END

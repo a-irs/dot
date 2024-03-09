@@ -37,6 +37,7 @@ if [[ "$(findmnt -no fstype -T /tmp)" == tmpfs ]]; then
     mkdir -p ~/.local/share/keepassxc && ln -sfn ~/.local/share/keepassxc ~/.cache/keepassxc
     mkdir -p ~/.local/share/thumbnails && ln -sfn ~/.local/share/thumbnails ~/.cache/thumbnails
     mkdir -p ~/.local/share/thumbnails/darktable && ln -sfn ~/.local/share/thumbnails/darktable ~/.cache/darktable
+    mkdir -p ~/.local/cache/pip && ln -sfn ~/.local/cache/pip ~/.cache/pip
 fi
 
 # cleanup history
