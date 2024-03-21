@@ -34,7 +34,7 @@
     ca = !git add --intent-to-add -A && git add --patch && git commit
     trash = !git stash push --include-untracked -m "trash-$(date +%F_%T)"
     sw = switch
-    b = branch -vv
+    b = branch -vv --sort=committerdate --format='%(HEAD) %(if)%(HEAD)%(then)%(color:green)%(end)%(align:width=16)%(refname:short)%(end)%(color:reset) %(objectname:short) [%(color:blue)%(upstream:short)%(color:reset)] %(color:dim white)%(committerdate:short-local) (%(committerdate:relative))%(color:reset) %(color:italic)\"%(subject)\"%(color:reset)'
 
     stash-pull = pull --rebase --autostash
     sp = stash-pull
