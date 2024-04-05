@@ -4,11 +4,12 @@ if [[ $commands[fd] ]]; then
     export FZF_DEFAULT_COMMAND_BASE="fd --hidden --ignore --color never"
     export FZF_DEFAULT_COMMAND="$FZF_DEFAULT_COMMAND_BASE -E .vim/undo -E .vim/plugged -E __pycache__ -E Cache -E .cache -E cache -E .gem -E .npm -E .thumbnails -E .steam -E .local/share/Steam -E .git -E .local/share/containers -E .ansible -E .gradle -E data/ios-backup -E .m2 -E .choosenim -E .stack -E .cabal -E '.local/share/yay/*/src' -E '*.zwc' -E '*.zwc.old' -E '*~' -E '*.pyc' -E node_modules -E .avfs"
 
+    FZF_DEFAULT_COMMAND_COMPGEN="$FZF_DEFAULT_COMMAND"
     _fzf_compgen_path() {
-        eval $FZF_DEFAULT_COMMAND . "$@"
+        eval $FZF_DEFAULT_COMMAND_COMPGEN . "$@"
     }
     _fzf_compgen_dir() {
-        eval $FZF_DEFAULT_COMMAND --type directory . "$@"
+        eval $FZF_DEFAULT_COMMAND_COMPGEN --type directory . "$@"
     }
 fi
 # note: 'rg --files --hidden --no-ignore' is equally fast (benchmarked with hyperfine)
