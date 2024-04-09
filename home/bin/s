@@ -23,6 +23,9 @@ set -uo pipefail
 
 export BAT_THEME=ansi  # alternatives: ansi,base16
 
+# plain output has been output already or not
+shown=0
+
 path=$1
 path=${path/#\~/~}  # expand a literal tilde at the beginning
 
@@ -78,7 +81,7 @@ preview_elf() { run2 readelf -sh --wide "$path"; }
 preview_binary() { run1 xxd -R always -autoskip "$path" | head -n 1000; }
 
 preview_sqlite() {
-    printf "${yellow}[sqlite3]$reset\n"
+    printf '%s\n' "${yellow}[sqlite3]$reset"
     local t
     for t in $(sqlite3 -readonly "$path" .tables); do
         sqlite3 -readonly "$path" < <(echo -e ".mode json\nSELECT '$t' AS 'TABLE', * FROM $t")
@@ -97,7 +100,7 @@ preview_pdf() { run1 pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remo
 preview_txt() { run1 cat "$path" | remove_blank | remove_double_blank; }
 preview_image() { run2 exiftool -canon "$path"; }
 preview_video() { run1 mediainfo "$path"; }
-preview_json() { run1 jsn "$path"; }
+preview_json() { run1 jq . -C "$path"; }
 preview_bat() { _bat "$path" "$@"; }
 preview_sshkey() { run3 ssh-keygen -l -v -f "$path"; echo ""; cat "$path"; }
 preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
@@ -112,7 +115,6 @@ preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass ''; }
 preview_pkcs_openssl() { run2 openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
 preview_csr() { run2 openssl req -in "$path" -noout -text | cleanup_openssl; }
 preview_crl() { run2 openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
-preview_csv() { run2 column -t -s\;, "$path"; }
 preview_rrd() { run1 rrdinfo "$path"; }
 preview_pkg() { run1 pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort | highlight_dirs; }
 preview_pgp() {
@@ -151,20 +153,20 @@ if [[ -d "$path" ]]; then
 fi
 
 case "$file_type" in
-    *"bill of materials"*) preview_bom ;;
-    "Certificate, Version=3"*) preview_openssl -inform der ;;
-    "PGP public "*) preview_pgp ;;
-    "PGP signature "*) preview_pgp_sig ;;
-    "PGP "*"encrypted"*) preview_pgp_sig ;;
-    "PGP private "*) preview_pgp ;;
-    "GPG keybox"*) preview_pgp_keybox ;;
-    "GPG key trust database"*) preview_binary ;;
-    *" private key") preview_sshkey ;;
-    *" public key") preview_sshkey ;;
-    *" certificate") preview_openssl ;;
-    *" certificate request") preview_csr ;;
-    ELF*) preview_elf ;;
-    AppleScript*) preview_applescript ;;
+    *"bill of materials"*) ((shown == 0)) && preview_bom && shown=1 ;;
+    "Certificate, Version=3"*) ((shown == 0)) && preview_openssl -inform der && shown=1;;
+    "PGP public "*) ((shown == 0)) && preview_pgp && shown=1;;
+    "PGP signature "*) ((shown == 0)) && preview_pgp_sig && shown=1;;
+    "PGP "*"encrypted"*) ((shown == 0)) && preview_pgp_sig && shown=1;;
+    "PGP private "*) ((shown == 0)) && preview_pgp && shown=1;;
+    "GPG keybox"*) ((shown == 0)) && preview_pgp_keybox && shown=1;;
+    "GPG key trust database"*) ((shown == 0)) && preview_binary && shown=1;;
+    *" private key") ((shown == 0)) && preview_sshkey && shown=1;;
+    *" public key") ((shown == 0)) && preview_sshkey && shown=1;;
+    *" certificate") ((shown == 0)) && preview_openssl && shown=1;;
+    *" certificate request") ((shown == 0)) && preview_csr && shown=1;;
+    ELF*) ((shown == 0)) && preview_elf && shown=1;;
+    AppleScript*) ((shown == 0)) && preview_applescript && shown=1;;
 esac
 
 extension="${filename##*.}"
@@ -173,74 +175,78 @@ if (( BASH_VERSINFO >= 4 )); then
 fi
 case "$extension" in
     bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
-        preview_tar ;;
+        ((shown == 0)) && preview_tar && shown=1 ;;
     deb)
-        preview_deb ;;
+        ((shown == 0)) && preview_deb && shown=1 ;;
     rar)
-        preview_rar ;;
+        ((shown == 0)) && preview_rar && shown=1 ;;
     7z|dmg)
-        preview_7z ;;
-    zip|jar)
-        preview_zip ;;
-    md)
-        preview_bat -l Markdown ;;
+        ((shown == 0)) && preview_7z && shown=1 ;;
+    zip|jar|xlsx|pptx|docx)
+        ((shown == 0)) && preview_zip && shown=1 ;;
+    md|txt)
+        ((shown == 0)) && preview_bat -l Markdown && shown=1 ;;
     gpg)
-        preview_pgp; preview_pgp_sig ;;
+        ((shown == 0)) && preview_pgp; preview_pgp_sig && shown=1 ;;
     rrd)
-        preview_rrd ;;
+        ((shown == 0)) && preview_rrd && shown=1 ;;
     # html|xhtml)
     #     preview_htm ;;
     json)
-        preview_json ;;
+        ((shown == 0)) && preview_json && shown=1 ;;
     padl|plist|mom|strings)
-        preview_plist ;;
+        ((shown == 0)) && preview_plist && shown=1 ;;
     csv)
-        preview_csv ;;
+        ((shown == 0)) && preview_bat -l csv && shown=1 ;;
     p12|pfx|pkcs12)
-        preview_pkcs ;;
+        ((shown == 0)) && preview_pkcs && shown=1 ;;
     pkg)
-        preview_pkg ;;
+        ((shown == 0)) && preview_pkg && shown=1 ;;
     sig|sign)
-        preview_pgp_sig ;;
+        ((shown == 0)) && preview_pgp_sig && shown=1 ;;
     crl)
-        preview_crl | cleanup_openssl ;;
+        ((shown == 0)) && preview_crl | cleanup_openssl && shown=1 ;;
     crt|pem)
-        preview_openssl || preview_key ;;
+        ((shown == 0)) && preview_openssl || preview_key && shown=1 ;;
     rw2)
-        preview_image ;;
+        ((shown == 0)) && preview_image && shown=1 ;;
 esac
 
 case "$mime_type" in
     message/*)
-        preview_bat -l Email ;;
+        ((shown == 0)) && preview_bat -l Email && shown=1 ;;
     application/x-sqlite* )
-        preview_sqlite ;;
+        ((shown == 0)) && preview_sqlite && shown=1 ;;
     application/vnd.sqlite* )
-        preview_sqlite ;;
+        ((shown == 0)) && preview_sqlite && shown=1 ;;
     application/json )
-        preview_json ;;
+        ((shown == 0)) && preview_json && shown=1 ;;
     application/pdf )
-        preview_pdf ;;
+        ((shown == 0)) && preview_pdf && shown=1 ;;
     application/zip )
-        preview_zip ;;
+        ((shown == 0)) && preview_zip && shown=1 ;;
     application/*-compressed )
-        preview_7z ;;
+        ((shown == 0)) && preview_7z && shown=1 ;;
     */xml | application/postscript )
-        preview_bat -l xml ;;
+        ((shown == 0)) && preview_bat -l xml && shown=1 ;;
     video/* | audio/* )
-        preview_video ;;
+        ((shown == 0)) && preview_video && shown=1 ;;
     image/* )
-        preview_image ;;
+        ((shown == 0)) && preview_image && shown=1 ;;
     text/* )
-        preview_bat ;;
+        ((shown == 0)) && preview_bat && shown=1 ;;
 esac
 
 mime_encoding=$(file --mime-encoding -Lb -- "$path")
 if [[ "$mime_encoding" == binary ]]; then
+    # always show hex dump
+    ((shown == 1)) && echo
     preview_binary
 else
     # fallback bat should show non-printable characters with unicode symbols
-    preview_bat || preview_bat --show-all
+    if ((shown == 0)); then
+        preview_bat || preview_bat --show-all
+    fi
 fi
 
 exit 0

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 export AVFSBASE=${XDG_RUNTIME_DIR:-/run/user/$UID}/avfs
 mkdir -p "$AVFSBASE"
 
