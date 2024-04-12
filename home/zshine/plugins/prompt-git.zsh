@@ -23,6 +23,7 @@ git_get_dirt() {
         (( VCS_STATUS_NUM_STAGED )) && s+="$ZSHINE_GIT_SYMBOL_ADDED${VCS_STATUS_NUM_STAGED}"
         (( VCS_STATUS_NUM_UNSTAGED )) && s+="$ZSHINE_GIT_SYMBOL_MODIFIED${VCS_STATUS_NUM_UNSTAGED}"
         (( VCS_STATUS_NUM_UNTRACKED )) && s+="$ZSHINE_GIT_SYMBOL_UNTRACKED${VCS_STATUS_NUM_UNTRACKED}"
+        (( VCS_STATUS_NUM_CONFLICTED )) && s+="$ZSHINE_GIT_SYMBOL_CONFLICT${VCS_STATUS_NUM_CONFLICTED}"
         printf '%s' "$s"
         return
     fi
@@ -35,6 +36,9 @@ git_get_dirt() {
 
     pcre_compile -m -- "^\d (M\.|\.M)"
     pcre_match -- "$git_out" && s+="$ZSHINE_GIT_SYMBOL_MODIFIED"
+
+    pcre_compile -m -- "^\d (U\.|\.U)"
+    pcre_match -- "$git_out" && s+="$ZSHINE_GIT_SYMBOL_CONFLICT"
 
     pcre_compile -m -- "^\d (D\.|\.D)"
     pcre_match -- "$git_out" && s+="$ZSHINE_GIT_SYMBOL_DELETED"

@@ -22,7 +22,6 @@
     cm = commit
     d = diff
 
-    subup = submodule update --remote --merge
     p = !git add -A && git commit && git push
     pp = !git add -A && git commit -m 'Update' && git push 2>/dev/null
     clone1 = clone --depth=1
@@ -47,7 +46,6 @@
 
 [merge]
     tool = nvimdiff
-    conflictstyle = diff3
     ff = true  # try fast-forward, if not possible, make a merge commit instead
 
 [pull]
