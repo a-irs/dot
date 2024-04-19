@@ -38,6 +38,7 @@ ZSHINE_PLUGINS=(
   vault  # hashicorp vault
 
   todo  # show ~/.todo on start
+  magic-enter  # run something on ENTER with empty buffer
 )
 
 for _loadx in $ZSHINE_PLUGINS; do

@@ -13,4 +13,4 @@ jsn <<< "$out" | grep -v 'readme'
 
 # PTR
 ip=$(jq -r .ip <<< "$out")
-dig +short -x "$ip"
+printf '\n%s\n' "PTR: $(dig +short -x "$ip")"
