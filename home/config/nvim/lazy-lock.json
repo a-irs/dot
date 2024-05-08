@@ -8,6 +8,7 @@
   "fzf": { "branch": "master", "commit": "26244ad8c21ccc946393e10eea7d6b1ad32096e1" },
   "fzf.vim": { "branch": "master", "commit": "8ea9574b3ebdc44fbe3dc6381a13f9ce0c290e2f" },
   "goyo.vim": { "branch": "master", "commit": "fa0263d456dd43f5926484d1c4c7022dfcb21ba9" },
+  "gp.nvim": { "branch": "main", "commit": "52938ffbd47b5e06d0f9b7c8b146f26d6021fbac" },
   "gruvbox": { "branch": "master", "commit": "f1ecde848f0cdba877acb0c740320568252cc482" },
   "gruvbox-material": { "branch": "master", "commit": "b17fe51688b76e2ccf118e5f76f3978b9a8c503e" },
   "icinga2-vim": { "branch": "master", "commit": "79a4bf5e4b45123835c9f27ebf41dbbfc41e1d0d" },
