@@ -109,10 +109,6 @@ if has('nvim')
     set mouse-=a
 endif
 
-" better TAB command autocomplete
-set wildmenu
-set wildmode=list:longest,full
-
 " netrw
 let g:netrw_liststyle=3  " tree style
 let g:netrw_list_hide='.*\.swp$,\.DS_Store'

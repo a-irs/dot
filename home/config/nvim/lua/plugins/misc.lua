@@ -1,5 +1,13 @@
 return {
   {
+    'gelguy/wilder.nvim',
+    config = function()
+      require('wilder').setup({
+          modes = { ':', '/', '?' }
+      })
+    end
+  },
+  {
     "folke/which-key.nvim",
     event = "VeryLazy",
     init = function()

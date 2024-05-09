@@ -1,4 +1,5 @@
 {
+  "ChatGPT.nvim": { "branch": "main", "commit": "df53728e05129278d6ea26271ec086aa013bed90" },
   "Colorizer": { "branch": "master", "commit": "7db0e0dd8adfccab35655f5b6db805caa0fef49a" },
   "ale": { "branch": "master", "commit": "4d132b3ffa5c42c882fccdf970ddb3f0063ee599" },
   "ansible-vim": { "branch": "master", "commit": "afc739e505053a6143a1fc6cedac6fb4d7a1d4db" },
@@ -17,9 +18,13 @@
   "jsonc.vim": { "branch": "master", "commit": "6fb92460f9e50505c9b93181a00f27d10c9b383f" },
   "lazy.nvim": { "branch": "main", "commit": "83493db50a434a4c5c648faf41e2ead80f96e478" },
   "nim.vim": { "branch": "master", "commit": "a15714fea392b0f06ff2b282921a68c7033e39a2" },
+  "nui.nvim": { "branch": "main", "commit": "a3597dc88b53489d3fddbddbbd13787355253bb0" },
   "papercolor-theme": { "branch": "master", "commit": "9051480ad9129ff4ab4fffb38b44779b9081626f" },
+  "plenary.nvim": { "branch": "master", "commit": "08e301982b9a057110ede7a735dd1b5285eb341f" },
   "rainbow_csv": { "branch": "master", "commit": "6955d13a65e0161e8dad488b6045441d527d62ec" },
   "semantic-highlight.vim": { "branch": "master", "commit": "7e141c2b7be0f2600276004fd2e7382a3fa0f690" },
+  "telescope.nvim": { "branch": "master", "commit": "fac83a556e7b710dc31433dec727361ca062dbe9" },
+  "trouble.nvim": { "branch": "main", "commit": "b9cf677f20bb2faa2dacfa870b084e568dca9572" },
   "vim-CtrlXA": { "branch": "master", "commit": "26ab577a888c6346a009702caa4522e73b42242f" },
   "vim-better-whitespace": { "branch": "master", "commit": "029f35c783f1b504f9be086b9ea757a36059c846" },
   "vim-buftabline": { "branch": "master", "commit": "73b9ef5dcb6cdf6488bc88adb382f20bc3e3262a" },
@@ -40,5 +45,6 @@
   "vim-slime": { "branch": "main", "commit": "1feef68f237cb840a7220f83c24b6c60bf914eb5" },
   "vim-spl": { "branch": "master", "commit": "f89da952dc4c08b0d830370d40cd53886d402547" },
   "vim-terraform": { "branch": "master", "commit": "21f756b933cd11ac5990a6046fdc7c4e2a6c0aee" },
-  "which-key.nvim": { "branch": "main", "commit": "4433e5ec9a507e5097571ed55c02ea9658fb268a" }
+  "which-key.nvim": { "branch": "main", "commit": "4433e5ec9a507e5097571ed55c02ea9658fb268a" },
+  "wilder.nvim": { "branch": "master", "commit": "679f348dc90d80ff9ba0e7c470c40a4d038dcecf" }
 }

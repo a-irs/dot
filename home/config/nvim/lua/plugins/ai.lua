@@ -1,5 +1,39 @@
 return {
     {
+        "jackMort/ChatGPT.nvim",
+        config = function()
+            require("chatgpt").setup({
+                api_key_cmd = "cat " .. vim.fn.expand("$HOME/.config/openai")
+            })
+        end,
+        lazy = false,
+        keys = function()
+            local function key(mode, binding, cmd, desc)
+                return {
+                    binding,
+                    cmd,
+                    mode = mode,
+                    noremap = true,
+                    silent = true,
+                    nowait = true,
+                    desc = "ChatGPT " .. desc,
+                }
+            end
+
+            -- https://github.com/Robitx/gp.nvim?tab=readme-ov-file#native
+            return {
+                key({ "n", "v" }, "<C-g>e", "<cmd>ChatGPTRun explain_code<CR>", "Explain Code"),
+                key({ "n", "i" }, "<C-g><tab>", "<cmd>ChatGPTCompleteCode<CR>", "Complete Code"),
+            }
+        end,
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "folke/trouble.nvim",
+            "nvim-telescope/telescope.nvim"
+        }
+    },
+    {
         "robitx/gp.nvim",
         keys = function()
             local function key(mode, binding, cmd, desc)
@@ -64,7 +98,7 @@ return {
         end,
         config = function()
             require("gp").setup({
-                openai_api_key = { "sh", "-c", "gpg --decrypt ~/.config/openai.gpg" },
+                openai_api_key = { "cat", vim.fn.expand("$HOME/.config/openai") },
             }
             )
         end,
