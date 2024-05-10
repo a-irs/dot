@@ -99,6 +99,11 @@ return {
         config = function()
             require("gp").setup({
                 openai_api_key = { "cat", vim.fn.expand("$HOME/.config/openai") },
+
+                -- remove emojis
+                chat_user_prefix = "## Question",
+                chat_assistant_prefix = { "## Answer", "[{{agent}}]" },
+                command_prompt_prefix_template = "Ask {{agent}}: ",
             }
             )
         end,
