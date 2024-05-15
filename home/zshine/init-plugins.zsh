@@ -28,7 +28,7 @@ ZSHINE_PLUGINS=(
   aliases-global # ZSH global aliases
   auto-ls # launch "ls" when entering directory
   nix # nixos, nix package manager
-  # kubernetes  # aliases, autocompletion for k8s
+  kubernetes  # aliases, autocompletion for k8s
 
   infra # custom
   fasd  # autocomplete paths
