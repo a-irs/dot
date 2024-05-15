@@ -2,8 +2,6 @@
 # run command when buffer is empty and enter is pressed
 
 _magic_enter_run() {
-    tput clear
-
     if git rev-parse --is-inside-work-tree &> /dev/null; then
         if ! git diff-index --quiet HEAD; then
             _trunc 10 git --no-pager -c color.ui=always s
