@@ -1,5 +1,30 @@
 return {
   {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+
+    -- https://github.com/lukas-reineke/indent-blankline.nvim/issues/824
+    local hooks = require "ibl.hooks"
+    hooks.register(
+        hooks.type.VIRTUAL_TEXT,
+        function(_, _, _, virt_text)
+            if virt_text[1] and virt_text[1][1] == '▏' then
+                virt_text[1] = { ' ', { "@ibl.whitespace.char.1" } }
+            end
+            return virt_text
+        end
+    )
+    hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, "IblIndent", { fg = "#364353" })
+    end)
+
+    require("ibl").setup {
+        indent = { char = "▏" },
+        scope = { enabled = false }
+    }
+    end
+  },
+  {
     'gelguy/wilder.nvim',
     config = function()
       require('wilder').setup({

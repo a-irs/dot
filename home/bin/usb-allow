@@ -23,6 +23,6 @@ if [[ -n "$selection" ]]; then
 
     read -r -p "Description of device: "
 
-    echo "$(date +%F)|$REPLY|$selection" >> data/usbguard.log
+    echo "$(date +%F)|$REPLY|$selection" >> ~/data/usbguard.log
     usbguard append-rule "$selection" >/dev/null
 fi

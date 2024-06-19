@@ -225,18 +225,18 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 *hosts 34
 
 # cert
-.crl 3;30;45
-.csr 3;30;45
-.pem 3;30;45
-.key 3;30;45
-.cert 3;30;45
-.pub 3;30;45
-.gpg 3;30;45
-.pgp 3;30;45
-.asc 3;30;45
-.sig 3;30;45
-.p12 3;30;45
-.der 3;30;45
+.crl 40;36
+.csr 40;36
+.pem 40;36
+.key 40;36
+.cert 40;36
+.pub 40;36
+.gpg 40;36
+.pgp 40;36
+.asc 40;36
+.sig 40;36
+.p12 40;36
+.der 40;36
 
 ###### programming
 .gpx 34

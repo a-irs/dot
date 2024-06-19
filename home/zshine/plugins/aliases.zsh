@@ -383,7 +383,6 @@ if [[ "$commands[tmux]" ]]; then
         tmux capture-pane -pCJS - \
             | sed -E -e 's/[[:space:]]*$//' \
             | sed -E -e 's/.*\s*$/-------------------------/' \
-            | sed -E 's/^❯/$/' \
             | $vim -
     }
 fi

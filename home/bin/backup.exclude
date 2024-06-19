@@ -103,6 +103,7 @@ R /home
 - home/*/downloads/
 - home/*/media/
 - home/*/videos/
+- home/*/games/
 - home/*/data/ios-backup/
 - home/*/data/vm/*.log
 - home/*/data/battery.log

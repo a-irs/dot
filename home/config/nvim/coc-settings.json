@@ -2,8 +2,8 @@
     "yaml.format.enable": true,
     "yaml.schemas": {
         "kubernetes": [
-            "manifests/*.yaml",
-            "manifests/*.yml",
+            "manifests/**/*.yaml",
+            "manifests/**/*.yml",
             "k8s.yaml",
             "k8s.yml"
         ]

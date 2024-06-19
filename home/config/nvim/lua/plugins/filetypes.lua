@@ -67,4 +67,5 @@ return {
     'neoclide/jsonc.vim',
     'lilyinstarlight/vim-spl',  -- splunk search language
     'elixir-editors/vim-elixir',
+    'towolf/vim-helm',
 }
