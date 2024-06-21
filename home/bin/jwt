@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+import base64
+import json
+import sys
+
+split = sys.stdin.read().split(".")
+header, payload = [json.loads(base64.b64decode(b + "==")) for b in split[0:2]]
+
+print()
+print(json.dumps(dict(header=header, payload=payload), indent=2))
