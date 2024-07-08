@@ -9,28 +9,25 @@ Host gitlab.com github.com
 
 Host x1 desk
     IdentityFile ~/.ssh/yk1.pub
-    IdentityFile ~/.ssh/id_me
     User alex
 
 Host srv1 srv2 srv3 srv4 srv5 pi1 pi2 pi3 printpi mox1 mox2 backup stor1 rm box1 mvault berry
     IdentityFile ~/.ssh/yk1.pub
-    IdentityFile ~/.ssh/id_me
     User root
 
 Host erx
     IdentityFile ~/.ssh/yk1.pub
-    IdentityFile ~/.ssh/id_me
     User ubnt
 
 Host rm-usb
     HostName 10.11.99.1
     User root
     IdentityFile ~/.ssh/yk1.pub
-    IdentityFile ~/.ssh/id_me
 
 Host *
     # privacy defaults:
     # do not leak username
     User root
+
     # do not leak SSH fingerprints - only use identities explicitly given instead of all in agent plus id_rsa/id_ed25519
     IdentitiesOnly yes

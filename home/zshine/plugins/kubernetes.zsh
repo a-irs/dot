@@ -29,6 +29,7 @@ kns() {
 
     printf '%s\n' "$1" > ~/.namespace
     kubectl_namespace=$ns
+    alias kn="kubectl --namespace $ns"
 
     echo "namespace for \`kn\` set to '$ns'"
 }

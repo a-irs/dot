@@ -5,10 +5,6 @@
 user_pref("network.dns.echconfig.enabled", true);
 user_pref("network.dns.http3_echconfig.enabled", true);
 
-// Use TRR first, and only if the name resolve fails use the native resolver as a fallback
-user_pref("network.trr.mode", 2);
-user_pref("network.trr.uri", "https://firefox.dns.nextdns.io/");
-
 // HTTPS only
 user_pref("dom.security.https_only_mode", true);
 user_pref("dom.security.https_only_mode_ever_enabled", true);
