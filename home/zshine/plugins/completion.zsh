@@ -19,7 +19,10 @@ setopt LIST_PACKED
 
 zmodload -i zsh/complist
 
-fpath+=($ZSHINE_DIR/completion)
+fpath+=(
+    $ZSHINE_DIR/completion
+    $ZSHINE_CACHE_DIR/completion
+)
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 # zstyle ':completion:*' list-colors ''

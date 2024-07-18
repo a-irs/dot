@@ -1,5 +1,11 @@
 [[ $commands[kubectl] ]] || return
 
+if [[ -z "$functions[_kubectl]" && ! -f "$ZSHINE_CACHE_DIR/completion/_kubectl" ]]; then
+    echo "Creating $ZSHINE_CACHE_DIR/completion/_kubectl"
+    kubectl completion zsh > "$ZSHINE_CACHE_DIR/completion/_kubectl"
+    compinit
+fi
+
 k() {
     if [[ "$#" -eq 0 ]]; then
         echo "Context: $(kubectl config current-context)"

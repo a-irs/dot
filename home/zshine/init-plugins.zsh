@@ -29,6 +29,7 @@ ZSHINE_PLUGINS=(
   auto-ls # launch "ls" when entering directory
   nix # nixos, nix package manager
   kubernetes  # aliases, autocompletion for k8s
+  docker  # aliases, autocompletion for docker
 
   infra # custom
   fasd  # autocomplete paths

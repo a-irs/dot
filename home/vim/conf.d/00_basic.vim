@@ -155,14 +155,14 @@ cmap w!! w !sudo tee > /dev/null %
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
 " toggle line numbers
-nnoremap <silent> <C-n> :set number!<CR>
+nnoremap <silent> <leader>wn :set number!<CR>
 
 " toggle line wrap
-nnoremap <silent> <leader>w :set wrap!<CR>
+nnoremap <silent> <leader>ww :set wrap!<CR>
 
 " buffer on <Leader>1-9/tab
-nnoremap <silent> <tab> :bnext<CR>
-nnoremap <silent> <S-tab> :bprev<CR>
+nnoremap <silent> <leader><tab> :bnext<CR>
+nnoremap <silent> <leader><S-tab> :bprev<CR>
 nnoremap <silent> <leader>1 :buffer 1<CR>
 nnoremap <silent> <leader>2 :buffer 2<CR>
 nnoremap <silent> <leader>3 :buffer 3<CR>

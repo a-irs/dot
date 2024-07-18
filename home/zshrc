@@ -9,6 +9,9 @@ fi
 
 ZSHINE_DIR=~/.zshine
 
+ZSHINE_CACHE_DIR=~/.cache/zshine
+[[ ! -d "$ZSHINE_CACHE_DIR/completion" ]] && mkdir -p "$ZSHINE_CACHE_DIR/completion"
+
 zshine_load=(
     ~/.zshrc.d/pre/*(N)
     "$ZSHINE_DIR/init.zsh"

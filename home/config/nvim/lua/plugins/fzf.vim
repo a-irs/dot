@@ -11,7 +11,7 @@ let g:fzf_preview_window = ['right:50%', 'ctrl-_']
 " uses $FZF_DEFAULT_COMMAND
 nnoremap <silent> <Leader>ff :Files<CR>
 nnoremap <silent> <Leader>fh :History<CR>
-nnoremap <silent> <Leader><Tab> :History<CR>
+nnoremap <silent> <Leader>f<Tab> :History<CR>
 nnoremap <silent> <Leader>fg :GFiles<CR>
 nnoremap <silent> <Leader>fm :GFiles?<CR>
-nnoremap <silent> <Leader>s :Rg<CR>
+nnoremap <silent> <Leader>fs :Rg<CR>
