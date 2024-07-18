@@ -15,3 +15,14 @@ nnoremap <silent> <Leader>f<Tab> :History<CR>
 nnoremap <silent> <Leader>fg :GFiles<CR>
 nnoremap <silent> <Leader>fm :GFiles?<CR>
 nnoremap <silent> <Leader>fs :Rg<CR>
+nnoremap <silent> <Leader>fb :Lines<CR>
+
+" fugitive + fzf
+nnoremap <silent> <Leader>gc :BCommits<CR>
+
+" fugitive
+nnoremap <silent> <Leader>gb Git blame<CR>
+nnoremap <silent> <Leader>gl :tab Git log<CR>
+
+" do not auto-close fugitive buffers
+autocmd User FugitiveObject setlocal bufhidden=

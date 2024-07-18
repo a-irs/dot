@@ -1,5 +1,6 @@
 return {
   "junegunn/fzf",
+  "tpope/vim-fugitive",
   {
     "junegunn/fzf.vim",
     config = function()
