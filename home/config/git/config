@@ -18,6 +18,12 @@
     coloring = repeatedLines
     date = short
 
+[log]
+    date = iso
+
+    # do not show first commit content
+    showroot = false
+
 [alias]
     a = add
     s = status -sb
