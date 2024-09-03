@@ -91,6 +91,7 @@ preview_tar() { run2 tar tf "$path" | highlight_dirs; }
 preview_rar() { run2 unrar lb "$path" | highlight_dirs; }
 preview_7z() { run2 7z l -ba "$path" 2>/dev/null || run2 7za l -ba "$path" 2>/dev/null | highlight_dirs; }
 preview_zip() { run2 zipinfo -1tz "$path" | highlight_dirs; }
+preview_zlib() { run2 perl -MCompress::Zlib -E 'undef $/;print uncompress(<>)' "$path"; }
 preview_htm() { run1 elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
 preview_bom() { run1 lsbom -s "$path" | highlight_dirs; }
 preview_pdf() { run1 pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
@@ -229,6 +230,8 @@ show_by_mime() {
             preview_pdf && shown=1 ;;
         application/zip )
             preview_zip && shown=1 ;;
+        application/zlib )
+            preview_zlib && shown=1 ;;
         application/*-compressed )
             preview_7z && shown=1 ;;
         */xml | application/postscript )
