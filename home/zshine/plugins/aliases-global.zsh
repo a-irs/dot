@@ -28,6 +28,13 @@ function global-aliases:awk-n() {
     awk "{print ${(j:,:)args[@]}}"
 }
 
+# show nth line
+function global-aliases:nth() {
+    local n=$1
+    sed -n "${n}p"
+}
+
+
 alias -g -- :a,='| awk -F,'
 alias -g -- :a/='| awk -F/'
 alias -g -- :a:='| awk -F:'
@@ -51,3 +58,4 @@ alias -g -- :uc="| sort | uniq -c | sort -n"
 alias -g -- :2null="2>/dev/null"
 alias -g -- :1null=">/dev/null"
 alias -g -- :21="2>&1"
+alias -g -- :n="| global-aliases:nth"
