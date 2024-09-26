@@ -17,7 +17,6 @@ let g:coc_global_extensions = [
     \ 'coc-lua',
     \ 'coc-elixir',
     \ '@yaegassy/coc-marksman',
-    \ 'coc-go',
     \ ]
 
 " $ fd 'language_server.sh'

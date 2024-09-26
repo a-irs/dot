@@ -42,8 +42,10 @@ fi
 
 # cleanup history
 rm -rf ~/.local/share/recently-used.xbel ~/.local/share/RecentDocuments
-echo -n > ~/.local/share/recently-used.xbel
+echo > ~/.local/share/recently-used.xbel
 sudo chattr +i ~/.local/share/recently-used.xbel
+echo > ~/.local/share/ark/ark_recentfiles
+sudo chattr +i ~/.local/share/ark/ark_recentfiles
 mkdir -p ~/.local/share/RecentDocuments
 sudo chattr +i ~/.local/share/RecentDocuments
 

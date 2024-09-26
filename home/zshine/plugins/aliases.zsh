@@ -671,8 +671,8 @@ if [[ "$commands[systemctl]" ]]; then
     for c in $user_commands; do; alias sc-$c="systemctl $c"; done
     for c in $sudo_commands; do; alias sc-$c="sudo systemctl $c"; done
 
-    for c in $user_commands; do; alias su-$c="systemctl --user $c"; done
-    for c in $sudo_commands; do; alias su-$c="systemctl --user $c"; done
+    for c in $user_commands; do; alias scu-$c="systemctl --user $c"; done
+    for c in $sudo_commands; do; alias scu-$c="systemctl --user $c"; done
     alias lock="loginctl lock-session"
 fi
 unset sudo_commands user_commands
@@ -718,8 +718,12 @@ sandbox-light() {
 }
 
 cdt() {
-    builtin cd "$(mktemp -d -t cdt)"
+    builtin cd "$(mktemp -d -t cdt.XXX)"
 }
+
+alias i2png="mogrify -format png"
 
 # text-to-speech from stdin
 [[ "$commands[spd-say]" ]] && alias say="spd-say --pipe-mode --wait"
+
+alias curlj="curl -H 'Content-Type: application/json'"

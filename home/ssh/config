@@ -11,7 +11,7 @@ Host x1 desk
     IdentityFile ~/.ssh/yk1.pub
     User alex
 
-Host srv1 srv2 srv3 srv4 srv5 pi1 pi2 pi3 printpi mox1 mox2 backup stor1 rm box1 mvault berry
+Host srv1 srv2 srv3 srv4 srv5 pi1 pi2 pi3 printpi mox1 mox2 backup stor1 rm box1 mvault berry kube1
     IdentityFile ~/.ssh/yk1.pub
     User root
 

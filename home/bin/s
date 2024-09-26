@@ -94,7 +94,7 @@ preview_zip() { run2 zipinfo -1tz "$path" | highlight_dirs; }
 preview_zlib() { run2 perl -MCompress::Zlib -E 'undef $/;print uncompress(<>)' "$path"; }
 preview_htm() { run1 elinks -dump 1 -dump-color-mode 1 "$path" | remove_blank | remove_double_blank; }
 preview_bom() { run1 lsbom -s "$path" | highlight_dirs; }
-preview_pdf() { run1 pdftotext -l 10 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
+preview_pdf() { pdfinfo "$path" | awk '/^Pages/{print $1 " " $2}'; run1 pdftotext -l 5 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
 preview_txt() { run1 cat "$path" | remove_blank | remove_double_blank; }
 preview_image() { run2 exiftool -canon "$path"; }
 preview_video() { run1 mediainfo "$path"; }
@@ -158,6 +158,7 @@ show_by_type() {
         "PGP signature "*) preview_pgp_sig && shown=1;;
         "PGP "*"encrypted"*) preview_pgp_sig && shown=1;;
         "PGP private "*) preview_pgp && shown=1;;
+        "PGP message "*) preview_pgp && shown=1;;
         "GPG keybox"*) preview_pgp_keybox && shown=1;;
         "GPG key trust database"*) preview_binary && shown=1;;
         *" private key") preview_sshkey && shown=1;;

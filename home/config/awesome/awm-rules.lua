@@ -45,7 +45,8 @@ awful.rules.rules = {
     },
 
     { rule_any = {
-        class = { "Kodi" }
+        name = {"Software Keyboard"},
+        class = {"Kodi", "steam_app_.*"}
     },
         properties = { fullscreen = true, placement = awful.placement.restore, titlebars_enabled = false, size_hints_honor = false, border_width = 0 }
     },

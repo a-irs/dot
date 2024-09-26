@@ -23,8 +23,18 @@ alias kl="kubectl logs"
 alias kexe="kubectl exec -it"
 alias kexp="kubectl explain"
 alias kg="kubectl get"
-alias ks="kubectl get -o yaml"
+alias ky="kubectl get -o yaml"
+alias ksecret="kubectl get secret --template='{{range \$k,\$v := .data}}{{\$k}} = {{\$v|base64decode}}{{\"\n\"}}{{end}}'"
 alias kev="kubectl events"
+
+kdebug() {
+    local selection=$(kubectl get pod -A | fzf --reverse)
+    local ns="$(awk '{print $1}' <<< $selection)"
+    local pod="$(awk '{print $2}' <<< $selection)"
+    local cmd="kubectl debug --image digitalocean/doks-debug:latest --image-pull-policy=IfNotPresent -it -n $ns $pod"
+    echo ":: $cmd"
+    eval $cmd
+}
 
 alias kaf="kubectl apply -f"
 alias kdf="kubectl delete -f"
@@ -40,7 +50,7 @@ kns() {
     echo "namespace for \`kn\` set to '$ns'"
 }
 
-kubectl_namespace=$(< ~/.namespace)
+kubectl_namespace=$(< ~/.namespace) 2>/dev/null
 alias kn="kubectl --namespace $kubectl_namespace"
 
 
