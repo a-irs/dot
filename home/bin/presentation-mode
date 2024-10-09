@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # start
+pkill -USR1 redshift
 sudo systemctl stop opensnitchd.service
 sudo systemctl stop usbguard-dbus.service usbguard.service
 for i in /sys/bus/usb/devices/*/authorized_default; do sudo tee "$i" <<< 1 >/dev/null; done
@@ -16,3 +17,4 @@ for i in /sys/bus/usb/devices/*/authorized_default; do sudo tee "$i" <<< 0 >/dev
 sudo systemctl start usbguard-dbus.service usbguard.service
 sudo systemctl start opensnitchd.service
 usbguard-notifier --wait >/dev/null &
+pkill -USR1 redshift

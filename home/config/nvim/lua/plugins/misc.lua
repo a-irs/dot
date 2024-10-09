@@ -32,6 +32,7 @@ return {
       })
     end
   },
+
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -42,10 +43,14 @@ return {
         ]]
     end,
     opts = {
-        window = {
-          margin = { 0, 0, 0, 0 },
-          padding = { 1, 1, 1, 1 },
+        -- win = {
+        --   margin = { 0, 0, 0, 0 },
+        --   padding = { 1, 1, 1, 1 },
+        -- },
+        icons = {
+            mappings = false
         },
+
         show_help = false
       }
   },

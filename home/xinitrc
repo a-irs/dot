@@ -60,7 +60,7 @@ kupfer --no-splash &
 nitrogen --restore &
 lxpolkit &
 picom &
-redshift-gtk &
+redshift &
 dunst &
 keepassxc &
 bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
