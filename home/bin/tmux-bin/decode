@@ -7,6 +7,7 @@ import re
 from datetime import datetime
 import sys
 
+# TODO: openssl x509
 
 def trunc(s: str, limit=60) -> str:
     if len(s) <= limit - 1:
@@ -48,15 +49,17 @@ if epoch_matches:
         )
     msg("Epoch", "\n".join(dates))
 
-base64_decoded = get_base64(buffer)
-if base64_decoded:
-    try:
-        s = base64_decoded.decode()
-        msg("Base64", s)
-    except ValueError:
-        s = subprocess.run(
-            ["xxd"], input=base64_decoded, capture_output=True, check=True
-        ).stdout.decode()
-        msg("Base64", s)
+base64_match = [x for x in re.findall(r"(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?", buffer) if x]
+if base64_match:
+    base64_decoded = get_base64(base64_match[0])
+    if base64_decoded:
+        try:
+            s = base64_decoded.decode()
+            msg("Base64", s)
+        except ValueError:
+            s = subprocess.run(
+                ["xxd"], input=base64_decoded, capture_output=True, check=True
+            ).stdout.decode()
+            msg("Base64", s)
 
 msg("Warning", f"nothing found in buffer '{trunc(buffer)}'")
