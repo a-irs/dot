@@ -31,6 +31,10 @@ let g:coc_filetype_map = {
   \ 'tex': 'latex',
   \ }
 
+" this is usually empty or set to 'spell' so dictionary uses the spelling
+" dictionaries automatically, but this is needed to work with coc-dictionary
+set dictionary=~/.config/nvim/spell/en.utf-8.add
+
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
