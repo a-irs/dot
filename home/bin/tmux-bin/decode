@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+import base64
+import subprocess
+import binascii
+import re
+from datetime import datetime
+import sys
+
+
+def trunc(s: str, limit=60) -> str:
+    if len(s) <= limit - 1:
+        return s
+    else:
+        return f"{s[0:limit]}…"
+
+
+def msg(header: str, s: str):
+    line_num = len(s.splitlines())
+    if line_num > 1:
+        msg = f"{header}\n{'-'*len(header)}\n{s.rstrip()}"
+        subprocess.run(["tmux", "display-message", "-d0", "-p", "--", msg])
+    else:
+        msg = f"{header}: {s}"
+        subprocess.run(["tmux", "display-message", "-d0", "--", msg])
+    sys.exit(0)
+
+
+def get_base64(s: str) -> bytes | None:
+    try:
+        decoded = base64.b64decode(s)
+        if base64.b64encode(decoded).decode() == s:
+            return decoded
+    except (binascii.Error, ValueError):
+        pass
+
+
+buffer = subprocess.run(
+    ["tmux", "show-buffer"], capture_output=True, check=True, text=True
+).stdout.rstrip()
+
+epoch_matches = list(map(int, re.findall(r"\b[0-9]{10}\b", buffer)))
+if epoch_matches:
+    dates = []
+    for epoch in epoch_matches:
+        dates.append(
+            f"{datetime.fromtimestamp(epoch).strftime('%Y-%m-%d (%A) %H:%M:%S')} ({epoch})"
+        )
+    msg("Epoch", "\n".join(dates))
+
+base64_decoded = get_base64(buffer)
+if base64_decoded:
+    try:
+        s = base64_decoded.decode()
+        msg("Base64", s)
+    except ValueError:
+        s = subprocess.run(
+            ["xxd"], input=base64_decoded, capture_output=True, check=True
+        ).stdout.decode()
+        msg("Base64", s)
+
+msg("Warning", f"nothing found in buffer '{trunc(buffer)}'")
