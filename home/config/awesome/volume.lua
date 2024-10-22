@@ -10,8 +10,8 @@ function volume.increase()
     audiowidget_timer:emit_signal("timeout")
 end
 
-function volume.increase_10()
-    os.execute 'pactl set-sink-volume @DEFAULT_SINK@ +10%; dunstify -r 20 -t 1500 "Volume +++" -i /usr/share/icons/Faba/48x48/notifications/notification-audio-volume-high.svg'
+function volume.increase_5()
+    os.execute 'pactl set-sink-volume @DEFAULT_SINK@ +5%; dunstify -r 20 -t 1500 "Volume +++" -i /usr/share/icons/Faba/48x48/notifications/notification-audio-volume-high.svg'
     audiowidget_timer:emit_signal("timeout")
 end
 
@@ -20,8 +20,8 @@ function volume.decrease()
     audiowidget_timer:emit_signal("timeout")
 end
 
-function volume.decrease_10()
-    os.execute 'pactl set-sink-volume @DEFAULT_SINK@ -10%; dunstify -r 20 -t 1500 "Volume ---" -i /usr/share/icons/Faba/48x48/notifications/notification-audio-volume-low.svg'
+function volume.decrease_5()
+    os.execute 'pactl set-sink-volume @DEFAULT_SINK@ -5%; dunstify -r 20 -t 1500 "Volume ---" -i /usr/share/icons/Faba/48x48/notifications/notification-audio-volume-low.svg'
     audiowidget_timer:emit_signal("timeout")
 end
 

@@ -54,6 +54,9 @@
     b2m = back-to-master
     unpushed = log -p @{upstream}..
 
+    # run program from git root directory
+    exec = "!exec "
+
 [merge]
     tool = nvimdiff
     ff = true  # try fast-forward, if not possible, make a merge commit instead

@@ -31,5 +31,8 @@ autocmd FileType fugitive nmap <buffer> cc cvc
 autocmd FileType fugitive nmap <buffer> ca cva
 autocmd FileType fugitive nnoremap <buffer> <silent> c :<C-U>Gcommit --verbose<CR><C-w>_O<Esc>
 
+" remove 'reword' binding to not trigger it accidentially...
+autocmd FileType fugitive nmap <buffer> cw <Nop>
+
 " do not auto-close fugitive buffers
 autocmd User FugitiveObject setlocal bufhidden=

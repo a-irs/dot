@@ -202,9 +202,9 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "Menu", function() run_script("toggle-display") end),
     awful.key({ }, "XF86HomePage", function() run_or_raise("kodi", "Kodi") end),
 
-    awful.key({},        "XF86AudioRaiseVolume", volume.increase_10),
+    awful.key({},        "XF86AudioRaiseVolume", volume.increase_5),
     awful.key({"Shift"}, "XF86AudioRaiseVolume", volume.increase),
-    awful.key({},        "XF86AudioLowerVolume", volume.decrease_10),
+    awful.key({},        "XF86AudioLowerVolume", volume.decrease_5),
     awful.key({"Shift"}, "XF86AudioLowerVolume", volume.decrease),
     awful.key({},        "XF86AudioMute",        volume.toggle),
     awful.key({"Ctrl"},        "XF86AudioMute",        function() run("pavucontrol") end),
