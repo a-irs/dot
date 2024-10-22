@@ -19,7 +19,7 @@ def msg(header: str, s: str):
     line_num = len(s.splitlines())
     if line_num > 1:
         msg = f"{header}\n{'-'*len(header)}\n{s.rstrip()}"
-        subprocess.run(["tmux", "display-message", "-d0", "-p", "--", msg])
+        print(msg)
     else:
         msg = f"{header}: {s}"
         subprocess.run(["tmux", "display-message", "-d0", "--", msg])
@@ -62,10 +62,16 @@ def try_base64(buffer: str):
                 s = base64_decoded.decode()
                 msg("Base64", s)
             except ValueError:
-                s = subprocess.run(
-                    ["xxd"], input=base64_decoded, capture_output=True, check=True
+                xxd = subprocess.run(
+                    ["xxd", "-a"], input=base64_decoded, capture_output=True, check=True
                 ).stdout.decode()
-                msg("Base64", s)
+
+                file = subprocess.run(
+                    ["file", "-Lb", "-"], input=base64_decoded, capture_output=True, check=True
+                ).stdout.decode().strip()
+
+                msg(f"Base64 binary ({file})", xxd)
+
 
 def main():
     buffer = subprocess.run(
