@@ -16,13 +16,8 @@ def trunc(s: str, limit=60) -> str:
 
 
 def msg(header: str, s: str):
-    line_num = len(s.splitlines())
-    if line_num > 1:
-        msg = f"{header}\n{'-'*len(header)}\n{s.rstrip()}"
-        print(msg)
-    else:
-        msg = f"{header}: {s}"
-        subprocess.run(["tmux", "display-message", "-d0", "--", msg])
+    msg = f"{header}\n{'-'*len(header)}\n{s.rstrip()}"
+    print(msg)
     sys.exit(0)
 
 
@@ -63,7 +58,7 @@ def try_base64(buffer: str):
                 msg("Base64", s)
             except ValueError:
                 xxd = subprocess.run(
-                    ["xxd", "-a"], input=base64_decoded, capture_output=True, check=True
+                    ["xxd", "-autoskip", "-R", "always"], input=base64_decoded, capture_output=True, check=True
                 ).stdout.decode()
 
                 file = subprocess.run(
