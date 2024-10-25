@@ -210,7 +210,7 @@ show_by_ext() {
         crl)
             preview_crl | cleanup_openssl && shown=1 ;;
         crt|pem)
-            preview_openssl || preview_key && shown=1 ;;
+            preview_openssl || preview_sshkey && shown=1 ;;
         rw2)
             preview_image && shown=1 ;;
     esac
