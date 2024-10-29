@@ -74,7 +74,7 @@ return {
     "tpope/vim-dispatch",
     config = function()
       vim.cmd [[
-        map <silent> <C-y> :Make<CR>
+        nnoremap <silent> <C-x> :Make<CR>
         set errorformat=%m  " anything is shown in quickfix window instead of errors only
       ]]
     end
