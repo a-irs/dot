@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+yellow=$(tput -T ansi setaf 3)
+blue=$(tput -T ansi setaf 4)
+cyan=$(tput -T ansi setaf 6)
+reset=$(tput -T ansi sgr0)
+
+gpg --keyid-format none --with-subkey-fingerprint "$@" \
+    | perl \
+    `# colorize uid` \
+    -pe "s|^uid(.*)|${yellow}uid\1${reset}|;" \
+    `# colorize pub, sub etc. at the beginning - except uid` \
+    -pe "s|^(?!.*uid)(\S+)(.*)|${cyan}\1${reset}\2|;" \
+    `# colorize fingerprints` \
+    -pe "s|([A-F0-9]{40})|${blue}\1${reset}|g;"

@@ -242,7 +242,7 @@ wait_until_file_does_not_exist() {
     echo "$1 does not exist any more"
 }
 
-dl() {
+dl-calc() {
     case "$1" in
         (*T|*t|*Tb|*TB|*tb|*tB) UNIT1=TB ;;
         (*G|*g|*Gb|*GB|*gb|*gB) UNIT1=GB ;;
