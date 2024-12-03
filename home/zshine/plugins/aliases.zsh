@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 
+http-echo() {
+    local port=${1:-8080}
+    docker run --rm -it -p "$port:$port" traefik/whoami -verbose -port "$port"
+}
+
 alias reload-aliases="source $0"
 
 export BAT_THEME=ansi
