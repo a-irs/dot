@@ -109,7 +109,7 @@ preview_openssl() {
         run2 openssl rsa -pubin -in "$path" -noout -text "$@"
     } | cleanup_openssl
 }
-preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass ''; }
+preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass '' || run3 keytool -v -list -keystore "$path" -storepass changeit; }
 preview_pkcs_openssl() { run2 openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
 preview_csr() { run2 openssl req -in "$path" -noout -text | cleanup_openssl; }
 preview_crl() { run2 openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
@@ -225,6 +225,8 @@ show_by_mime() {
             preview_sqlite && shown=1 ;;
         application/vnd.sqlite* )
             preview_sqlite && shown=1 ;;
+        application/x-java-keystore )
+            preview_pkcs && shown=1 ;;
         application/json )
             preview_json && shown=1 ;;
         application/pdf )
