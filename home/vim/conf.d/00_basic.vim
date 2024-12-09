@@ -99,10 +99,10 @@ augroup lastposition
 augroup END
 
 " move through wrapped lines
-imap <silent> <Down> <C-o>gj
-imap <silent> <Up> <C-o>gk
-nmap <silent> <Down> gj
-nmap <silent> <Up> gk
+inoremap <silent> <Down> <C-o>gj
+inoremap <silent> <Up> <C-o>gk
+nnoremap <silent> <Down> gj
+nnoremap <silent> <Up> gk
 
 " disable mouse in neovim
 if has('nvim')
@@ -131,6 +131,7 @@ autocmd BufNewFile,BufFilePre,BufRead *.json5 set filetype=jsonc
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType go setlocal noet ts=4 sw=4 sts=4
 
 " do not auto-hardwrap git commit messages
 autocmd Filetype gitcommit setlocal formatoptions-=t

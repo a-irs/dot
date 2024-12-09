@@ -154,7 +154,7 @@ globalkeys = awful.util.table.join(
     -- awful.key({ alt }, "space",      function() run("rofi -show drun") end),
     awful.key({ alt }, "space",      function() run("kupfer") end),
     awful.key({ "Ctrl" }, "space",   function() run_script("menu-vpn") end),
-    awful.key({ alt }, "Return",     function() run("alacritty") end),
+    awful.key({ alt }, "Return",     function() run("alacritty -e tmux -u new-session -c ~") end),
     awful.key({ alt, ctrl }, "Return",function() run("alacritty -e bash") end),
     awful.key({ alt }, "f",          function() run_gui("dolphin") end),
     awful.key({ alt }, "c",          function() run_or_raise("firefox", "firefox") end),

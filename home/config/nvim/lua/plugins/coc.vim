@@ -16,6 +16,7 @@ let g:coc_global_extensions = [
     \ 'coc-ltex',
     \ 'coc-lua',
     \ 'coc-elixir',
+    \ 'coc-go',
     \ '@yaegassy/coc-marksman',
     \ ]
 

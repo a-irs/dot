@@ -13,9 +13,6 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 # hide message: "Pipenv found itself running within a virtual environment, so it will automatically use that environment, instead of creating its own for any project."
 export PIPENV_VERBOSITY=-1
 
-# pipenv
-
-# or: pipenv shell
 venv() {
     if [[ -n "$VIRTUAL_ENV" ]]; then
         deactivate
@@ -27,12 +24,13 @@ venv() {
         if ! [[ $REPLY =~ ^[Yy]$ ]]; then
             return
         fi
+        echo
 
         mkdir -p .venv
         if [[ -f setup.py || -f pyproject.toml ]]; then
-            pipenv install --site-packages --dev --ignore-pipfile .
+            uv init --no-readme && rm -f hello.py
         else
-            pipenv install --site-packages --dev --ignore-pipfile
+            uv sync --frozen
         fi
 
         printf '\n%s\n' "----------"
@@ -44,4 +42,9 @@ venv() {
     fi
 
     source .venv/bin/activate
+
+    echo "Cheatsheet:"
+    echo "uv add <packages>; uv remove <packages>"
+    echo "uv sync"
+    echo "uv run; uv run python"
 }
