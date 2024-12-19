@@ -6,36 +6,71 @@ import sys
 import datetime
 import copy
 
+
+class Color(object):
+    if sys.stdout.isatty():
+        RESET = "\033[" + str(0) + "m"
+        BOLD = "\033[" + str(1) + "m"
+        DIM = "\033[" + str(2) + "m"
+        MAGENTA = "\033[" + str(35) + "m"
+        CYAN = "\033[" + str(36) + "m"
+        BLUE = "\033[" + str(34) + "m"
+        GREEN = "\033[" + str(32) + "m"
+        YELLOW = "\033[" + str(33) + "m"
+        RED = "\033[" + str(31) + "m"
+        WHITE = "\033[" + str(37) + "m"
+        BLACK = "\033[" + str(30) + "m"
+    else:
+        RESET = ""
+        BOLD = ""
+        DIM = ""
+        MAGENTA = ""
+        CYAN = ""
+        BLUE = ""
+        GREEN = ""
+        YELLOW = ""
+        RED = ""
+        WHITE = ""
+        BLACK = ""
+
+
 def b64d(s):
     rem = len(s) % 4
     if rem > 0:
         s += "=" * (4 - rem)
     return base64.urlsafe_b64decode(s)
 
-if len(sys.argv) > 1 and sys.argv[1] == "test":
-    split = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzcyI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiOiAiMjQ4Mjg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ.ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg".split(".")
-else:
-    split = sys.stdin.read().split(".")
-
-header, payload = [json.loads(b64d(b.strip())) for b in split[0:2]]
-signature = b64d(split[2].strip())
 
 def transform_payload(d: dict) -> dict:
     d = copy.copy(d)
     for key in d:
         # convert epoch to formatted time
         if isinstance(d[key], int) and 1_000_000_000 < d[key] < 3_000_000_000:
-            d[key] = f"{datetime.datetime.fromtimestamp(d[key]).isoformat()} [converted from {d[key]}]"
+            d[key] = (
+                f"{datetime.datetime.fromtimestamp(d[key]).isoformat()} [converted from {d[key]}]"
+            )
     return d
 
-output = {
-    "header": header,
-    "payload": transform_payload(payload),
-    "signature": {
-        "length": len(signature),
-        "hex": signature.hex()[0:8] + "..." if len(signature) > 8 else signature.hex(),
-    },
-}
 
-print()
-print(json.dumps(output, indent=2))
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        split = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzcyI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiOiAiMjQ4Mjg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ.ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg".split(
+            "."
+        )
+    else:
+        split = sys.stdin.read().split(".")
+
+    header, payload = [json.loads(b64d(b.strip())) for b in split[0:2]]
+    signature = b64d(split[2].strip())
+
+    print(f"{Color.RESET}{Color.RED}")
+    print(json.dumps(header, indent=2))
+    print(f"{Color.RESET}.{Color.BLUE}")
+    print(json.dumps(transform_payload(payload), indent=2))
+    print(f"{Color.RESET}.{Color.GREEN}")
+    print(f"[length={len(signature)}, base64-encoded]")
+    print(f"{base64.b64encode(signature).decode()}")
+
+
+if __name__ == "__main__":
+    main()
