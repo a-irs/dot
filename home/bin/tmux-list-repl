@@ -2,5 +2,6 @@
 
 # find REPLs to send code snippets to
 tmux list-panes -aF "#{window_id}  [#{pane_current_command}] #{pane_title}  [#{pane_current_path}]" \
-    | sed "s|\[$HOME|[~|" | sed 's/^@//' | sort -n \
-    | grep -E '(\[beam.smp]| ipython )'
+    | grep -E '(\[beam.smp]| ipython.? | \[python.*\] python.?| \[zsh\] )' \
+    | grep -v "${0##*/}"  `# hide script itself` \
+    | sed "s|\[$HOME|[~|" | sed 's/^@//' | sort -n
