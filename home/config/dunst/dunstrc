@@ -27,7 +27,7 @@
     width = (200, 600)
 
     # The maximum height of a single notification, excluding the frame.
-    height = 200
+    height = (0, 200)
     offset = 16x38
 
     # Padding between text and separator.

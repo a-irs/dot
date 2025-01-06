@@ -59,6 +59,7 @@ EXEC 00 # do not set specific color (only "*" with ls -F)
 .tar 32
 .sublime-package 32
 .apk 32
+.aab 32
 .tgz 32
 .arc 32
 .arj 32
