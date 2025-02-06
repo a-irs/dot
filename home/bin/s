@@ -101,6 +101,7 @@ preview_video() { run1 mediainfo "$path"; }
 preview_json() { run1 jq . -C "$path"; }
 preview_bat() { _bat "$path" "$@"; }
 preview_sshkey() { run3 ssh-keygen -l -v -f "$path"; echo ""; cat "$path"; }
+preview_xml() { xmllint --format "$path" | _bat -l xml; }
 preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
 preview_openssl() {
     {
@@ -238,7 +239,7 @@ show_by_mime() {
         application/*-compressed )
             preview_7z && shown=1 ;;
         */xml | application/postscript )
-            preview_bat -l xml && shown=1 ;;
+            preview_xml && shown=1 ;;
         video/* | audio/* )
             preview_video && shown=1 ;;
         image/* )

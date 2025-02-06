@@ -8,30 +8,17 @@ import copy
 
 
 class Color(object):
-    if sys.stdout.isatty():
-        RESET = "\033[" + str(0) + "m"
-        BOLD = "\033[" + str(1) + "m"
-        DIM = "\033[" + str(2) + "m"
-        MAGENTA = "\033[" + str(35) + "m"
-        CYAN = "\033[" + str(36) + "m"
-        BLUE = "\033[" + str(34) + "m"
-        GREEN = "\033[" + str(32) + "m"
-        YELLOW = "\033[" + str(33) + "m"
-        RED = "\033[" + str(31) + "m"
-        WHITE = "\033[" + str(37) + "m"
-        BLACK = "\033[" + str(30) + "m"
-    else:
-        RESET = ""
-        BOLD = ""
-        DIM = ""
-        MAGENTA = ""
-        CYAN = ""
-        BLUE = ""
-        GREEN = ""
-        YELLOW = ""
-        RED = ""
-        WHITE = ""
-        BLACK = ""
+    RESET = "\033[" + str(0) + "m"
+    BOLD = "\033[" + str(1) + "m"
+    DIM = "\033[" + str(2) + "m"
+    MAGENTA = "\033[" + str(35) + "m"
+    CYAN = "\033[" + str(36) + "m"
+    BLUE = "\033[" + str(34) + "m"
+    GREEN = "\033[" + str(32) + "m"
+    YELLOW = "\033[" + str(33) + "m"
+    RED = "\033[" + str(31) + "m"
+    WHITE = "\033[" + str(37) + "m"
+    BLACK = "\033[" + str(30) + "m"
 
 
 def b64d(s):
@@ -63,13 +50,26 @@ def main():
     header, payload = [json.loads(b64d(b.strip())) for b in split[0:2]]
     signature = b64d(split[2].strip())
 
-    print(f"{Color.RESET}{Color.RED}")
-    print(json.dumps(header, indent=2))
-    print(f"{Color.RESET}.{Color.BLUE}")
-    print(json.dumps(transform_payload(payload), indent=2))
-    print(f"{Color.RESET}.{Color.GREEN}")
-    print(f"[length={len(signature)}, base64-encoded]")
-    print(f"{base64.b64encode(signature).decode()}")
+    if sys.stdout.isatty():
+        print(f"{Color.RESET}{Color.RED}")
+        print(json.dumps(header, indent=2, ensure_ascii=False))
+        print(f"{Color.RESET}.{Color.BLUE}")
+        print(json.dumps(transform_payload(payload), indent=2, ensure_ascii=False))
+        print(f"{Color.RESET}.{Color.GREEN}")
+        print(f"[length={len(signature)}, base64-encoded]")
+        print(f"{base64.b64encode(signature).decode()}")
+    else:
+        print(
+            json.dumps(
+                {
+                    "header": header,
+                    "payload": payload,
+                    "signature": base64.b64encode(signature).decode(),
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
 
 
 if __name__ == "__main__":

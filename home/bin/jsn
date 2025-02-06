@@ -67,7 +67,7 @@ def main():
         def dye(s, color):
             return f"{color}{s}{color_palette['reset']}"
 
-        print(dye(name, colors['prefix']) + ": " + dye(json.dumps(value), color))
+        print(dye(name + ": ", colors['prefix']) + dye(json.dumps(value), color))
 
 
 if __name__ == "__main__":

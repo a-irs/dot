@@ -4,7 +4,7 @@ load-env() {
     emulate -L zsh
 
     # only whitelisted paths
-    if [[ "$PWD" == ~/projects/* ]]; then
+    if [[ "$PWD" == ~/projects/* || "$PWD" == ~/Documents/* ]]; then
         [[ -f .env ]] && source .env
     fi
 }
