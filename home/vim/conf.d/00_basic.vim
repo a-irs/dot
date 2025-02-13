@@ -217,6 +217,17 @@ function! XTermPasteBegin()
   return ''
 endfunction
 
+" create directory on edit if it does not exist. see https://stackoverflow.com/a/4294176/151048
+augroup BWCCreateDir
+  autocmd!
+  autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup END
+function! s:MkNonExDir(file, buf)
+  if empty(getbufvar(a:buf, '&buftype')) && a:file !~# '\v^\w+\:\/'
+    call mkdir(fnamemodify(a:file, ':h'), 'p')
+  endif
+endfun
+
 
 " MAN PAGES
 let g:no_man_maps = 1
