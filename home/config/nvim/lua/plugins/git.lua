@@ -6,6 +6,10 @@ return {
       vim.cmd("source " .. rc)
     end
   },
+
+  -- for staging hunk mapping
+  "airblade/vim-gitgutter",
+
   -- verbose git commit message
   "rhysd/committia.vim"
 }

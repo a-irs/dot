@@ -36,3 +36,7 @@ autocmd FileType fugitive nmap <buffer> cw <Nop>
 
 " do not auto-close fugitive buffers
 autocmd User FugitiveObject setlocal bufhidden=
+
+" jump to next/prev diffs
+autocmd FileType fugitive nmap <silent> <leader>< ]c
+autocmd FileType fugitive nmap <silent> <leader>> [c

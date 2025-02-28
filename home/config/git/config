@@ -31,6 +31,8 @@
     co = checkout
     cm = commit
     d = diff
+    ds = diff --staged
+    cp = !git commit && git push
 
     p = !git add -A && git commit && git push
     pp = !git add -A && git commit -m 'Update' && git push 2>/dev/null

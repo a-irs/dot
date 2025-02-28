@@ -10,3 +10,8 @@ nmap <leader>> <plug>(signify-prev-hunk)
 
 " committia
 let g:committia_use_singlecolumn = 'always'
+
+" only use for staging hunk mapping
+let g:gitgutter_map_keys = 0
+let g:gitgutter_signs = 0
+nmap <silent> <Leader>gs <Plug>(GitGutterStageHunk)
