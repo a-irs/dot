@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 entropy() {
     keepassxc-cli estimate | sed -E 's/^Length .*Entropy ([0-9]+).*$/\1/' | tr -d '\n'
 }

@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+# TODO: delete temp file
+# TODO: generate help from parser
+
+import argparse
+import subprocess
+import tempfile
+import os
+import re
+import sys
+
+
+def cmd(*args, **kwargs):
+    kwargs_merged = dict(check=True) | kwargs
+    subprocess.run(args, **kwargs_merged)
+
+def cmd_verbose(*args, **kwargs):
+    print(f":: {' '.join(args)}", file=sys.stderr)
+    cmd(*args, **kwargs)
+
+def parse_host(host: str):
+    port = 443
+    if host.startswith(('http://', 'https://')):
+        host = host.split("://", 1)[1]  # strip protocol://
+    if ':' in host:
+        host, port = host.rsplit(":", 1)  # extract port
+    return host, int(port)
+
+def download_cert(host: str):
+    host, port = parse_host(host)
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pem", prefix=f"{host}_") as temp_file:
+        print(f":: Downloading cert to {temp_file.name}", file=sys.stderr)
+        s_client = subprocess.run(("openssl", "s_client", "-servername", host, "-showcerts", "-connect", f"{host}:{port}"), check=True, capture_output=True, stdin=subprocess.DEVNULL)
+        temp_file.write(s_client.stdout)
+
+        print("", file=sys.stderr)
+        return temp_file.name
+
+def command_priv(file: str):
+    cmd_verbose("openssl", "pkey", "-in", file)
+
+def command_pub(file: str):
+    cmd_verbose("openssl", "x509", "-pubkey", "-noout", "-in", file)
+
+def command_cert(file: str):
+    cmd_verbose("openssl", "x509", "-in", file)
+
+def command_chain(file: str):
+    pipe = subprocess.Popen(("openssl", "crl2pkcs7", "-nocrl", "-certfile", file), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.Popen(("openssl", "pkcs7", "-print_certs"), stdin=pipe.stdout)
+
+def command_text(file: str):
+    cmd_verbose("s", file)  # ~/.bin/s
+
+def command_fp(file: str):
+    cmd("openssl", "x509", "-noout", "-fingerprint", "-sha1", "-in", file)
+    cmd("openssl", "x509", "-noout", "-fingerprint", "-sha256", "-in", file)
+
+def command_connect(host: str, port: int, *args):
+    cmd_verbose("openssl", "s_client", "-servername", host, "-connect", f"{host}:{port}", *args, stdin=subprocess.DEVNULL)
+
+def command_dump(file: str):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".der") as temp_file:
+        cmd("openssl", "x509", "-in", file, "-outform", "der", "-out", temp_file.name)
+        cmd_verbose("dumpasn1", "-dpvz", temp_file.name, check=False)
+
+def command_ocsp(file: str, *args):
+    cmd_verbose("ocsp", file, *args)
+
+def help_message():
+    print("Unknown command.")
+    print()
+    print("Available commands:")
+    print("  priv <file or host>")
+    print("  pub <file or host>")
+    print("  chain <file or host>")
+    print("  cert <file or host>")
+    print("  text <file or host>")
+    print("  dump <file or host>")
+    print("  fp <file or host>")
+    print("  connect <host>")
+    print("  ocsp <file or host> [<intermediate cert>]")
+    print("")
+    print(f"openssl version: {subprocess.check_output(('openssl', 'version'), text=True)}")
+    sys.exit(2)
+
+def main():
+    parser = argparse.ArgumentParser(description="Process SSL certificates")
+    parser.add_argument("action", choices=["priv", "pub", "chain", "cert", "text", "dump", "fp", "connect", "ocsp"], help="Action to perform")
+    parser.add_argument("file_or_host", help="Certificate file or host to process")
+    parser.add_argument("args", nargs=argparse.REMAINDER, help="Additional arguments for the command")
+
+    args = parser.parse_args()
+
+    if args.action in ["priv", "pub", "chain", "cert", "text", "dump", "fp", "ocsp"]:
+        if not os.path.exists(args.file_or_host) and not re.search(r'\.(pem|crt|der|cer)$', args.file_or_host, re.IGNORECASE):
+            file = download_cert(args.file_or_host)
+        else:
+            file = args.file_or_host
+
+        cmds = {
+            "priv": command_priv,
+            "pub": command_pub,
+            "cert": command_cert,
+            "chain": command_chain,
+            "text": command_text,
+            "dump": command_dump,
+            "ocsp": command_ocsp,
+            "fp": command_fp
+        }
+        cmds[args.action](file, *args.args)
+
+    elif args.action == "connect":
+        host, port = parse_host(args.file_or_host)
+        command_connect(host, port, *args.args)
+
+    else:
+        help_message()
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        help_message()
+    main()
