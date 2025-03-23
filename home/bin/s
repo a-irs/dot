@@ -102,7 +102,7 @@ preview_json() { run1 jq . -C "$path"; }
 preview_bat() { _bat "$path" "$@"; }
 preview_sshkey() { run3 ssh-keygen -l -v -f "$path"; echo ""; cat "$path"; }
 preview_xml() { xmllint --format "$path" | _bat -l xml; }
-preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path"; _bat -l xml "$temp"; rm -f "$temp"; }
+preview_plist() { temp=$(mktemp); run1 plutil -convert xml1 -o "$temp" -- "$path" || plistutil -i "$path" -o "$temp"; xmllint --format "$temp" | _bat -l xml; rm -f "$temp"; }
 preview_openssl() {
     {
         run2 openssl x509 -noout -text -in "$path" "$@" 2>/dev/null || \
@@ -168,6 +168,7 @@ show_by_type() {
         *" certificate request") preview_csr && shown=1;;
         ELF*) preview_elf && shown=1;;
         AppleScript*) preview_applescript && shown=1;;
+        "Apple binary property list") preview_plist && shown=1;;
     esac
 }
 ((shown == 0)) && show_by_type

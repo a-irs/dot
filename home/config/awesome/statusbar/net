@@ -6,6 +6,14 @@ vpn_color="#ffd700"
 error_color="#fa7883"
 
 out=$(nmcli --wait 1 --terse --colors no --fields name,type,device,state,active connection show)
+wifi_rfkill=$(rfkill --output type,soft,hard --raw --noheadings | awk '/^wlan/{print $2"."$3}' | uniq)
+case "$wifi_rfkill" in
+    unblocked.unblocked) wifi_rfkill="" ;;
+    blocked.unblocked) wifi_rfkill=" soft blocked" ;;
+    unblocked.blocked) wifi_rfkill=" hard blocked" ;;
+    blocked.blocked) wifi_rfkill=" soft and hard blocked" ;;
+    *) wifi_rfkill=" blocked" ;;
+esac
 active=$(printf '%s\n' "$out" | grep -v '^docker0' | awk -F: '$5 == "yes" {print $1":"$2}' | sort -r | sort -t : -k 2)
 
 txt=()
@@ -24,7 +32,7 @@ done <<< "$active"
 total="${#txt[@]}"
 count=1
 if [[ $total == 0 ]]; then
-    printf '%s' "<span foreground='$error_color'><b>N/A</b></span>"
+    printf '%s' "<span foreground='$error_color'><b>N/A</b></span>$wifi_rfkill"
 else
     for item in "${txt[@]}"; do
         printf "%s" "$item"
@@ -32,7 +40,7 @@ else
         count=$((count+1))
     done
 
-    ping=$(ping -c 1 -w 2 9.9.9.9)
+    ping=$(ping -c 1 -w 2 9.9.9.9 2>/dev/null)
     ping_rc=$?
     if [[ "$ping_rc" != 0 ]]; then
         printf '%s' " <span foreground='$error_color'><b>[>2000ms]</b></span>"

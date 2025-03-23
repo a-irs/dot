@@ -1,10 +1,5 @@
 // see e.g. https://github.com/milgradesec/firefox-settings
 
-// enable ECH/ESNI
-// test e.g. with https://crypto.cloudflare.com/cdn-cgi/trace
-user_pref("network.dns.echconfig.enabled", true);
-user_pref("network.dns.http3_echconfig.enabled", true);
-
 // HTTPS only
 user_pref("dom.security.https_only_mode", true);
 user_pref("dom.security.https_only_mode_ever_enabled", true);

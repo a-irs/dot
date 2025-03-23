@@ -32,6 +32,11 @@ awful.rules.rules = {
         properties = { size_hints_honor = false }
     },
 
+    {
+        rule = { class = "firefox" },
+        properties = { maximized = false, floating = false }
+    },
+
     { rule_any = {
         class = { "Steam" }
     },
