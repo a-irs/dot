@@ -4,7 +4,7 @@ set -euo pipefail
 
 case "$(uname -s)" in
     Darwin)
-        ifconfig -f inet:cidr,inet6:cidr -u | grep 'inet[ 46]' | awk '{print $2}' | grep -vE '^(127\.|::1/|fe80::)' | sort -V | uniq
+        ifconfig -f inet:cidr,inet6:cidr -u | grep 'inet[ 46]' | awk '{print $2}' | grep -vE '^(127\.|::1/|fe80::)'
         ;;
     *)
         echo TODO
