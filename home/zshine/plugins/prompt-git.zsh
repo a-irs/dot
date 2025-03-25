@@ -52,6 +52,20 @@ git_get_dirt() {
     printf "%s" "$s"
 }
 
+git_get_tag() {
+    local git_out=$1
+    if [[ "$git_out" == gitstatus ]]; then
+        [[ -n "$VCS_STATUS_TAG" ]] && s="$VCS_STATUS_TAG"
+        printf '%s' "$s"
+        return
+    fi
+
+    tag=$(command git describe --tags 2> /dev/null)
+    [[ "$?" -eq 0 ]] && s="$tag"
+
+    printf "%s" "$s"
+}
+
 git_get_commit() {
     local git_out=$1
     if [[ "$git_out" == gitstatus ]]; then
@@ -69,9 +83,6 @@ git_get_commit() {
 
     gen=$(command git rev-list --count HEAD 2> /dev/null)
     [[ "$?" -eq 0 ]] && s="${gen} « $s"
-
-    tag=$(command git describe --tags 2> /dev/null)
-    [[ "$?" -eq 0 ]] && s="$s ($tag)"
 
     printf "%s" "$s"
 }
@@ -198,6 +209,7 @@ git_prompt_info() {
     local git_remote=$(git_get_remote "$git_out")
     local git_mod=$(git_get_dirt "$git_out")
     local git_stash=$(git_get_stash "$git_out")
+    local git_tag=$(git_get_tag "$git_out")
     if [[ "$(wc -c <<< "${git_repo}${git_branch}${git_remote}")" -le 1 ]]; then
         # show commit hash if all other information is not available
         local git_commit=$(git_get_commit "$git_out")
@@ -210,5 +222,6 @@ git_prompt_info() {
         prompt_segment "$ZSHINE_GIT_COMMIT_BG" "$ZSHINE_GIT_COMMIT_FG" "$git_stash"
         prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$git_remote"
         prompt_segment "$ZSHINE_GIT_DIRTY_BG" "$ZSHINE_GIT_DIRTY_FG" "$git_mod"
+        prompt_segment "$ZSHINE_GIT_BRANCH_BG" "$ZSHINE_GIT_BRANCH_FG" "$git_tag"
     fi
 }
