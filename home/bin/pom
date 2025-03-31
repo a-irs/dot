@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+# control pomodoro timer like this
+# echo -n 'pom_start()' | nc -U /tmp/pom.socket
+# echo -n 'pom_status()' | nc -U /tmp/pom.socket
+# echo -n 'pom_pause()' | nc -U /tmp/pom.socket
+
 import os
 import asyncio
 import json
@@ -10,7 +15,10 @@ import subprocess
 async def handle_client(reader, writer):
     request = None
     while request != 'quit':
-        request = (await reader.read(255)).decode()
+        request = (await reader.read(255)).decode().strip()
+        if request not in ["pom_start()", "pom_status()", "pom_pause()", ""]:
+            print(f"unknown command {request}")
+            break
         try:
             result = eval(request)
             if result:
