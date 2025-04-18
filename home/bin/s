@@ -239,6 +239,8 @@ show_by_mime() {
             preview_zlib && shown=1 ;;
         application/*-compressed )
             preview_7z && shown=1 ;;
+        application/x-tar )
+            preview_tar && shown=1 ;;
         */xml | application/postscript )
             preview_xml && shown=1 ;;
         video/* | audio/* )

@@ -1,11 +1,11 @@
 {
     "yaml.format.enable": true,
     "yaml.schemas": {
+        "https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json": ["ci/**/*.y*ml"],
         "kubernetes": [
-            "manifests/**/*.yaml",
-            "manifests/**/*.yml",
-            "k8s.yaml",
-            "k8s.yml"
+            "manifests/**/*.y*ml",
+            "dist/**/*.y*ml",
+            "k8s.y*ml",
         ]
     },
 

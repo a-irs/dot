@@ -73,6 +73,11 @@ inoremap <silent><expr> <TAB>
     \ coc#refresh()
 let g:coc_snippet_next = '<tab>'
 
+" trigger CoC completion. default: builtin vim keyword completion
+inoremap <silent><expr> <C-n>
+    \ coc#pum#visible() ? coc#pum#next(1):
+    \ coc#refresh()
+
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " <CR>: when a completion entry is selected, confirm selection. else, stop undo (see :h i_CTRL-g) and send return
