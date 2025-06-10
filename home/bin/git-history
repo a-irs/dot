@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# usage e.g. "git history --first-parent ./docs"
+
+preview='preview() {
+    git show --stat -p --first-parent --color=always "$@"
+}'
+
+git log --color=always --date short --format="%C(blue bold)%cd %C(auto)%h%d %s %C(black bold)%an <%ae>" \
+    "$@" \
+        | command fzf --exact --ansi --no-sort --no-separator --reverse --tiebreak=index \
+        --preview "$preview; preview {2}" \
+        --preview-window=right:66%:wrap \
+        --bind "ctrl-e:preview-down,ctrl-y:preview-up" \
+        --bind 'ctrl-w:toggle-preview-wrap' \
+        --bind 'ctrl-p:change-preview-window(down,66%|hidden|)' \
+        --bind "q:abort" \
+        --bind "ctrl-m:execute:( \
+            nvim \
+            '+nnoremap q :qa!<CR>' \
+            '+Git! show -p --first-parent {2}' \
+            '+hide' \
+            )" \
+    || true
