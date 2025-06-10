@@ -64,7 +64,6 @@ return {
     'Galicarnax/vim-regex-syntax',
     'LnL7/vim-nix',
     'PProvost/vim-ps1',
-    'neoclide/jsonc.vim',
     'lilyinstarlight/vim-spl',  -- splunk search language
     'elixir-editors/vim-elixir',
     'towolf/vim-helm',

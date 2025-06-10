@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+CMD="$(basename "$0")"
 
 URL=$1
 [[ $URL == https://* ]] || URL=https://github.com/$URL
@@ -8,18 +9,16 @@ URL=$1
 NS=$(echo "$URL" | rev | cut -d '/' -f 2 | rev)
 REPO=$(echo "$URL" | rev | cut -d '/' -f 1 | rev | sed -E 's/\.git$//')
 
-dest=/tmp/git-peek/$NS/$REPO
-
-if [[ "$URL" == clean ]]; then
-    rm -rf "$TMPDIR/git-peek"
-    echo "removed '$TMPDIR/git-peek'."
-    exit
-fi
+dest=/tmp/$CMD/$NS/$REPO
 
 echo ":: $URL"
 if [[ ! -d "$dest/.git" ]]; then
     echo ""
-    git clone "$URL" "$dest"
+    if [[ "$(basename "$0")" == git-peek1 ]]; then
+        git clone --depth=1 "$URL" "$dest"
+    else
+        git clone "$URL" "$dest"
+    fi
 fi
 cd "$dest"
 echo ""
