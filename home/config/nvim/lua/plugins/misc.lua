@@ -93,27 +93,32 @@ return {
   -- readline mappings: CTRL-A, CTRL-E etc. in insert and command mode
   "tpope/vim-rsi",
 
-   -- send lines to tmux/REPL
-   {
-     "jpalardy/vim-slime",
-     config = function()
-       vim.cmd [[
-         let g:slime_target = "tmux"
-         let g:slime_paste_file = tempname()
-         let g:slime_bracketed_paste = 1
+  -- send lines to tmux/REPL
+  {
+    "jpalardy/vim-slime",
+    config = function()
+      vim.cmd [[
+        let g:slime_target = "tmux"
+        let g:slime_paste_file = tempname()
+        let g:slime_bracketed_paste = 1
+        let g:slime_no_mappings = 1
 
-         " default: SlimeParagraphSend
-         nmap <c-c><c-c> <Plug>SlimeLineSend
+        " default: SlimeParagraphSend
+        nmap <c-c><c-c> <Plug>SlimeLineSend
+        xmap <c-c><c-c> <Plug>SlimeRegionSend \| gv
 
-         func! SetTmuxWindow(entry)
-           let b:slime_config["target_pane"] = split(a:entry, ' ')[0]
-         endfunc
+        " send whole file
+        nmap <c-c><c-v> :%SlimeSend<CR>
 
-         function SlimeOverrideConfig()
-           let b:slime_config = {"socket_name": "default"}
-           call fzf#run(fzf#wrap({'source': 'tmux-list-repl', 'sink': function('SetTmuxWindow')}))
-         endfunction
-       ]]
-    end
+        func! SetTmuxWindow(entry)
+          let b:slime_config["target_pane"] = split(a:entry, ' ')[0]
+        endfunc
+
+        function SlimeOverrideConfig()
+          let b:slime_config = {"socket_name": "default"}
+          call fzf#run(fzf#wrap({'source': 'tmux-list-repl', 'sink': function('SetTmuxWindow')}))
+        endfunction
+      ]]
+   end
   },
 }

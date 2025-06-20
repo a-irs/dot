@@ -10,7 +10,7 @@ preview='preview() {
 
 git log --color=always --date short --format="%C(blue bold)%cd %C(auto)%h%d %s %C(black bold)%an <%ae>" \
     "$@" \
-        | command fzf --exact --ansi --no-sort --no-separator --reverse --tiebreak=index \
+        | fzf --exact --ansi --no-sort --no-separator --reverse --tiebreak=index \
         --preview "$preview; preview {2}" \
         --preview-window=right:66%:wrap \
         --bind "ctrl-e:preview-down,ctrl-y:preview-up" \
@@ -23,4 +23,5 @@ git log --color=always --date short --format="%C(blue bold)%cd %C(auto)%h%d %s %
             '+Git! show -p --first-parent {2}' \
             '+hide' \
             )" \
+        --exit-0 \
     || true
