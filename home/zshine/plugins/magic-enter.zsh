@@ -2,17 +2,17 @@
 # run command when buffer is empty and enter is pressed
 
 _magic_enter_run() {
+    _trunc 10 ls -l --color=always -CF
+
     if git rev-parse --is-inside-work-tree &> /dev/null; then
+        _sep
         if ! git diff-index --quiet HEAD; then
             _trunc 10 git --no-pager -c color.ui=always s
-            _sep
         fi
 
-        _trunc 10 git --no-pager -c color.ui=always log --stat --decorate=short --date=relative -1 | perl -0777 -pe 's/(Date: .*)\n\s+(.*)/\1\nBody:   \2/g'
-        _sep
+        # _trunc 10 git --no-pager -c color.ui=always log --stat --decorate=short --date=relative -1 | perl -0777 -pe 's/(Date: .*)\n\s+(.*)/\1\nBody:   \2/g'
+        # _sep
     fi
-
-    _trunc 10 ls -l --color=always -CF
 }
 
 _sep() {

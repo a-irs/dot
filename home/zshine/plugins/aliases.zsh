@@ -491,10 +491,9 @@ if [[ "$commands[git]" ]]; then
 fi
 
 psg() {
-    [[ ! "$1" ]] && echo "psg <string>" && return
-    INP="$*";
-    REST=$(echo $INP | tail -c +2)
-    ps aux | grep -i \[${INP:0:1}\]${INP:1:${#INP}-1}
+    [[ ! "$1" ]] && ps auxww && return
+    local process="$*";
+    ps auxww | grep -i \[${process:0:1}\]${process:1:${#process}-1}
 }
 
 if [[ "$commands[pacman]" ]]; then
