@@ -30,7 +30,12 @@ def download_cert(host: str):
     host, port = parse_host(host)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pem", prefix=f"{host}_") as temp_file:
         print(f":: Downloading cert to {temp_file.name}", file=sys.stderr)
-        s_client = subprocess.run(("openssl", "s_client", "-servername", host, "-showcerts", "-connect", f"{host}:{port}"), check=True, capture_output=True, stdin=subprocess.DEVNULL)
+        s_client = subprocess.run(("openssl", "s_client", "-servername", host, "-showcerts", "-connect", f"{host}:{port}"), capture_output=True, stdin=subprocess.DEVNULL)
+        # if s_client.returncode != 0:
+        #     print(f"Failed to download cert:")
+        #     print(f"------------------------")
+        #     print(s_client.stderr.decode())
+        #     exit(1)
         temp_file.write(s_client.stdout)
 
         print("", file=sys.stderr)
