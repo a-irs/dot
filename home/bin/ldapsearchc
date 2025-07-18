@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+import json
+import re
+import base64
+import ast
+
+cmd = subprocess.run(("ldapsearch", "-LLL", "-o", "ldif-wrap=no", *sys.argv[1:]), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+if cmd.stderr:
+    print(cmd.stderr, file=sys.stderr)
+
+results = []
+if cmd.stdout:
+    current = {}
+    for line in cmd.stdout.splitlines():
+        if not line.strip():
+            results.append(current)
+            current = {}
+        else:
+            m = re.match(r"^(?P<key>[\w-]+)(?P<sep>::?) (?P<value>.*)", line).groupdict()
+            key = m["key"]
+            value = m["value"]
+            if m["sep"] == "::" and not (key.lower().endswith("sid") or key.lower().endswith("uid")):
+                try:
+                    value = base64.b64decode(value).decode()
+                except UnicodeDecodeError:
+                    pass
+
+            try:
+                # FIXME writes SyntaxWarning to stderr, even when caught, for e.g. 4jif ("SyntaxWarning: invalid imaginary literal")
+                value = ast.literal_eval(value)
+            except (ValueError, SyntaxError):
+                value = value
+
+            if key in current:
+                if isinstance(current[key], list):
+                    current[key] = current[key] + [value]
+                else:
+                    current[key] = [current[key], value]
+            else:
+                current[key] = value
+
+print(json.dumps(results, indent=2, ensure_ascii=False))
+sys.exit(cmd.returncode)
