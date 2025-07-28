@@ -1,4 +1,7 @@
 return {
+  -- show context of current buffer location (e.g. function header, JSON level etc.)
+  "wellle/context.vim",
+
   {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
