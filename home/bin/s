@@ -61,7 +61,7 @@ cleanup_openssl() {
         `# fix for missing colon after "Validity"` \
         -pe "s/^(\s+Validity)$/${blue}\1${reset}/g;" \
         `# special coloring for CA attributes` \
-        -pe "s/(CA:TRUE|1024 bit|2048 bit|sha1|SHA1)/${red}\1${reset}/g;" \
+        -pe "s/(CA:TRUE|512 bit|1024 bit|2048 bit|sha1|SHA1)/${red}\1${reset}/g;" \
         `# skip empty lines` \
     | awk NF
 }

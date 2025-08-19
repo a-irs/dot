@@ -28,6 +28,7 @@
     a = add
     s = status -sb
     r = reset
+    w = worktree
     co = checkout
     cm = commit
     d = diff
