@@ -14,9 +14,6 @@ postcommands:
   # sign kernel image with own keys for UEFI secure boot
   - sbctl sign $MOUNT$/efi/EFI/BOOT/BOOTX64.EFI
 
-  # disable dropbox autostart
-  - sed -i -E '/.*dropbox.*/d' $MOUNT$/home/*/.xinitrc
-
   # avoid hardware dependencies
   - rm -f $MOUNT$/etc/systemd/system/*/tlp.service
   - rm -f $MOUNT$/etc/systemd/system/*/fstrim.timer
@@ -36,15 +33,12 @@ exclude:
   - "/home/*/doc/**/*.mp4"
   - /home/**/nintendo-switch-hacking/sd
   - /home/**/nintendo-switch-hacking/tmp
-  - /home/*/.dropbox
   - /home/*/.cargo
   - /home/*/.local/share/Steam
   - /home/*/.local/share/yay
   - /home/*/.local/share/Trash/*
   - /home/*/.local/share/thumbnails/*
   - /home/*/.local/share/blur/*
-  - /home/*/Dropbox/media
-  - /home/*/dropbox/media
   - /home/*/downloads/*
   - /home/*/data/ios-backup
   - /home/*/data/splunk

@@ -185,6 +185,8 @@ tar-bz()  { tar cvaf "$(basename "$PWD")".tar.bz2 -- "$@"; }
 tar-lz()  { tar cvaf "$(basename "$PWD")".tar.lzma -- "$@"; }
 tar-zip() { zip -r "$(basename "$PWD")".zip -- "$@"; }
 
+alias m=make
+
 rotate-log() {
     [[ -z "$1" || ! -f "$1" ]] && return 1
     local outname="$1_$(date +'%F_%H-%M-%S')"
@@ -364,9 +366,6 @@ alias lt="$ls -lhtr"
 alias lS="$ls -lhSr"
 
 [[ "$commands[python]" ]] && alias http-share='python -m http.server'
-[[ "$commands[dropbox-cli]" ]] && alias ds='dropbox-cli status'
-[[ "$commands[dropbox-cli]" ]] && alias dstop='dropbox-cli stop'
-[[ "$commands[dropbox-cli]" ]] && alias dstart='dropbox-cli start'
 
 if [[ "$commands[nmcli]" ]]; then
     alias nd='nmcli connection down'

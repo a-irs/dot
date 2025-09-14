@@ -12,18 +12,18 @@ while true; do
     (( TRIES++ ))
     if ((TRIES > TRIES_MAX)); then
         echo "Maximum tries reached, aborting."
-        notify-send -u critical "\"$REACHABLE_HOST\" not reachable." "Command: $cmd"
+        notify-send -u critical "'$REACHABLE_HOST' not reachable." "Command: $cmd"
         exit 1
     fi
 
-    echo "Waiting for host at \"$REACHABLE_HOST\". Attempt number $TRIES / $TRIES_MAX."
+    echo "Waiting for host at '$REACHABLE_HOST'. Attempt number $TRIES / $TRIES_MAX."
 
     if ping -W 1 -c 1 "$REACHABLE_HOST" &> /dev/null; then
-        echo "Host now reachable, executing \"$cmd\""
+        echo "Host now reachable, executing '$cmd'"
         $cmd
         exit
     else
-        echo "\"$REACHABLE_HOST\" not reachable."
+        echo "'$REACHABLE_HOST' not reachable."
     fi
 
     sleep "$SLEEP"

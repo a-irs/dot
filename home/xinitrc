@@ -22,13 +22,6 @@ if [[ $HOSTNAME == x1* ]]; then
     ~/.bin/x1/track-battery &
 fi
 
-if [[ $HOSTNAME == desk ]]; then
-    xrandr --output DP-1 --mode 2560x1440 --auto --primary --rate 69.93
-    xrandr --output DisplayPort-0 --mode 2560x1440 --auto --primary --rate 69.93
-    xrandr --output HDMI-1 --off
-    xrandr --output HDMI-A-0 --off
-fi
-
 # make some cache persistent, some in tmpfs
 if [[ "$(findmnt -no fstype -T /tmp)" == tmpfs ]]; then
     mkdir -p "/tmp/$UID"

@@ -43,7 +43,7 @@ venv() {
         printf '%s\n' "----------"
 
         printf '%s\n' '[[ -z "$VIRTUAL_ENV" ]] && source .venv/bin/activate' >> .env
-        printf '\n%s\n' '.env' >> .gitignore
+        grep -Eq '^\.env$' .gitignore || printf '%s\n' '.env' >> .gitignore
     fi
 
     source .venv/bin/activate

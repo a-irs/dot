@@ -7,6 +7,7 @@ import sys
 import glob
 import configparser
 import tempfile
+import subprocess
 
 import urllib.request
 
@@ -115,6 +116,16 @@ def remove_link(link: Path) -> None:
         log("error", f"{link} is not a symlink!")
 
 
+def handle_systemd_user(unit: str, should_be_enabled: bool) -> None:
+    file = Path(f"~/.config/systemd/user/default.target.wants/{unit}").expanduser()
+    if not file.exists() and should_be_enabled:
+        subprocess.run(["systemctl", "--user", "enable", unit], check=True, capture_output=True)
+        log("info", f"enabled {unit}")
+    if file.exists() and not should_be_enabled:
+        subprocess.run(["systemctl", "--user", "disable", unit], check=True, capture_output=True)
+        log("info", f"disabled {unit}")
+
+
 def main() -> None:
     action = 'link'
     if len(sys.argv) > 1 and sys.argv[1] == 'rm':
@@ -160,6 +171,14 @@ def main() -> None:
                     make_link(src, dest)
                 else:
                     remove_link(dest)
+
+    # SYSTEMD USER
+    for package_name, units in config['systemd.user'].items():
+        for unit in units.split(', '):
+            if action == 'rm':
+                handle_systemd_user(unit, should_be_enabled=False)
+            else:
+                handle_systemd_user(unit, should_be_enabled=True)
 
     # FIREFOX
     if action == 'link':

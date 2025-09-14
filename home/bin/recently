@@ -17,7 +17,6 @@ main() {
 .config/pulse/
 .config/spotify/
 .dot/
-.dropbox/
 .git/
 .lesshst
 .local/share/fasd
@@ -34,7 +33,6 @@ main() {
 .vim/undo/
 .vim/plugged/
 .viminfo
-.dropbox-dist
 .zsh_history
 .zsh_recent-dirs
 shell.history

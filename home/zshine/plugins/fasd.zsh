@@ -1,13 +1,9 @@
-# https://github.com/clvv/fasd
-#
-# TODO:
-# - make fasd faster...?
+# https://github.com/whjvenyl/fasd
 
 [[ $commands[fasd] ]] || return
 
 export _FASD_IGNORE="fasd ls echo rm rmdir touch"
 export _FASD_DATA=${XDG_DATA_HOME:-~/.local/share}/fasd
-export _FASD_BLACKLIST="$HOME"
 
 [[ -d "$HOME/.cache" ]] || mkdir -p "$HOME/.cache"
 fasd_cache="$HOME/.cache/fasd.zsh"

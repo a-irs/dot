@@ -75,6 +75,10 @@ end
 
 def help_usage()
   puts "Usage: %s <interface or IP> <port> <binary> <name>" % NAME
+  puts ""
+  puts "Catch with:"
+  puts "nc -lnvp $PORT$"
+  puts "rlwrap ncat -C -v -4 -l -p $PORT$ -k"
 end
 
 def help(config)

@@ -5,14 +5,12 @@ pkill -USR1 redshift
 sudo systemctl stop opensnitchd.service
 sudo systemctl stop usbguard-dbus.service usbguard.service
 for i in /sys/bus/usb/devices/*/authorized_default; do sudo tee "$i" <<< 1 >/dev/null; done
-dropbox-cli stop >/dev/null 2>&1
 killall usbguard-notifier
 
 echo ":: end with CTRL+C..."
 (trap exit SIGINT; read -r -d '' _ < /dev/tty)
 
 # end
-dropbox-cli start >/dev/null 2>&1
 for i in /sys/bus/usb/devices/*/authorized_default; do sudo tee "$i" <<< 0 >/dev/null; done
 sudo systemctl start usbguard-dbus.service usbguard.service
 sudo systemctl start opensnitchd.service
