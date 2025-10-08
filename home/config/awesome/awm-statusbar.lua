@@ -52,9 +52,9 @@ if is_mobile then
             end
             if perc <= 5 then
                 color = "#fa7883"
-            elseif perc <= 20 then
+            elseif perc <= 15 then
                 color = "#ffff00"
-            elseif perc <= 35 then
+            elseif perc <= 30 then
                 color = "#ffffff"
             else
                 color = "#90ee90"
@@ -222,7 +222,7 @@ audiowidget_tooltip_result = ""
 audiowidget_tooltip = awful.tooltip({
     objects = { audiowidget },
     timer_function = function()
-        systray.visible = not systray.visible
+        -- systray.visible = not systray.visible
         awful.spawn.easy_async_with_shell(gears.filesystem.get_configuration_dir() .. "/statusbar/audio-tooltip", function(result)
             audiowidget_tooltip_result = result:gsub("\n$", "")
             audiowidget_tooltip:set_markup(audiowidget_tooltip_result)
@@ -232,9 +232,9 @@ audiowidget_tooltip = awful.tooltip({
     timeout = 10,
 })
 
-traytimer = timer({ timeout = 10 })
-traytimer:connect_signal("timeout", function() systray.visible = false end)
-traytimer:start()
+-- traytimer = timer({ timeout = 10 })
+-- traytimer:connect_signal("timeout", function() systray.visible = false end)
+-- traytimer:start()
 
 
 -- DATE, TIME

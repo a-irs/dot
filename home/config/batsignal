@@ -1,0 +1,11 @@
+# warning
+-w
+15
+# critical
+-c
+5
+# let notifications expire
+-e
+# check interval
+-m
+5
