@@ -5,7 +5,7 @@ set -uo pipefail
 type=$1
 
 url_regex='https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]'
-ip_regex='[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,5})?(/\S+)*'
+ip_regex='(?:(^|[^\.\w-]))((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}(?:($|[^\.\w-]))'
 file_regex='[a-zA-Z0-9\-=&_@\.\$\\:/~\(\)]{5,}'  # names with len>6
 case $type in
     all)
@@ -18,6 +18,9 @@ case $type in
         pipe2=(cat)
         action() {
             local url=$1
+            # remove leading and trailing whitespace characters
+            url="${url#"${url%%[![:space:]]*}"}"
+            url="${url%"${url##*[![:space:]]}"}"
             [[ "$url" == "http"* ]] || url=http://"$url"
             open "$url" >/dev/null 2>&1 || xdg-open "$url" >/dev/null 2>&1
         }

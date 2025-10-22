@@ -5,6 +5,7 @@ import binascii
 from datetime import datetime
 import re
 import subprocess
+from typing import Optional
 import sys
 
 
@@ -21,7 +22,7 @@ def msg(header: str, s: str):
     sys.exit(0)
 
 
-def get_base64(s: str) -> bytes | None:
+def get_base64(s: str) -> Optional[bytes]:
     try:
         decoded = base64.b64decode(s)
         if base64.b64encode(decoded).decode() == s:
