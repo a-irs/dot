@@ -35,6 +35,7 @@
     },
 
     "python.formatting.provider": "black",
+    "python.formatting.blackArgs": ["-l", "200"],
     "snippets.ultisnips.directories": ["~/.vim/snip"],
 
     // enables semantic tokens for highlighting, see :CocCommand semanticTokens.checkCurrent
