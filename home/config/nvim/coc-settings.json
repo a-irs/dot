@@ -51,6 +51,7 @@
 
     "python.linting.ruffEnabled": true,
     "pyright.inlayHints.variableTypes": false,
+    "pyright.inlayHints.parameterTypes": false,
 
     "outline.keepWindow": true,
     "outline.autoPreview": true,
