@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+import sys
+
+import requests
+
+DOMAIN = [l.split()[1] for l in open("/etc/resolv.conf", "r").readlines() if l.startswith("search ")][0].replace("int", "cloud")
+GATUS_URL = f"https://gatus.{DOMAIN}"
+
+
+class Color(object):
+    SYMBOL = "-"
+
+    RESET = "\033[" + str(0) + "m"
+    BOLD = "\033[" + str(1) + "m"
+    DIM = "\033[" + str(2) + "m"
+    MAGENTA = "\033[" + str(35) + "m"
+    CYAN = "\033[" + str(36) + "m"
+    BLUE = "\033[" + str(34) + "m"
+    GREEN = "\033[" + str(32) + "m"
+    YELLOW = "\033[" + str(33) + "m"
+    RED = "\033[" + str(31) + "m"
+    WHITE = "\033[" + str(37) + "m"
+    BLACK = "\033[" + str(30) + "m"
+
+
+def main():
+    exit_code = 0
+    response = requests.get(f"{GATUS_URL}/api/v1/endpoints/statuses")
+    response.raise_for_status()
+    # print(response.json())
+
+    for service in response.json():
+        recents = []
+        last_result = service["results"][-1]
+
+        for r in service["results"]:
+            c = Color.GREEN
+            if not r["success"]:
+                c = Color.RED
+            recents.append(f"{c}{Color.SYMBOL}{Color.RESET}")
+
+        color = Color.GREEN
+        duration = str(round(last_result["duration"] / 1000 / 1000)) + "ms"
+        if not last_result["success"]:
+            color = Color.RED
+            exit_code = 1
+            duration = ""
+
+        print(
+            "".join(recents),
+            f"{service['group']} {color}{service['name']} {Color.BLACK + Color.BOLD}{duration}{Color.RESET}",
+        )
+
+    sys.exit(exit_code)
+
+
+if __name__ == "__main__":
+    main()
