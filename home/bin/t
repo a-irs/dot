@@ -15,9 +15,13 @@ help() {
 
 action=${1:-status}; shift || true
 case "$action" in
+    fzf)
+        eval "t start $(grep ';t start' ~/.zsh_history | cut -d\; -f 2- | grep '^t start ' | grep -v -E '[0-9]:[0-9]' | sed 's/^t start //' | tac | fzf)"
+        ;;
     status)
+        # timew summary :no-annotations :ids sopw - now "$@"
+        timew summary :no-annotations :ids today "$@"
         timew "$@" || true
-        timew summary :ids sopw - now "$@"
         ;;
     help)
         help
@@ -45,7 +49,9 @@ case "$action" in
         timew continue "$@"
         ;;
     edit)
-        $EDITOR ~/.timewarrior/data/"$(date +%Y-%m).data"
+        d=~/.local/share/timewarrior
+        [[ -d "$d" ]] || d=~/.timewarrior
+        $EDITOR "$d/data/$(date +%Y-%m).data"
         ;;
     track)
         if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
@@ -56,6 +62,7 @@ case "$action" in
         ;;
     report)
         timew week "$@"
+        timew summary :no-annotations :ids :week "$@"
         ;;
     *)
         echo "Unknown action: $action"
