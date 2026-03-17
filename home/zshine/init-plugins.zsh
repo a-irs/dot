@@ -37,6 +37,7 @@ ZSHINE_PLUGINS=(
 
   status  # server status on login
   vault  # hashicorp vault
+  timewarrior
 
   todo  # show ~/.todo on start
   magic-enter  # run something on ENTER with empty buffer
