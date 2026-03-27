@@ -21,7 +21,14 @@ case "$action" in
     status)
         # timew summary :no-annotations :ids sopw - now "$@"
         timew summary :no-annotations :ids today "$@"
-        timew "$@" || true
+        { timew | sed -E "s|Tracking (.*)|Tracking $(tput setaf 4)\1$(tput sgr0)|"; } || true
+        ;;
+    watch)
+        while true; do
+            clear
+            t status
+            sleep 60
+        done
         ;;
     help)
         help
