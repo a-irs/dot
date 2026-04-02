@@ -13,68 +13,74 @@ help() {
     echo "t report <tag> [<tag>] ... [:month|:lastyear|...]"
 }
 
-action=${1:-status}; shift || true
-case "$action" in
-    fzf)
-        eval "t start $(grep ';t start' ~/.zsh_history | cut -d\; -f 2- | grep '^t start ' | grep -v -E '[0-9]:[0-9]' | sed 's/^t start //' | tac | fzf)"
-        ;;
-    status)
-        # timew summary :no-annotations :ids sopw - now "$@"
-        timew summary :no-annotations :ids today "$@"
-        { timew | sed -E "s|Tracking (.*)|Tracking $(tput setaf 4)\1$(tput sgr0)|"; } || true
-        ;;
-    watch)
-        while true; do
-            clear
-            t status
-            sleep 60
-        done
-        ;;
-    help)
-        help
-        ;;
-    cancel)
-        timew
+fzf() {
+    eval "t start $(grep ';t start' ~/.zsh_history | cut -d\; -f 2- | grep '^t start ' | grep -v -E '[0-9]:[0-9]' | sed 's/^t start //' | tac | fzf)"
+}
+
+status() {
+    # timew summary :no-annotations :ids sopw - now "$@"
+    timew summary :no-annotations :ids today "$@"
+    { timew | sed -E "s|Tracking (.*)|Tracking $(tput setaf 4)\1$(tput sgr0)|"; } || true
+}
+
+watch() {
+    while true; do
+        clear
+        t status "$@"
+        sleep 60
+    done
+}
+
+cancel() {
+    timew
+    echo
+    read -r -p "Are you sure to cancel? (y/N) " -n1
+    if [[ ${REPLY} =~ ^[Yy]$ ]]; then
         echo
-        read -r -p "Are you sure to cancel? (y/N) " -n1
-        if [[ ${REPLY} =~ ^[Yy]$ ]]; then
-            echo
-            timew cancel
-        fi
-        ;;
-    start)
-        if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
-            echo "Do not forget to supply the tag(s)."
-            exit 1
-        fi
-        timew start "$@"
-        ;;
-    stop)
-        timew stop "$@"
-        ;;
-    cont*)
-        timew continue "$@"
-        ;;
-    edit)
-        d=~/.local/share/timewarrior
-        [[ -d "$d" ]] || d=~/.timewarrior
-        $EDITOR "$d/data/$(date +%Y-%m).data"
-        ;;
-    track)
-        if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
-            echo "Do not forget to supply the tag(s)."
-            exit 1
-        fi
-        timew track "$@"
-        ;;
-    report)
-        timew week "$@"
-        timew summary :no-annotations :ids :week "$@"
-        ;;
-    *)
-        echo "Unknown action: $action"
-        echo
-        help
+        timew cancel "$@"
+    fi
+}
+
+start() {
+    if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
+        echo "Do not forget to supply the tag(s)."
         exit 1
-        ;;
-esac
+    fi
+    timew start "$@"
+}
+
+stop() {
+    timew stop "$@"
+}
+
+continue() {
+    timew continue "$@"
+}
+cont() {
+    timew continue "$@"
+}
+
+edit() {
+    local d=~/.local/share/timewarrior
+    [[ -d "$d" ]] || d=~/.timewarrior
+    $EDITOR "$d/data/$(date +%Y-%m).data"
+}
+
+track() {
+    if ! grep -qE '[A-Za-z]{2,}' <<< "$@"; then
+        echo "Do not forget to supply the tag(s)."
+        exit 1
+    fi
+    timew track "$@"
+}
+
+report() {
+    timew week "$@"
+    timew summary :no-annotations :ids :week "$@"
+}
+
+if (($# < 1)); then
+    status "$@"
+else
+    "$@"
+fi
