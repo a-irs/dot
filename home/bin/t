@@ -13,14 +13,14 @@ help() {
     echo "t report <tag> [<tag>] ... [:month|:lastyear|...]"
 }
 
-fzf() {
+history() {
     eval "t start $(grep ';t start' ~/.zsh_history | cut -d\; -f 2- | grep '^t start ' | grep -v -E '[0-9]:[0-9]' | sed 's/^t start //' | tac | fzf)"
 }
 
 status() {
     # timew summary :no-annotations :ids sopw - now "$@"
     timew summary :no-annotations :ids today "$@"
-    { timew | sed -E "s|Tracking (.*)|Tracking $(tput setaf 4)\1$(tput sgr0)|"; } || true
+    { timew | grep -v "Current" | sed -E "s|Tracking (.*)|Tracking $(tput setaf 4)\1$(tput sgr0)|"; } || true
 }
 
 watch() {

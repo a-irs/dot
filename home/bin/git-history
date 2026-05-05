@@ -4,24 +4,33 @@ set -euo pipefail
 
 # usage e.g. "git history --first-parent ./docs"
 
-preview='preview() {
-    git show --stat -p --first-parent --color=always "$@"
-}'
+ghistory() {
+    git log --color=always --date short --format="%C(blue bold)%cd %C(auto)%h%d %s %C(black bold)%an <%ae>" \
+        "$@" \
+            | fzf --exact --ansi --no-sort --no-separator --reverse --tiebreak=index \
+            --preview "git show --stat -p --first-parent --color=always {2}" \
+            --preview-window=right:66%:wrap \
+            --bind "ctrl-e:preview-down,ctrl-y:preview-up" \
+            --bind 'ctrl-w:toggle-preview-wrap' \
+            --bind 'ctrl-p:change-preview-window(down,66%|hidden|)' \
+            --bind "q:abort" \
+            --bind "ctrl-m:execute:( \
+                nvim \
+                '+nnoremap q :qa!<CR>' \
+                '+Git! show -p --first-parent {2}' \
+                '+hide' \
+                )" \
+            --exit-0 \
+        || true
+}
 
-git log --color=always --date short --format="%C(blue bold)%cd %C(auto)%h%d %s %C(black bold)%an <%ae>" \
-    "$@" \
-        | fzf --exact --ansi --no-sort --no-separator --reverse --tiebreak=index \
-        --preview "$preview; preview {2}" \
-        --preview-window=right:66%:wrap \
-        --bind "ctrl-e:preview-down,ctrl-y:preview-up" \
-        --bind 'ctrl-w:toggle-preview-wrap' \
-        --bind 'ctrl-p:change-preview-window(down,66%|hidden|)' \
-        --bind "q:abort" \
-        --bind "ctrl-m:execute:( \
-            nvim \
-            '+nnoremap q :qa!<CR>' \
-            '+Git! show -p --first-parent {2}' \
-            '+hide' \
-            )" \
-        --exit-0 \
-    || true
+if [[ "${1:-}" == last ]]; then
+    # last two pulls
+    deltas=$(git reflog | grep 'pull: ' | head -2 | awk '{print $1}')
+    delta1=$(printf '%s' "$deltas" | sed -n 1p)
+    delta2=$(printf '%s' "$deltas" | sed -n 2p)
+    echo "$delta2..$delta1"
+    ghistory "$delta2..$delta1" --first-parent --merges
+else
+    ghistory "$@"
+fi

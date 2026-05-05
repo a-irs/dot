@@ -43,6 +43,7 @@ red=$(tput -T ansi setaf 1)
 remove_blank() { sed '/./,$!d'; } # remove blank lines at top of file
 remove_double_blank() { cat -s; } # remove multiple blank lines
 highlight_dirs() { grep -E --color=always '(.)*/|$'; }
+# TODO do with python https://github.com/pyca/cryptography/pull/8695/files
 cleanup_openssl() {
     # `# also show serial number as decimal, not only hex` \
     # | python3 -c 'import re, sys; s = sys.stdin.read(); i = int(re.search(r"Serial Number:.\s+([0-9a-zA-Z:]+)", s, flags=re.S)[1].replace(":", ""), 16); print(re.sub(r"Serial Number:(.\s+)", rf"Serial Number: \1DEC: {i}\1HEX: ", s, flags=re.S))' \

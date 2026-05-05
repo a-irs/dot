@@ -5,6 +5,7 @@ ZSHINE_PLUGINS=(
   haskell
   asdf
   elixir
+  dotnet
 
   auto-env  # source .env
   projects
