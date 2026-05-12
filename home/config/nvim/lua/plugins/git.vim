@@ -7,6 +7,7 @@ let g:signify_sign_show_count = 0
 let g:signify_sign_change_delete = g:signify_sign_change . g:signify_sign_delete_first_line
 nmap <leader>< <plug>(signify-next-hunk)
 nmap <leader>> <plug>(signify-prev-hunk)
+nnoremap <silent> <leader>wg :SignifyToggle<CR>
 
 " committia
 let g:committia_use_singlecolumn = 'always'
@@ -15,3 +16,7 @@ let g:committia_use_singlecolumn = 'always'
 let g:gitgutter_map_keys = 0
 let g:gitgutter_signs = 0
 nmap <silent> <Leader>gs <Plug>(GitGutterStageHunk)
+nmap <silent> <Leader>gu <Plug>(GitGutterUndoHunk)
+nmap <silent> <Leader>gp <Plug>(GitGutterPreviewHunk)
+command! Gqf GitGutterQuickFix | copen
+nmap <silent> <Leader>gq :Gqf<CR>
