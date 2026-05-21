@@ -9,6 +9,8 @@ import os
 import re
 import sys
 
+OPENSSL_COMMAND = "/opt/homebrew/bin/openssl"
+
 
 def cmd(*args, **kwargs):
     kwargs_merged = dict(check=True) | kwargs
@@ -30,7 +32,7 @@ def download_cert(host: str):
     host, port = parse_host(host)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pem", prefix=f"{host}_") as temp_file:
         print(f":: Downloading cert to {temp_file.name}", file=sys.stderr)
-        s_client = subprocess.run(("openssl", "s_client", "-servername", host, "-showcerts", "-connect", f"{host}:{port}"), capture_output=True, stdin=subprocess.DEVNULL)
+        s_client = subprocess.run((OPENSSL_COMMAND, "s_client", "-servername", host, "-showcerts", "-connect", f"{host}:{port}"), capture_output=True, stdin=subprocess.DEVNULL)
         # if s_client.returncode != 0:
         #     print(f"Failed to download cert:")
         #     print(f"------------------------")
@@ -42,31 +44,31 @@ def download_cert(host: str):
         return temp_file.name
 
 def command_priv(file: str):
-    cmd_verbose("openssl", "pkey", "-in", file)
+    cmd_verbose(OPENSSL_COMMAND, "pkey", "-in", file)
 
 def command_pub(file: str):
-    cmd_verbose("openssl", "x509", "-pubkey", "-noout", "-in", file)
+    cmd_verbose(OPENSSL_COMMAND, "x509", "-pubkey", "-noout", "-in", file)
 
 def command_cert(file: str):
-    cmd_verbose("openssl", "x509", "-in", file)
+    cmd_verbose(OPENSSL_COMMAND, "x509", "-in", file)
 
 def command_chain(file: str):
-    pipe = subprocess.Popen(("openssl", "crl2pkcs7", "-nocrl", "-certfile", file), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    subprocess.Popen(("openssl", "pkcs7", "-print_certs"), stdin=pipe.stdout)
+    pipe = subprocess.Popen((OPENSSL_COMMAND, "crl2pkcs7", "-nocrl", "-certfile", file), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.Popen((OPENSSL_COMMAND, "pkcs7", "-print_certs"), stdin=pipe.stdout)
 
 def command_text(file: str):
     cmd_verbose("s", file)  # ~/.bin/s
 
 def command_fp(file: str):
-    cmd("openssl", "x509", "-noout", "-fingerprint", "-sha1", "-in", file)
-    cmd("openssl", "x509", "-noout", "-fingerprint", "-sha256", "-in", file)
+    cmd(OPENSSL_COMMAND, "x509", "-noout", "-fingerprint", "-sha1", "-in", file)
+    cmd(OPENSSL_COMMAND, "x509", "-noout", "-fingerprint", "-sha256", "-in", file)
 
 def command_connect(host: str, port: int, *args):
-    cmd_verbose("openssl", "s_client", "-servername", host, "-connect", f"{host}:{port}", *args, stdin=subprocess.DEVNULL)
+    cmd_verbose(OPENSSL_COMMAND, "s_client", "-showcerts", "-servername", host, "-connect", f"{host}:{port}", *args, stdin=subprocess.DEVNULL)
 
 def command_dump(file: str):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".der") as temp_file:
-        cmd("openssl", "x509", "-in", file, "-outform", "der", "-out", temp_file.name)
+        cmd(OPENSSL_COMMAND, "x509", "-in", file, "-outform", "der", "-out", temp_file.name)
         cmd_verbose("dumpasn1", "-dpvz", temp_file.name, check=False)
 
 def command_ocsp(file: str, *args):

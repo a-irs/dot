@@ -1,0 +1,465 @@
+#!/usr/bin/env python3
+
+from __future__ import annotations  # wrap all type hints in quotes
+import argparse
+from dataclasses import dataclass, field
+from datetime import datetime, time, timedelta
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+from time import sleep
+from typing import Iterable
+
+DATA_FILE = Path("~/.local/share/time.data").expanduser()
+
+# TODO: do not create new log if tags are identical to last/current one
+
+# FP concepts:
+# - parse once from TimeLog to VerifiedTimeLog instead of validating always (<https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/>)
+# - IO (file read/write) just in TimeLogs
+# - IO (print) just in Cli
+
+
+class TimeLogParseException(Exception):
+    pass
+
+
+def delta_hm(delta: timedelta):
+    hours, remainder = divmod(delta.total_seconds(), 3600)
+    minutes, _ = divmod(remainder, 60)
+    return f"{int(hours):0>1}:{int(minutes):0>2}"
+
+
+@dataclass
+class TimeLog:
+    start: datetime
+    end: datetime | None = None
+    tags: list[str] = field(default_factory=lambda: list())
+
+    @staticmethod
+    def deserialize(text: str) -> VerifiedTimeLog:
+        pattern_isfinished = r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) - (?P<end>\d{2}:\d{2}) +(?P<tags>.*)"
+        pattern_unfinished = r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) +(?P<tags>[^-].*)"
+        match = re.match(pattern_isfinished, text) or re.match(pattern_unfinished, text)
+        if match:
+            d = match.groupdict()
+        else:
+            raise TimeLogParseException(f"failed to parse line: '{text}'")
+
+        log = TimeLog(start=datetime.strptime(d["start"], "%Y-%m-%d %H:%M"))
+        log.tags = d["tags"].split()
+        if d.get("end"):
+            log.end = datetime.combine(log.start, time(hour=int(d["end"].split(":")[0]), minute=int(d["end"].split(":")[1])))
+
+        return log.verify()
+
+    @property
+    def end_hm(self) -> str:
+        if self.end:
+            return self.end.strftime("%H:%M")
+        else:
+            return ""
+
+    @property
+    def start_hm(self) -> str:
+        return self.start.strftime("%H:%M")
+
+    @property
+    def start_week(self) -> str:
+        return self.start.strftime("%V")
+
+    @property
+    def start_ymd(self) -> str:
+        return self.start.strftime("%Y-%m-%d")
+
+    @property
+    def start_ymdhm(self) -> str:
+        return self.start.strftime("%Y-%m-%d %H:%M")
+
+    @property
+    def delta_str(self) -> str:
+        return str(self.delta())[0:4]
+
+    def delta(self) -> timedelta:
+        if self.end:
+            return self.end - self.start
+        else:
+            return datetime.now() - self.start
+
+    def serialize(self) -> str:
+        if self.end:
+            return f"{self.start_ymdhm} - {self.end_hm}  {' '.join(self.tags)}"
+        else:
+            return f"{self.start_ymdhm}          {' '.join(self.tags)}"
+
+    def as_dict(self) -> dict:
+        if self.end:
+            return {
+                "time_start": self.start.isoformat(),
+                "time_end": self.end.isoformat(),
+                "tags": self.tags,
+            }
+        else:
+            return {
+                "time_start": self.start.isoformat(),
+                "tags": self.tags,
+            }
+
+    def table_row(self, before: VerifiedTimeLog | None = None) -> str:
+        if before and before.start.strftime("%V") == self.start.strftime("%V"):
+            col_week = "  "
+        else:
+            col_week = self.start.strftime("%V")
+
+        if before and before.start_ymd == self.start_ymd:
+            col_start_d = "                "
+        else:
+            col_start_d = f"{self.start.strftime('%Y-%m-%d (%a)')}"
+
+        col_start_t = self.start_hm
+
+        if self.end:
+            col_end = self.end_hm
+        else:
+            col_end = "     "
+
+        return f"{col_week} │ {col_start_d} │ {col_start_t} - {col_end} │ {self.delta_str} │ {', '.join(self.tags)}"
+
+    def verify(self) -> VerifiedTimeLog:
+        if self.end and self.end < self.start:
+            raise TimeLogParseException(f"start date {self.start.isoformat()} is ahead of end date {self.end.isoformat()}")
+        elif self.end and self.end.date() != self.start.date():
+            raise TimeLogParseException(f"Not supported: start and end are on different days")
+        else:
+            return VerifiedTimeLog(start=self.start, end=self.end, tags=self.tags)
+
+
+@dataclass
+class VerifiedTimeLog(TimeLog):
+    # FIXME Make sure this cannot be instanciated somehow, just cast?
+    pass
+
+
+class TimeLogs:
+    @staticmethod
+    def import_from_timewarrior() -> Iterable[VerifiedTimeLog]:
+        order = {}
+
+        import json
+
+        timewarrior_data = json.loads(subprocess.run(("timew", "export"), capture_output=True, check=True).stdout)
+        tz = 2
+        for item in timewarrior_data:
+            log = TimeLog(start=datetime.strptime(item["start"], "%Y%m%dT%H%M%SZ") + timedelta(hours=tz))
+            if "end" in item:
+                log.end = datetime.strptime(item["end"], "%Y%m%dT%H%M%SZ") + timedelta(hours=tz)
+            log.tags = sorted(item["tags"], key=lambda val: order.get(val, 999))
+            # log.tags = [f"@{tag}" for tag in log.tags]
+            yield log.verify()
+
+    @staticmethod
+    def last() -> VerifiedTimeLog | None:
+        if DATA_FILE.exists():
+            return TimeLog.deserialize(DATA_FILE.read_text().splitlines()[-1])
+        else:
+            return None
+
+    @staticmethod
+    def cancel() -> None:
+        last = TimeLogs.last()
+        if not last or last.end:
+            raise CliError("No active track")  # FIXME how to not use Cli exception here?
+
+        else:
+            yes_no = input(f"Really cancel {', '.join(last.tags)} since {last.start_hm}? ")
+            if yes_no in ["y", "Y"]:
+                new_lines = DATA_FILE.read_text().splitlines()
+                new_lines.pop()  # delete last
+                DATA_FILE.write_text("\n".join(new_lines) + "\n")
+
+    @staticmethod
+    def get_all(accept=lambda _: True) -> Iterable[VerifiedTimeLog]:
+        if DATA_FILE.exists():
+            last_entry = None
+            for line in DATA_FILE.read_text().splitlines():
+                if line.strip() == "" or line.strip().startswith("#"):
+                    continue
+                result = TimeLog.deserialize(line)
+                if last_entry and last_entry.end and last_entry.end > result.start:
+                    raise TimeLogParseException(f"End of entry {last_entry.as_dict()} is after start of entry {result.as_dict()}")
+                if accept(result):
+                    yield result
+
+                last_entry = result
+
+    @staticmethod
+    def save(log: VerifiedTimeLog) -> None:
+        last = TimeLogs.last()
+        if not last:
+            # first entry
+            new_lines = [log.serialize()]
+        else:
+            # new log -> finish last one
+            last.end = datetime.now()
+            new_lines = DATA_FILE.read_text().splitlines()
+            new_lines[-1] = last.serialize()
+
+            # new day
+            if last.start_ymd != log.start_ymd:
+                new_lines.append("\n")
+
+            new_lines.append(log.serialize())
+
+        DATA_FILE.write_text("\n".join(new_lines) + "\n")
+
+    @staticmethod
+    def stop(end: datetime) -> None:
+        last = TimeLogs.last()
+        if last:
+            # finish last one
+            last.end = end
+            new_lines = DATA_FILE.read_text().splitlines()
+            new_lines[-1] = last.serialize()
+            DATA_FILE.write_text("\n".join(new_lines) + "\n")
+
+
+class CliError(Exception):
+    pass
+
+
+@dataclass
+class CliReportDay:
+    logs: list[VerifiedTimeLog] = field(default_factory=lambda: list())
+
+    def total(self) -> timedelta:
+        result = timedelta()
+        for log in self.logs:
+            result += log.delta()
+        return result
+
+    def __str__(self) -> str:
+        s = ""
+        before = None
+        for log in self.logs:
+            s += log.table_row(before=before) + "\n"
+            before = log
+        s += " " * 38 + "└ " + delta_hm(self.total()) + " ┘"
+        return s
+
+
+class Cli:
+    args: argparse.Namespace
+
+    def __init__(self) -> None:
+        parser = argparse.ArgumentParser(description="time tracker")
+        command_parser = parser.add_subparsers(dest="command")
+
+        # commands with arguments
+        command_parser_start = command_parser.add_parser("start")
+        command_parser_start.add_argument("additional", nargs="*")
+        command_parser_stop = command_parser.add_parser("stop")
+        command_parser_stop.add_argument("additional", nargs="*")
+        command_parser_report = command_parser.add_parser("report")
+        command_parser_report.add_argument("additional", nargs="*")
+        command_parser_status = command_parser.add_parser("status")
+        command_parser_status.add_argument("additional", nargs="*")
+        command_parser_watch = command_parser.add_parser("watch")
+        command_parser_watch.add_argument("additional", nargs="*")
+        command_parser_export = command_parser.add_parser("export")
+        command_parser_export.add_argument("additional", nargs="*")
+
+        # commands without arguments
+        for command in ("edit", "cancel", "import"):
+            command_parser.add_parser(command)
+
+        self.args = parser.parse_args()
+
+    def import_timewarrior(self):
+        current_day = None
+        for log in TimeLogs.import_from_timewarrior():
+            if current_day and log.start_ymd != current_day:
+                print()
+            print(log.serialize())
+            current_day = log.start_ymd
+
+    def status(self):
+        last = TimeLogs.last()
+        if last and not last.end:
+            print(f"""
+Tracking:  {" ".join(last.tags)}
+ Started:  {last.start_hm}
+   Total:  {last.delta_str}
+""".strip())
+        else:
+            if last:
+                print(f"Currently not tracking. Last entry: '{last.serialize()}'")
+            else:
+                print(f"Currently not tracking.")
+
+    @staticmethod
+    def get_accept_func(args):
+        if ":today" in args or ":day" in args:
+
+            def accept(log: TimeLog):  # pyright: ignore
+                now = datetime.now()
+                start = datetime.combine(now, time(hour=0, minute=0))
+                end = start + timedelta(days=1)
+                return start < log.start <= end
+
+        elif ":week" in args:
+
+            def accept(log: TimeLog):  # pyright: ignore
+                now = datetime.now()
+                start = datetime.combine(now, time(hour=0, minute=0)) - timedelta(days=now.weekday())
+                end = start + timedelta(days=7)
+                return start < log.start <= end
+
+        elif ":month" in args:
+
+            def accept(log: TimeLog):  # pyright: ignore
+                now = datetime.now()
+                start = datetime.combine(now, time(hour=0, minute=0)) - timedelta(days=now.day - 1)
+                end = start + timedelta(days=31)
+                return start < log.start <= end
+
+        elif any(x.startswith(":") for x in args):
+            raise CliError(f"Unknown :argument in arguments: {args}")
+
+        else:
+
+            def accept(_: TimeLog):
+                return True
+
+        return accept
+
+    def report(self):
+        headr = " W │ Date             │ Start         │ Time │ Tags"
+        delim = "───┼──────────────────┼───────────────┼──────┼──────────────"
+        print(headr)
+        print(delim)
+
+        before = None
+
+        # create ReportDays
+        before = None
+        day = CliReportDay()
+        days = [day]
+        for log in TimeLogs.get_all(Cli.get_accept_func(self.args.additional)):
+            if before and before.start_ymd != log.start_ymd:
+                day = CliReportDay()
+                days.append(day)
+            day.logs.append(log)
+            before = log
+
+        # print
+        total = timedelta()
+        for day in days:
+            print(day)
+            total += day.total()
+
+        print(" " * 40 + delta_hm(total))
+
+    def edit(self) -> None:
+        editor = os.getenv("EDITOR", "vim")
+        command = [editor, DATA_FILE]
+        if "vim" in editor:
+            command += "+"  # open on last line
+        print(f"Running: {' '.join(str(c) for c in command)}")
+        subprocess.run(command)
+
+    def stop(self) -> None:
+        timestamps = []
+        for arg in self.args.additional:
+            if re.match(r"\d+:\d+", arg):
+                timestamps.append(time(hour=int(arg.split(":")[0]), minute=int(arg.split(":")[1])))
+
+        today = datetime.today()
+        if len(timestamps) == 1:
+            TimeLogs.stop(datetime.combine(today, timestamps[0]))
+        else:
+            TimeLogs.stop(datetime.now())
+
+    def cancel(self) -> None:
+        TimeLogs.cancel()
+
+    def export(self) -> None:
+        import json
+
+        accept_func = Cli.get_accept_func(self.args.additional)
+        json.dump(list(log.as_dict() for log in TimeLogs.get_all(accept_func)), sys.stdout, ensure_ascii=False)
+        sys.stdout.write("\n")
+
+    def watch(self) -> None:
+        while True:
+            subprocess.run("clear")
+            self.args.additional = [":today"]
+            self.report()
+            print()
+            self.status()
+            sleep(10)
+
+    def start(self) -> None:
+        log = TimeLog(start=datetime.now())
+        timestamps = []
+        for arg in self.args.additional:
+            if re.match(r"\d+:\d+", arg):
+                timestamps.append(time(hour=int(arg.split(":")[0]), minute=int(arg.split(":")[1])))
+            else:
+                if arg != "-":
+                    log.tags.append(arg)
+
+        if not log.tags:
+            raise CliError("No tags supplied")
+
+        today = datetime.today()
+        if len(timestamps) == 1:
+            log.start = datetime.combine(today, timestamps[0])
+        elif len(timestamps) == 2:
+            log.start = datetime.combine(today, timestamps[0])
+            log.end = datetime.combine(today, timestamps[1])
+        elif len(timestamps) >= 3:
+            raise CliError(f"Too many timestamps found in arguments: {timestamps}")
+
+        # FIXME multiple time works, should not work: track.py start test 10:00 - 11:00
+        TimeLogs.save(log.verify())
+        if log.end:
+            print(f"Tracked {','.join(log.tags)} from {log.start_hm} - {log.end_hm}")
+        else:
+            print(f"Started {','.join(log.tags)}")
+
+
+def main() -> None:
+    cli = Cli()
+
+    if cli.args.command == "start":
+        cli.start()
+    elif cli.args.command == "stop":
+        cli.stop()
+    elif cli.args.command == "status":
+        cli.status()
+    elif cli.args.command == "report":
+        cli.report()
+    elif cli.args.command == "edit":
+        cli.edit()
+    elif cli.args.command == "cancel":
+        cli.cancel()
+    elif cli.args.command == "import":
+        cli.import_timewarrior()
+    elif cli.args.command == "watch":
+        cli.watch()
+    elif cli.args.command == "export":
+        cli.export()
+    elif cli.args.command == None:
+        cli.status()
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(0)
