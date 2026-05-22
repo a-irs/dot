@@ -40,7 +40,7 @@ def delta_hm(delta: timedelta):
 class TimeLog:
     start: datetime
     end: datetime | None = None
-    tags: list[str] = field(default_factory=lambda: list())
+    tags: Iterable[str] = field(default_factory=lambda: list())
 
     @staticmethod
     def deserialize(text: str) -> VerifiedTimeLog:
@@ -152,16 +152,10 @@ class TimeLogs:
 
     @staticmethod
     def cancel() -> None:
-        last = TimeLogs.last()
-        if not last or last.end:
-            raise CliError("No active track")  # FIXME how to not use Cli exception here?
-
-        else:
-            yes_no = input(f"Really cancel {', '.join(last.tags)} since {last.start_hm}? ")
-            if yes_no in ["y", "Y"]:
-                new_lines = DATA_FILE.read_text().splitlines()
-                new_lines.pop()  # delete last
-                DATA_FILE.write_text("\n".join(new_lines) + "\n")
+        # delete last line
+        new_lines = DATA_FILE.read_text().splitlines()
+        new_lines.pop()
+        DATA_FILE.write_text("\n".join(new_lines) + "\n")
 
     @staticmethod
     def get_all(accept=lambda _: True) -> Iterable[VerifiedTimeLog]:
@@ -220,7 +214,7 @@ class CliError(Exception):
 
 @dataclass
 class CliReportDay:
-    logs: list[VerifiedTimeLog] = field(default_factory=lambda: list())
+    logs: Iterable[VerifiedTimeLog] = field(default_factory=lambda: list())
 
     def total(self) -> timedelta:
         result = timedelta()
@@ -338,7 +332,7 @@ Tracking:  {" ".join(last.tags)}
                 print(f"Currently not tracking.")
 
     @staticmethod
-    def get_accept_func(args: list) -> Callable[[TimeLog], bool]:
+    def get_accept_func(args: Iterable) -> Callable[[TimeLog], bool]:
         if ":today" in args or ":day" in args:
 
             def accept(log: TimeLog):  # pyright: ignore
@@ -399,7 +393,14 @@ Tracking:  {" ".join(last.tags)}
             TimeLogs.stop(datetime.now())
 
     def cancel(self) -> None:
-        TimeLogs.cancel()
+        last = TimeLogs.last()
+        if not last or last.end:
+            raise CliError("No active track")
+
+        else:
+            yes_no = input(f"Really cancel {', '.join(last.tags)} since {last.start_hm}? ")
+            if yes_no in ["y", "Y"]:
+                TimeLogs.cancel()
 
     def export(self) -> None:
         import json
