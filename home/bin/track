@@ -283,7 +283,8 @@ class CliTable:
             s += str(day) + "\n"
             total += day.total()
 
-        s += " " * 40 + delta_hm(total)
+        if len(self.report_days) > 1:
+            s += " " * 40 + delta_hm(total)
         return s
 
 
