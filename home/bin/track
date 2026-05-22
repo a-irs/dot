@@ -21,9 +21,13 @@ TIMELOG_PATTERNS_UNFINISHED = re.compile(r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d
 # better exception handling (especially outside Cli)
 
 # FP concepts:
-# - parse once from TimeLog to VerifiedTimeLog instead of validating always (<https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/>)
+# - parse once from TimeLog to VerifiedTimeLog instead of validating always (<https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/>), only allow serialization of VerifiedTimeLog
 # - IO (file read/write) just in TimeLogs
 # - IO (print) just in Cli
+
+# anti-features:
+# - no timezone handling
+# - no handling of tasks that span days
 
 
 class TimeLogParseException(Exception):
@@ -40,7 +44,7 @@ def delta_hm(delta: timedelta):
 class TimeLog:
     start: datetime
     end: datetime | None = None
-    tags: Iterable[str] = field(default_factory=lambda: list())
+    tags: list[str] = field(default_factory=lambda: list())
 
     @staticmethod
     def deserialize(text: str) -> VerifiedTimeLog:
@@ -90,6 +94,19 @@ class TimeLog:
         else:
             return datetime.now() - self.start
 
+    def verify(self) -> VerifiedTimeLog:
+        if self.end and self.end == self.start:
+            raise TimeLogParseException(f"start {self.start_hm} is identical to end {self.end_hm}")
+        elif self.end and self.end <= self.start:
+            raise TimeLogParseException(f"start {self.start_hm} is ahead of end {self.end_hm}")
+        elif self.end and self.end.date() != self.start.date():
+            raise TimeLogParseException(f"Not supported: start and end are on different days")
+        else:
+            return VerifiedTimeLog(start=self.start, end=self.end, tags=self.tags)
+
+
+@dataclass
+class VerifiedTimeLog(TimeLog):
     def serialize(self) -> str:
         if self.end:
             return f"{self.start_ymdhm} - {self.end_hm}  {' '.join(self.tags)}"
@@ -108,22 +125,6 @@ class TimeLog:
                 "time_start": self.start.isoformat(),
                 "tags": self.tags,
             }
-
-    def verify(self) -> VerifiedTimeLog:
-        if self.end and self.end == self.start:
-            raise TimeLogParseException(f"start {self.start_hm} is identical to end {self.end_hm}")
-        elif self.end and self.end <= self.start:
-            raise TimeLogParseException(f"start {self.start_hm} is ahead of end {self.end_hm}")
-        elif self.end and self.end.date() != self.start.date():
-            raise TimeLogParseException(f"Not supported: start and end are on different days")
-        else:
-            return VerifiedTimeLog(start=self.start, end=self.end, tags=self.tags)
-
-
-@dataclass
-class VerifiedTimeLog(TimeLog):
-    # FIXME Make sure this cannot be instanciated somehow, just cast?
-    pass
 
 
 class TimeLogs:
@@ -214,7 +215,7 @@ class CliError(Exception):
 
 @dataclass
 class CliReportDay:
-    logs: Iterable[VerifiedTimeLog] = field(default_factory=lambda: list())
+    logs: list[VerifiedTimeLog] = field(default_factory=lambda: list())
 
     def total(self) -> timedelta:
         result = timedelta()
@@ -406,8 +407,13 @@ Tracking:  {" ".join(last.tags)}
         import json
 
         accept_func = Cli.get_accept_func(self.args.additional)
-        json.dump(list(log.as_dict() for log in TimeLogs.get_all(accept_func)), sys.stdout, ensure_ascii=False)
-        sys.stdout.write("\n")
+        print(
+            json.dumps(
+                list(log.as_dict() for log in TimeLogs.get_all(accept_func)),
+                ensure_ascii=False,
+                separators=(",", ":"),  # minify
+            )
+        )
 
     def watch(self) -> None:
         while True:
@@ -440,7 +446,6 @@ Tracking:  {" ".join(last.tags)}
         elif len(timestamps) >= 3:
             raise CliError(f"Too many timestamps found in arguments: {timestamps}")
 
-        # FIXME multiple time works, should not work: track.py start test 10:00 - 11:00
         TimeLogs.save(log.verify())
         if log.end:
             print(f"Tracked {','.join(log.tags)} from {log.start_hm} - {log.end_hm}")
