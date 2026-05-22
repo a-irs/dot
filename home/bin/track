@@ -10,11 +10,15 @@ import re
 import subprocess
 import sys
 from time import sleep
-from typing import Iterable
+from typing import Iterable, Callable
 
 DATA_FILE = Path("~/.local/share/time.data").expanduser()
 
-# TODO: do not create new log if tags are identical to last/current one
+TIMELOG_PATTERNS_FINISHED = re.compile(r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) - (?P<end>\d{2}:\d{2}) +(?P<tags>.*)")
+TIMELOG_PATTERNS_UNFINISHED = re.compile(r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) +(?P<tags>[^-].*)")
+
+# TODO:
+# better exception handling (especially outside Cli)
 
 # FP concepts:
 # - parse once from TimeLog to VerifiedTimeLog instead of validating always (<https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/>)
@@ -40,11 +44,9 @@ class TimeLog:
 
     @staticmethod
     def deserialize(text: str) -> VerifiedTimeLog:
-        pattern_isfinished = r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) - (?P<end>\d{2}:\d{2}) +(?P<tags>.*)"
-        pattern_unfinished = r"^(?P<start>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) +(?P<tags>[^-].*)"
-        match = re.match(pattern_isfinished, text) or re.match(pattern_unfinished, text)
-        if match:
-            d = match.groupdict()
+        m = re.match(TIMELOG_PATTERNS_FINISHED, text) or re.match(TIMELOG_PATTERNS_UNFINISHED, text)
+        if m:
+            d = m.groupdict()
         else:
             raise TimeLogParseException(f"failed to parse line: '{text}'")
 
@@ -107,29 +109,11 @@ class TimeLog:
                 "tags": self.tags,
             }
 
-    def table_row(self, before: VerifiedTimeLog | None = None) -> str:
-        if before and before.start.strftime("%V") == self.start.strftime("%V"):
-            col_week = "  "
-        else:
-            col_week = self.start.strftime("%V")
-
-        if before and before.start_ymd == self.start_ymd:
-            col_start_d = "                "
-        else:
-            col_start_d = f"{self.start.strftime('%Y-%m-%d (%a)')}"
-
-        col_start_t = self.start_hm
-
-        if self.end:
-            col_end = self.end_hm
-        else:
-            col_end = "     "
-
-        return f"{col_week} │ {col_start_d} │ {col_start_t} - {col_end} │ {self.delta_str} │ {', '.join(self.tags)}"
-
     def verify(self) -> VerifiedTimeLog:
-        if self.end and self.end < self.start:
-            raise TimeLogParseException(f"start date {self.start.isoformat()} is ahead of end date {self.end.isoformat()}")
+        if self.end and self.end == self.start:
+            raise TimeLogParseException(f"start {self.start_hm} is identical to end {self.end_hm}")
+        elif self.end and self.end <= self.start:
+            raise TimeLogParseException(f"start {self.start_hm} is ahead of end {self.end_hm}")
         elif self.end and self.end.date() != self.start.date():
             raise TimeLogParseException(f"Not supported: start and end are on different days")
         else:
@@ -201,6 +185,11 @@ class TimeLogs:
             # first entry
             new_lines = [log.serialize()]
         else:
+            if not last.start <= log.start:
+                raise Exception(f"Start of new entry {log.start_hm} needs to be after start of last entry {last.start_hm}")
+            if last.end and not last.end <= log.start:
+                raise Exception(f"Start of new entry {log.start_hm} needs to be after end of last entry {last.end_hm}")
+
             # new log -> finish last one
             last.end = datetime.now()
             new_lines = DATA_FILE.read_text().splitlines()
@@ -243,9 +232,58 @@ class CliReportDay:
         s = ""
         before = None
         for log in self.logs:
-            s += log.table_row(before=before) + "\n"
+            s += CliReportDay.row(log, before=before) + "\n"
             before = log
         s += " " * 38 + "└ " + delta_hm(self.total()) + " ┘"
+        return s
+
+    @staticmethod
+    def row(log, before: VerifiedTimeLog | None = None) -> str:
+        if before and before.start.strftime("%V") == log.start.strftime("%V"):
+            col_week = "  "
+        else:
+            col_week = log.start.strftime("%V")
+
+        if before and before.start_ymd == log.start_ymd:
+            col_start_d = "                "
+        else:
+            col_start_d = f"{log.start.strftime('%Y-%m-%d (%a)')}"
+
+        col_start_t = log.start_hm
+
+        if log.end:
+            col_end = log.end_hm
+        else:
+            col_end = "     "
+
+        return f"{col_week} │ {col_start_d} │ {col_start_t} - {col_end} │ {log.delta_str} │ {', '.join(log.tags)}"
+
+
+class CliTable:
+    def __init__(self, logs: Iterable[VerifiedTimeLog]):
+        report_day = CliReportDay()
+        self.report_days = [report_day]
+
+        # create ReportDays
+        before = None
+        for log in logs:
+            if before and before.start_ymd != log.start_ymd:
+                report_day = CliReportDay()
+                self.report_days.append(report_day)
+            report_day.logs.append(log)
+            before = log
+
+    def __str__(self):
+        s = ""
+        s += " W │ Date             │ Start         │ Time │ Tags\n"
+        s += "───┼──────────────────┼───────────────┼──────┼──────────────\n"
+
+        total = timedelta()
+        for day in self.report_days:
+            s += str(day) + "\n"
+            total += day.total()
+
+        s += " " * 40 + delta_hm(total)
         return s
 
 
@@ -299,7 +337,7 @@ Tracking:  {" ".join(last.tags)}
                 print(f"Currently not tracking.")
 
     @staticmethod
-    def get_accept_func(args):
+    def get_accept_func(args: list) -> Callable[[TimeLog], bool]:
         if ":today" in args or ":day" in args:
 
             def accept(log: TimeLog):  # pyright: ignore
@@ -335,31 +373,9 @@ Tracking:  {" ".join(last.tags)}
         return accept
 
     def report(self):
-        headr = " W │ Date             │ Start         │ Time │ Tags"
-        delim = "───┼──────────────────┼───────────────┼──────┼──────────────"
-        print(headr)
-        print(delim)
-
-        before = None
-
-        # create ReportDays
-        before = None
-        day = CliReportDay()
-        days = [day]
-        for log in TimeLogs.get_all(Cli.get_accept_func(self.args.additional)):
-            if before and before.start_ymd != log.start_ymd:
-                day = CliReportDay()
-                days.append(day)
-            day.logs.append(log)
-            before = log
-
-        # print
-        total = timedelta()
-        for day in days:
-            print(day)
-            total += day.total()
-
-        print(" " * 40 + delta_hm(total))
+        accept_func = Cli.get_accept_func(self.args.additional)
+        table = CliTable(TimeLogs.get_all(accept_func))
+        print(table)
 
     def edit(self) -> None:
         editor = os.getenv("EDITOR", "vim")
