@@ -69,3 +69,14 @@ if [[ $commands[kubectl] ]]; then
         command kubectl "$@"
     }
 fi
+
+if [[ $commands[cilium-cli] ]]; then
+    cilium() {
+        if ! ps auxww | grep -q "[c]ilium-cli hubble port-forward"; then
+            echo ":: starting 'cilium-cli hubble port-forward' in the background"
+            nohup cilium-cli hubble port-forward </dev/null &>/dev/null &
+            sleep 1
+        fi
+        hubble observe "$@"
+    }
+fi

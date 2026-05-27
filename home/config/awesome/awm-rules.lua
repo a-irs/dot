@@ -87,6 +87,13 @@ client.connect_signal("property::minimized", backham)
 client.connect_signal("unmanage", backham)
 tag.connect_signal("property::selected", backham)
 
+client.connect_signal("property::minimized", function(c)
+    if c.class == "forge-view-Main" then
+        c.minimized = false
+    end
+end
+)
+
 local function make_name(existing_clients, client, wanted_name)
     if client.minimized then
         wanted_name = "[" .. wanted_name .. "]"
@@ -123,7 +130,7 @@ local function dynamic_tagging()
                         name = make_name(name, c, "ssh")
                     elseif c.class == "firefox" or c.class == "Firefox" or c.class == "Chrome" or c.class == "Chromium" then
                         name = make_name(name, c, "web")
-                    elseif c.class == "Thunderbird" or c.class == "thunderbird" then
+                    elseif c.class == "Thunderbird" or c.class == "thunderbird" or c.class == "org.mozilla.Thunderbird" then
                         name = make_name(name, c, "mail")
                     elseif c.class == "TickTick" or c.class == "ticktick" then
                         name = make_name(name, c, "todo")

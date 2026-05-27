@@ -1,3 +1,6 @@
+[[ -d Thunderbird ]] && rmdir Thunderbird
+[[ -d thunderbird ]] && rmdir thunderbird
+
 unset LC_ALL
 [[ -z "$LANG" ]] && export LANG=en_US.UTF-8
 export LC_COLLATE=C  # e.g. sort _index.md at beginning

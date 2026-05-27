@@ -21,3 +21,7 @@ user_pref("browser.uidensity", 1);
 
 // display advanced information on Insecure Connection warning pages
 user_pref("browser.xul.error_pages.expert_bad_cert", true);
+
+// https://jfkimmes.eu/posts/firefox-trackpad-on-wayland/
+user_pref("apz.gtk.pangesture.delta_mode", 2);
+user_pref("apz.gtk.pangesture.pixel_delta_mode_multiplier", "100");

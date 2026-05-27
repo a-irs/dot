@@ -54,10 +54,9 @@ kupfer --no-splash &
 nitrogen --restore &
 lxpolkit &
 picom &
-redshift &
+# redshift &  systemd service
 dunst &
 keepassxc &
-bash -c "if $HOME/.bin/wait-for-host dropbox.com; then dropbox; fi" &
 
 ~/.bin/xinitrc/setup-lock &
 

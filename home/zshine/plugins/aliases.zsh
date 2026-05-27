@@ -130,6 +130,9 @@ else
 fi
 alias vi="$vim -N -u <(cat $HOME/.vim/conf.d/00_basic.vim $HOME/.vim/conf.d/99_post.vim)"
 
+alias scratch="$EDITOR ~/doc/scratch.md"
+alias sc=scratch
+
 anon() {
     unset HISTFILE
     if [[ -n "$ZSHINE_PROMPT_SYMBOL" ]]; then
