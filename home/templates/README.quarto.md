@@ -1,3 +1,12 @@
+Install
+=======
+
+macOS:
+
+```bash
+$ quarto install tinytex
+```
+
 Debugging
 =========
 

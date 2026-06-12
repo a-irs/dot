@@ -11,7 +11,7 @@ export BAT_THEME=ansi
 
 v() {
     local before=$PWD
-    cd "$1"
+    [[ -n "$1" ]] && cd "$1"
     local dest="$(command vifm --choose-dir -)"
     if [[ -n "$dest" ]] && [[ "$before" != "$dest" ]]; then
         # unset and re-set "auto-ls" chpwd hook

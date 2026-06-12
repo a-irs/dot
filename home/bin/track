@@ -127,6 +127,10 @@ class VerifiedTimeLog(TimeLog):
             }
 
 
+class TimeLogException(Exception):
+    pass
+
+
 class TimeLogs:
     @staticmethod
     def import_from_timewarrior() -> Iterable[VerifiedTimeLog]:
@@ -181,9 +185,9 @@ class TimeLogs:
             new_lines = [log.serialize()]
         else:
             if not last.start <= log.start:
-                raise Exception(f"Start of new entry {log.start_hm} needs to be after start of last entry {last.start_hm}")
+                raise TimeLogException(f"Start of new entry {log.start_hm} needs to be after start of last entry {last.start_hm}")
             if last.end and not last.end <= log.start:
-                raise Exception(f"Start of new entry {log.start_hm} needs to be after end of last entry {last.end_hm}")
+                raise TimeLogException(f"Start of new entry {log.start_hm} needs to be after end of last entry {last.end_hm}")
 
             # new log -> finish last one
             last.end = datetime.now()
