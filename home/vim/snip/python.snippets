@@ -1,7 +1,27 @@
+snippet #! "shebang" b
+#!/usr/bin/env python3
+
+$0
+endsnippet
+
 snippet "exception" "Exception" br
 class ${1:MyException}(Exception):
-    '''raised when ${2:...}'''
+    """raised when ${2:...}"""
     pass
+endsnippet
+
+snippet match "match" b
+# https://benhoyt.com/writings/python-pattern-matching/
+
+def mysum(all: list[int]) -> int:
+    match all:
+        case []:
+            return 0
+        case [x]:
+            return x
+        case [x, *xs]:
+            return x + sum(xs)
+    return 0
 endsnippet
 
 snippet "run|subprocess|shell|exec" "subprocess" br
@@ -28,21 +48,21 @@ import argparse
 
 def cli_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="desc 123", allow_abbrev=False)
-    p.add_argument('--arg1', '-a', help="help text 1", required=True)
-    p.add_argument('--enable_feature_xyz', help="toggle for %(prog)s", action='store_true', default=False)
-    p.add_argument('--count', help="has to be %(type)s (default: %(default)s)", type=int, default=10)
-    p.add_argument('--verbose', '-v', help="store count of used args", action='count', default=0)
-    p.add_argument('--choose1', choices=["this", "that"])
-    p.add_argument('--choose2', type=int, choices=range(1, 6))
-    p.add_argument('--optarg', nargs='?', help="optional")
-    p.add_argument('--multiarg', nargs='+', help="can be specified multiple times, at least 1")
-    p.add_argument('--multiarg_opt', nargs='*', help="can be specified multiple times, at least 0")
-    p.add_argument('--file_out', type=argparse.FileType('w'), default=sys.stdout)
-    p.add_argument('--file_in', type=argparse.FileType('r'), default=sys.stdin)
+    p.add_argument("--arg1", "-a", help="help text 1", required=True)
+    p.add_argument("--enable_feature_xyz", help="toggle for %(prog)s", action="store_true", default=False)
+    p.add_argument("--count", help="has to be %(type)s (default: %(default)s)", type=int, default=10)
+    p.add_argument("--verbose", "-v", help="store count of used args", action="count", default=0)
+    p.add_argument("--choose1", choices=["this", "that"])
+    p.add_argument("--choose2", type=int, choices=range(1, 6))
+    p.add_argument("--optarg", nargs="?", help="optional")
+    p.add_argument("--multiarg", nargs="+", help="can be specified multiple times, at least 1")
+    p.add_argument("--multiarg_opt", nargs="*", help="can be specified multiple times, at least 0")
+    p.add_argument("--file_out", type=argparse.FileType("w"), default=sys.stdout)
+    p.add_argument("--file_in", type=argparse.FileType("r"), default=sys.stdin)
 
     subparser = p.add_subparsers(dest="cmd")
-    subparser.add_parser('pull')
-    subparser.add_parser('list')
+    subparser.add_parser("pull")
+    subparser.add_parser("list")
 
     return p.parse_args()
 endsnippet
@@ -57,33 +77,40 @@ if __name__ == "__main__":
 endsnippet
 
 snippet "dc|dataclass" "dataclass" br
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-@dataclass
+@dataclass(frozen=True)
 class ${1:Point}:
     x: int
     y: int = 0
     description: str = ""
+    others: list[int] = field(default_factory=list)
+
+	# access via p.sum
+	@property
+	def sum(self) -> int:
+		return self.x + self.y
 endsnippet
 
 snippet "raise|throw|exc" "exception" br
 # https://docs.python.org/3/library/exceptions.html#base-classes
-raise ValueError('Error message')
+raise ValueError("Error message")
 endsnippet
 
 snippet "tmp|temp" "temporary" br
 import tempfile
 
-with tempfile.NamedTemporaryFile('w') as temp:
+with tempfile.NamedTemporaryFile("w") as temp:
     temp.write("content")
     temp.flush()
 endsnippet
 
-snippet "defaultdict" "defaultdict" br
+snippet "defaultdict|dd" "defaultdict" br
 import collections
 
-d = collections.defaultdict(int)
+d = collections.defaultdict(list)  # or set, int, ...
 endsnippet
+
 
 snippet "b|br|break" "breakpoint" br
 from pprint import pp
@@ -110,9 +137,9 @@ for key, value in ${1:dict_obj}.items():
 endsnippet
 
 snippet "class" "class" br
-class ${1:ClassName}(object):
-    def __init__(self):
-        pass
+class ${1:ClassName}:
+    def __init__(self, attr1):
+		self.attr1 = attr1
     def __str__(self):
         return str("<{}: {}>".format(type(self).__name__, vars(self)))
 endsnippet
@@ -122,19 +149,96 @@ json.dumps(${1:item}, indent=2)
 endsnippet
 
 snippet "jsonr" "json read" br
-with open('${1:filename}', 'r') as fd:
+with open("${1:filename}", "r") as fd:
     data = json.load(fd)
 endsnippet
 
 snippet "jsonw" "json write" br
-with open('${1:filename}', 'w') as fd:
+with open("${1:filename}", "w") as fd:
     json.dump(data, fd)
 endsnippet
 
 snippet "csv2py" "csv to python object" br
 import csv
-with open("file.csv", 'r') as fd:
-    reader = csv.DictReader(fd, delimiter=';')
+with open("file.csv", "r") as fd:
+    reader = csv.DictReader(fd, delimiter=";")
     for d in reader:
         print(d)
+endsnippet
+
+snippet decorator "decorator" b
+from typing import Callable
+def logged(f: Callable):
+    def inner(*args, **kwargs):
+        print("Calling", f.__name__)
+        return f(*args, **kwargs)
+    return inner
+
+@logged
+def test(): ...
+endsnippet
+
+snippet decoratorc "decoratorcontext" b
+from contextlib import ContextDecorator
+
+class track_entry_and_exit(ContextDecorator):
+    def __init__(self, name):
+        self.name = name
+
+    def __enter__(self):
+        logging.info('Entering: %s', self.name)
+
+    def __exit__(self, exc_type, exc, exc_tb):
+        logging.info('Exiting: %s', self.name)
+
+# can be used as context manager
+with track_entry_and_exit('loader'):
+    pass
+
+# can be used as decorator
+@track_entry_and_exit('loader')
+def activity():
+    pass
+endsnippet
+
+snippet context "context manager class" b
+# https://docs.python.org/3/library/contextlib.html
+class ${1:ContextManager}:
+	def __enter__(self):
+		${2:pass}
+
+	def __exit__(self, exc_type, exc_value, traceback):
+		${3:pass}
+
+`!p snip.rv=t[1].lower()` = ${1}()
+with `!p snip.rv=t[1].lower()`:
+	pass
+endsnippet
+
+snippet contextdecorator "context manager decorator" b
+# https://docs.python.org/3/library/contextlib.html
+from contextlib import contextmanager
+
+@contextmanager
+def managed():
+    print("entered")
+    try:
+        yield
+    finally:
+        print("cleanup")
+
+with managed():
+    print("middle")
+
+# https://docs.python.org/3/library/contextlib.html
+@contextmanager
+def managed_complex(resource: str):
+    print("entered")
+    try:
+        yield resource.upper()
+    finally:
+        print("cleanup")
+
+with managed_complex("test") as m:
+    print(m)
 endsnippet

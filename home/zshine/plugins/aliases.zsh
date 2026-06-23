@@ -150,7 +150,7 @@ anon() {
 alias et="emacsclient -c --alternate-editor='' -t"
 alias e="emacsclient -c --alternate-editor='' -n"
 
-hex() { xxd "$1" | $vim +'set ft=xxd' -; }
+hex() { xxd "$1" | $vim +'setlocal ft=xxd | setlocal buftype=nofile' -; }
 
 # open e.g. html file in temporary browser in app mode
 web() {
@@ -170,7 +170,7 @@ if [[ "$commands[docker]" ]]; then
     do-rm() { docker rm "$@" || docker rmi "$@"; }
 fi
 
-mac() { curl -q "https://api.macvendors.com/${1:0:8}" && printf "\n"; }
+mac() { curl -sf "https://api.macvendors.com/${1:0:8}" && printf "\n"; }
 
 cht() {
     local query=${(j:+:)@}  # join all argument strings with "+" (URL whitespace)

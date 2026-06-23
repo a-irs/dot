@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from __future__ import annotations  # wrap all type hints in quotes
+from __future__ import annotations  # wrap all type hints in quotes automatically
 import argparse
 from dataclasses import dataclass, field
 from datetime import datetime, time, timedelta
@@ -44,7 +44,7 @@ def delta_hm(delta: timedelta):
 class TimeLog:
     start: datetime
     end: datetime | None = None
-    tags: list[str] = field(default_factory=lambda: list())
+    tags: list[str] = field(default_factory=list)
 
     @staticmethod
     def deserialize(text: str) -> VerifiedTimeLog:
@@ -219,7 +219,7 @@ class CliError(Exception):
 
 @dataclass
 class CliReportDay:
-    logs: list[VerifiedTimeLog] = field(default_factory=lambda: list())
+    logs: list[VerifiedTimeLog] = field(default_factory=list)
 
     def total(self) -> timedelta:
         result = timedelta()
