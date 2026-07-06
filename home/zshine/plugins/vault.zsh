@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-export VAULT_ADDR="https://vault.$(grep -E '^(domain|search)\s' /etc/resolv.conf | cut -d ' ' -f 2)"
+alias vault=bao
+
+export VAULT_ADDR="https://vault.$(grep -E '^(domain|search)\s' /etc/resolv.conf | sed 's/int/admin/' | cut -d ' ' -f 2)"
 
 v-login() {
     vault login --method=oidc
@@ -26,11 +28,11 @@ _v-sshkey() {
 }
 
 v-sshkey-user() {
-    _v-sshkey ssh-client/sign/ssh-user $USER
+    _v-sshkey ssh-client/sign/user $USER
 }
 
-v-sshkey-admin() {
-    _v-sshkey ssh-client/sign/ssh-admin root,$USER
+v-sshkey() {
+    _v-sshkey ssh-client/sign/admin root,$USER
 }
 
 v-token() {
@@ -41,5 +43,5 @@ v-token() {
 }
 
 v-ssh() {
-    command ssh -F /dev/null -i ~/.ssh/vault "$@"
+    command ssh -F /dev/null -o IdentitiesOnly=yes -i ~/.ssh/vault "$@"
 }

@@ -4,7 +4,7 @@ import sys
 
 import requests
 
-DOMAIN = [l.split()[1] for l in open("/etc/resolv.conf", "r").readlines() if l.startswith("search ")][0].replace("int", "cloud")
+DOMAIN = [l.split()[1] for l in open("/etc/resolv.conf", "r").readlines() if l.startswith("search ")][0].replace("int", "admin")
 GATUS_URL = f"https://gatus.{DOMAIN}"
 
 
@@ -47,6 +47,8 @@ def main():
             exit_code = 1
             duration = ""
 
+        if len(recents) < 50:
+            recents = ["-"] * (50 - len(recents)) + recents
         print(
             "".join(recents),
             f"{service['group']} {color}{service['name']} {Color.BLACK + Color.BOLD}{duration}{Color.RESET}",

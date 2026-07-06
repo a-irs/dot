@@ -120,6 +120,15 @@ if is_mobile then
     netwidget_wrap = bg_wrap(netwidget, theme.widget_music_bg, theme.statusbar_margin, theme.statusbar_margin)
 end
 
+nextcloudwidget = awful.widget.watch(
+    gears.filesystem.get_configuration_dir() .. "/statusbar/nextcloud",
+    2,
+    function(widget, stdout)
+        widget:set_markup(string.gsub(stdout, "\n", ""))
+    end
+)
+nextcloudwidget_wrap = bg_wrap(nextcloudwidget, theme.widget_music_bg, 0, 0)
+
 -- DOWNLOAD STATUS
 
 -- if not is_mobile then
@@ -311,6 +320,7 @@ awful.screen.connect_for_each_screen(function(s)
     layout2:add(s.mytaglist)
 
     local layout3 = wibox.layout.fixed.horizontal()
+    layout3:add(nextcloudwidget_wrap)
     layout3:add(systray_wrap)
     layout3:add(audiowidget_wrap)
     if is_mobile then

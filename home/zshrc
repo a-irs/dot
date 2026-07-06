@@ -1,5 +1,6 @@
 [[ -d Thunderbird ]] && rmdir Thunderbird
 [[ -d thunderbird ]] && rmdir thunderbird
+[[ -d desktop ]] && rmdir desktop
 
 unset LC_ALL
 [[ -z "$LANG" ]] && export LANG=en_US.UTF-8

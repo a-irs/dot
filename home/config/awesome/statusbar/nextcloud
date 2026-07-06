@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+wifi_color="#ffa200"
+error_color="#fa7883"
+
+out=$(busctl --user get-property \
+  com.nextcloudgmbh.Nextcloud \
+  /com/nextcloudgmbh/Nextcloud/Folder/0 \
+  org.freedesktop.CloudProviders.Account \
+  StatusDetails)
+out=${out:2}
+out=${out//\"/}
+
+if [[ "$out" != Connected* ]]; then
+    printf '%s' "<span foreground='$error_color'><b>$out</b></span>"
+elif [[ "$out" == "Connected - Success" ]]; then
+    exit
+else
+    out=${out/Connected - /}
+    printf '%s' "<span foreground='$wifi_color'> $out </span>"
+fi
