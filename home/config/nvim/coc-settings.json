@@ -17,8 +17,8 @@
     "ltex.completionEnabled": true,
     "ltex.disabledRules": {
         "en-US": [
-            // https://community.languagetool.org/rule/show/ARROWS?lang=en-US
-            "ARROWS"
+            "ARROWS",     // https://community.languagetool.org/rule/show/ARROWS?lang=en-US
+            "DASH_RULE",  // https://community.languagetool.org/rule/show/DASH_RULE?lang=en-US
         ]
     },
     "ltex.additionalRules.motherTongue": "en-US",

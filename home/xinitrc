@@ -19,7 +19,7 @@ if [[ $HOSTNAME == x1* ]]; then
     blueman-applet &
     pactl set-sink-mute @DEFAULT_SINK@ true &
     yubikey-touch-detector --libnotify &
-    ~/.bin/x1/track-battery &
+    # ~/.bin/x1/track-battery &
 fi
 
 # make some cache persistent, some in tmpfs

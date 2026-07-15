@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+theme_light=Arc
+theme_dark=Arc-Dark
+
+output=$(xrandr | awk '/ primary/{print $1}')
+current="$(vibrant-cli "$output" | awk "/$output/{print \$NF}")"
+
+saturation() {
+    local value=$1
+    vibrant-cli "$output" "$value"
+}
+
+xsetting() {
+    local from=$1
+    local to=$2
+    sed -i "s/\"$from\"/\"$to\"/" ~/.xsettingsd
+    systemctl --user restart xsettingsd.service
+}
+
+notify() {
+    local msg=$1
+    notify-send "Saturation" "$msg"
+}
+
+if [[ "$current" == 1* ]]; then
+    saturation 0.0 &
+    xsetting "$theme_light" "$theme_dark" &
+    notify 0% &
+elif [[ "$current" == 0.0* ]]; then
+    saturation 0.2 &
+    xsetting "$theme_light" "$theme_dark" &
+    notify 20% &
+elif [[ "$current" == 0.2* ]]; then
+    saturation 0.5 &
+    xsetting "$theme_light" "$theme_dark" &
+    notify 50% &
+else
+    saturation 1 &
+    xsetting "$theme_dark" "$theme_light" &
+    notify 100% &
+fi

@@ -240,7 +240,7 @@ clientkeys = gears.table.join(
     end),
     awful.key({ alt }, "F4", function(c) c:kill() end),
     awful.key({ win }, "w",  function(c) c:kill() end),
-    awful.key({ win }, "q",  function(c) c:kill() end),
+    awful.key({ win }, "b",  function() run_script("bw") end),
     awful.key({ win }, "e",  awful.client.floating.toggle),
     awful.key({ win }, "m",  awful.titlebar.toggle),
     awful.key({ win }, "Up", function(c) c.minimized = true end)

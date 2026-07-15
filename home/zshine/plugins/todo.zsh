@@ -12,6 +12,7 @@ todo() {
             return
         fi
     done
+    unset file
     echo "No todo files found: $todo_files"
 }
 
@@ -20,14 +21,10 @@ _show_todos() {
 
     for file in "${todo_files[@]}"; do
         [[ -s "$file" ]] || continue
-        content=$(grep -v '@done' "$file" | sed 's/- /• /')
-        if [[ ${args[(ie)--random]} -le ${#args} ]]; then
-            echo "$content" | grep --color -E '@.*|$' | shuf -n 1
-        else
-            echo "$content" | grep --color -E '@.*|$'
-        fi
+        content=$(grep "^- " "$file" | grep -v '@done' | sed 's/- /• /')
+        echo "$content" | grep --color -E '@.*|$'
     done
     unset file
 }
 
-_show_todos --random
+_show_todos | shuf -n 1

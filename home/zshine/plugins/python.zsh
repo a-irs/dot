@@ -8,11 +8,11 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 [[ -e /opt/homebrew/etc/ca-certificates/cert.pem ]] && export REQUESTS_CA_BUNDLE=/opt/homebrew/etc/ca-certificates/cert.pem
 
-[[ "$commands[ipython]" ]] && export PYTHONBREAKPOINT=IPython.core.debugger.set_trace
-[[ "$commands[ipdb]" ]] && export PYTHONBREAKPOINT=ipdb.set_trace
-[[ "$commands[pudb]" ]] && export PYTHONBREAKPOINT=pudb.set_trace
+# [[ "$commands[ipython]" ]] && export PYTHONBREAKPOINT=IPython.core.debugger.set_trace
+# [[ "$commands[ipdb]" ]] && export PYTHONBREAKPOINT=ipdb.set_trace
+# [[ "$commands[pudb]" ]] && export PYTHONBREAKPOINT=pudb.set_trace
 
-alias uv="uv --native-tls"  # use system CA store
+alias uv="uv --system-certs"  # use system CA store
 venv() {
     if [[ -n "$VIRTUAL_ENV" ]]; then
         deactivate
@@ -24,7 +24,7 @@ venv() {
         if ! [[ $REPLY =~ ^[Yy]$ ]]; then
             return
         fi
-        printf '\n'
+        printf '\n\n'
 
         mkdir -p .venv
         if [[ -f setup.py || -f pyproject.toml ]]; then
@@ -34,13 +34,13 @@ venv() {
                 uv sync
             fi
         else
-            uv init --no-readme && rm -f hello.py
+            uv init --no-description --no-readme
             uv sync
         fi
 
-        printf '\n%s\n' "----------"
-        printf '%s\n' "Created virtualenv in $PWD/.venv"
-        printf '%s\n' "----------"
+        # printf '\n%s\n' "----------"
+        # printf '%s\n' "Created virtualenv in $PWD/.venv"
+        # printf '%s\n' "----------"
 
         printf '%s\n' '[[ -z "$VIRTUAL_ENV" ]] && source .venv/bin/activate' >> .env
         grep -Eq '^\.env$' .gitignore || printf '%s\n' '.env' >> .gitignore
@@ -48,8 +48,7 @@ venv() {
 
     source .venv/bin/activate
 
-    printf '%s\n' "Cheatsheet"
-    printf '%s\n' "----------"
+    printf '\n'
     printf '%s\n' "uv add <packages>; uv remove <packages>"
     printf '%s\n' "uv sync"
     printf '%s\n' "uv run; uv run python"

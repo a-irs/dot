@@ -12,8 +12,10 @@ out=${out:2}
 out=${out//\"/}
 
 if [[ "$out" != Connected* ]]; then
-    printf '%s' "<span foreground='$error_color'><b>$out</b></span>"
+    printf '%s' "<span foreground='$error_color'> <b>$out</b> </span>"
 elif [[ "$out" == "Connected - Success" ]]; then
+    exit
+elif [[ "$out" == "Connected - Success, some files were ignored." ]]; then
     exit
 else
     out=${out/Connected - /}
