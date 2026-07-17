@@ -4,6 +4,28 @@ snippet #! "shebang" b
 $0
 endsnippet
 
+snippet "dot|dotdict" "DotDict" br
+# for more complex uses: https://pypi.org/project/dotmap/
+
+# way 1
+class ${1:DotDict}(dict):
+    """
+    access a dict with dot notation: mydict.key_blabla instead of mydict["key-blabla"]
+    """
+    def __getattr__(self, attr):
+        if attr in self:
+            return self[attr]
+        return self[attr.replace("_", "-")]
+    def __getstate__(self):
+        return self
+
+# way 2
+from types import SimpleNamespace
+dot = SimpleNamespace({"foo": "bar", "another": {"a": "b"}})
+print(dot.foo)
+print(dot.another.a)
+endsnippet
+
 snippet "exception" "Exception" br
 class ${1:MyException}(Exception):
     """raised when ${2:...}"""

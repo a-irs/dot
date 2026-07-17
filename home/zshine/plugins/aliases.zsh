@@ -129,6 +129,7 @@ else
     vim=vim
 fi
 alias vi="$vim -N -u <(cat $HOME/.vim/conf.d/00_basic.vim $HOME/.vim/conf.d/99_post.vim)"
+alias vimg="vim +Git +only"
 
 alias scratch="$EDITOR ~/doc/scratch.md"
 alias sc=scratch

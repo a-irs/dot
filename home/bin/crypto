@@ -69,13 +69,21 @@ def command_chain(file: str):
 
 
 def command_text(file: str):
-    cmd_verbose("s", file)  # ~/.bin/s
+    cmd("s", file)  # ~/.bin/s
 
 
 def command_fp(file: str):
     cmd(OPENSSL_COMMAND, "x509", "-noout", "-fingerprint", "-sha1", "-in", file)
     cmd(OPENSSL_COMMAND, "x509", "-noout", "-fingerprint", "-sha256", "-in", file)
 
+
+def command_gen(cn: str):
+    cmd(OPENSSL_COMMAND, "req", "-subj", f"/CN={cn}", "-newkey", "ec", "-pkeyopt", "ec_paramgen_curve:secp256k1", "-nodes", "-keyout", f"{cn}.key", "-x509", "-days", "3650", "-out", f"{cn}.pem", stderr=subprocess.PIPE)
+    print(f"{cn}.key")
+    print(f"{cn}.pem")
+    print()
+
+    command_text(f"{cn}.pem")
 
 def command_connect(host: str, port: int, *args):
     cmd_verbose(OPENSSL_COMMAND, "s_client", "-showcerts", "-servername", host, "-connect", f"{host}:{port}", *args, stdin=subprocess.DEVNULL)
@@ -104,6 +112,7 @@ def help_message():
     print("  fp <file or host>")
     print("  connect <host>")
     print("  ocsp <file or host> [<intermediate cert>]")
+    print("  gen <common name>")
     print("")
     print(f"openssl version: {subprocess.check_output(('openssl', 'version'), text=True)}")
     sys.exit(2)
@@ -111,7 +120,7 @@ def help_message():
 
 def main():
     parser = argparse.ArgumentParser(description="Process SSL certificates")
-    parser.add_argument("action", choices=["priv", "pub", "chain", "cert", "text", "dump", "fp", "connect", "ocsp"], help="Action to perform")
+    parser.add_argument("action", choices=["priv", "pub", "chain", "cert", "text", "dump", "fp", "connect", "ocsp", "gen"], help="Action to perform")
     parser.add_argument("file_or_host", help="Certificate file or host to process")
     parser.add_argument("args", nargs=argparse.REMAINDER, help="Additional arguments for the command")
 
@@ -129,6 +138,9 @@ def main():
     elif args.action == "connect":
         host, port = parse_host(args.file_or_host)
         command_connect(host, port, *args.args)
+
+    elif args.action == "gen":
+        command_gen(args.file_or_host)
 
     else:
         help_message()
