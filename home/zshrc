@@ -1,6 +1,6 @@
-[[ -d Thunderbird ]] && rmdir Thunderbird
-[[ -d thunderbird ]] && rmdir thunderbird
-[[ -d desktop ]] && rmdir desktop
+[[ -d Thunderbird ]] && rmdir Thunderbird 2>/dev/null
+[[ -d thunderbird ]] && rmdir thunderbird 2>/dev/null
+[[ -d desktop ]] && rmdir desktop 2>/dev/null
 
 unset LC_ALL
 [[ -z "$LANG" ]] && export LANG=en_US.UTF-8

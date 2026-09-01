@@ -728,6 +728,18 @@ cdt() {
     builtin cd "$(mktemp -d -t cdt.XXX)"
 }
 
+cdg() {
+    if git symbolic-ref --short HEAD >/dev/null 2>/dev/null; then
+        local d=$(git rev-parse --git-dir)/..
+        if [[ "$(realpath "$d")" != "$PWD" ]]; then
+            builtin cd "$d"
+        fi
+    else
+        printf '%s\n' "error: not inside git repo"
+        return 1
+    fi
+}
+
 alias i2png="mogrify -format png"
 
 # text-to-speech from stdin
