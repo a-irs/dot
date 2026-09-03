@@ -1,18 +1,41 @@
-snippet #! "shebang" b
+snippet #!|shebang "shebang" br
 #!/usr/bin/env python3
 
-$0
+def main():
+    ${1:${VISUAL}}
+
+if __name__ == "__main__":
+    main()
+endsnippet
+
+
+snippet di "dependency injection" b
+from typing import Callable
+
+def external_dependency_snmpwalk(oid: str, hostname: str) -> dict:
+    cmd = subprocess.run(("snmpwalk", hostname, oid), capture_output=True, check=True, text=True)
+    return {"stdout": cmd.stdout.splitlines(), "stderr": cmd.stderr.splitlines()}
+
+def run(hostname: str, snmpwalk_func: Callable[..., dict] = external_dependency_snmpwalk) -> str:
+    return snmpwalk_func("1.2.3", hostname).get("stdout", "")
+
+def main():
+    # use default arg for external dependency (snmpwalk)
+    run(sys.argv[0])
+
+    # in test for run(): inject function that fakes data
+    run("dummy", lambda *_: {"stdout": "fake"})
 endsnippet
 
 
 snippet test-unittest "test unittest base"
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import unittest
 import unittest.mock
-import lib_abc as sut
+import ${1:module_abc} as sut
 
-class TestLibAbc(unittest.TestCase):
+class Test${2:ModuleAbc}(unittest.TestCase):
     def test_that_blabla(self):
         self.assertTrue(sut.run())
 
@@ -34,9 +57,9 @@ endsnippet
 
 
 snippet test-pytest "test pytest base"
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import lib_abc as sut
+import ${1:module_abc} as sut
 
 def test_that_blabla():
     assert sut.run() == "expected"
@@ -49,23 +72,22 @@ endsnippet
 
 
 snippet test-doctest "test doctest base"
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # run with: python3 -m doctest file.py
 def transform_authors(authors: str):
-	"""
-	transforms authors string in a way that:
+    """
+    transforms authors string in a way that:
 
-	>>> transform_authors("Author A; Author B")
-	('Author B', 'Author A')
-	"""
-	return tuple(reversed([a.strip() for a in authors.split(";")]))
+    >>> transform_authors("Author A; Author B")
+    ('Author B', 'Author A')
+    """
+    return tuple(reversed([a.strip() for a in authors.split(";")]))
 endsnippet
 
 
-snippet "dot|dotdict" "DotDict" br
+snippet "dot1|dotdict1" "DotDict read" br
 # for more complex uses: https://pypi.org/project/dotmap/
 
-# way 1
 class ${1:DotDict}(dict):
     """
     access a dict with dot notation: mydict.key_blabla instead of mydict["key-blabla"]
@@ -76,12 +98,41 @@ class ${1:DotDict}(dict):
         return self[attr.replace("_", "-")]
     def __getstate__(self):
         return self
+endsnippet
 
-# way 2
+
+snippet "dot2|dotdict2" "DotDict write" br
 from types import SimpleNamespace
-dot = SimpleNamespace({"foo": "bar", "another": {"a": "b"}})
-print(dot.foo)
-print(dot.another.a)
+from typing import Any
+
+class DotDict(SimpleNamespace):
+    def __getattr__(self, name: str) -> Any:
+        value = DotDict()
+        setattr(self, name, value)
+        return value
+
+def dot_dict(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return DotDict(**{key: dot_dict(value) for key, value in obj.items()})
+    if isinstance(obj, list):
+        return [dot_dict(item) for item in obj]
+    if isinstance(obj, tuple):
+        return tuple(dot_dict(item) for item in obj)
+    return obj
+
+data = dot_dict(
+    {
+        "name": "Alice",
+        "address": {
+            "city": "NY",
+        },
+    }
+)
+data.foo.bar = ["baz", "x"]
+print(data)
+print(data.name)
+print(data.foo.bar)
+print(data.address.city)
 endsnippet
 
 
