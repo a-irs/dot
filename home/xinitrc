@@ -51,7 +51,7 @@ ln -sf ~/.config/mimeapps.list ~/.local/share/applications/defaults.list
 # applications
 opensnitch-ui &
 kupfer --no-splash &
-nitrogen --restore &
+~/.bin/xinitrc/setup-wallpaper &
 lxpolkit &
 picom &
 # redshift &  systemd service

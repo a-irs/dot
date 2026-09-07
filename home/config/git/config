@@ -33,6 +33,7 @@
     cm = commit
     d = diff
     ds = diff --staged
+    diffs = diff --staged
     cp = !git commit && git push
 
     p = !git add -A && git commit && git push
@@ -49,6 +50,7 @@
     sw = switch
     b = branch -vv --sort=committerdate --format='%(HEAD) %(if)%(HEAD)%(then)%(color:green)%(end)%(align:width=16)%(refname:short)%(end)%(color:reset) %(objectname:short) [%(color:blue)%(upstream:short)%(color:reset)] %(color:dim white)%(committerdate:short-local) (%(committerdate:relative))%(color:reset) %(color:italic)\"%(subject)\"%(color:reset)'
 
+    pushf = push --force-with-lease
     stash-pull = pull --rebase --autostash
     sp = stash-pull
     sm = sync-master

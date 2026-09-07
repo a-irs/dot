@@ -4,7 +4,7 @@ import sys
 
 import requests
 
-DOMAIN = [l.split()[1] for l in open("/etc/resolv.conf", "r").readlines() if l.startswith("search ")][0].replace("int", "admin")
+DOMAIN = [l.split()[1] for l in open("/etc/resolv.conf", "r").readlines() if l.startswith("search ")][0].replace("int", "cloud")
 GATUS_URL = f"https://gatus.{DOMAIN}"
 
 

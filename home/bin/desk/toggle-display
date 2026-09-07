@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import subprocess
 import logging
+import subprocess
 import sys
 
 CONFIG = {
@@ -19,7 +19,7 @@ CONFIG = {
         ],
         "post": [
             "~/.bin/dpitog 2 apply",
-            "nitrogen --restore 2>/dev/null",
+            "~/.bin/xinitrc/setup-wallpaper",
         ]
     },
     "ext": {
@@ -33,7 +33,7 @@ CONFIG = {
         },
         "post": [
             "~/.bin/dpitog 3 apply",
-            "nitrogen --restore 2>/dev/null",
+            "~/.bin/xinitrc/setup-wallpaper",
             "pidof kodi-x11 || exo-open '/usr/share/applications/kodi.desktop'",
             "xdotool set_desktop_for_window \"$(xdotool search --limit 1 --sync --class kodi)\" 6",
             "xdotool set_desktop 6"

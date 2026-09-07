@@ -14,9 +14,6 @@ local beautiful  = require 'beautiful'
 hostname        = awesome.hostname
 is_mobile       = hostname:find("^x1") ~= nil
 
--- re-set wallpaper after awesomewm reload
-awful.spawn("nitrogen --restore", false)
-
 function dpi(value)
     return math.floor(xresources.apply_dpi(value) + 0.5)
 end

@@ -100,6 +100,7 @@ preview_bom() { run1 lsbom -s "$path" | highlight_dirs; }
 preview_pdf() { pdfinfo "$path" | awk '/^Pages/{print $1 " " $2}'; run1 pdftotext -l 5 -nopgbrk -q "$path" - | remove_blank | remove_double_blank; }
 preview_txt() { run1 cat "$path" | remove_blank | remove_double_blank; }
 preview_image() { run2 exiftool -canon "$path"; }
+preview_ebook() { run2 exiftool "$path"; }
 preview_video() { run1 mediainfo "$path"; }
 preview_json() { run1 jq . -C "$path"; }
 preview_bat() { _bat "$path" "$@"; }
@@ -234,6 +235,8 @@ show_by_mime() {
             preview_pkcs && shown=1 ;;
         application/json )
             preview_json && shown=1 ;;
+        application/epub+zip )
+            preview_ebook && shown=1 ;;
         application/pdf )
             preview_pdf && shown=1 ;;
         application/zip )

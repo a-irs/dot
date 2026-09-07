@@ -67,4 +67,5 @@ return {
     'lilyinstarlight/vim-spl',  -- splunk search language
     'elixir-editors/vim-elixir',
     'towolf/vim-helm',
+    'jjo/vim-cue',
 }
