@@ -8,6 +8,89 @@ if __name__ == "__main__":
     main()
 endsnippet
 
+snippet enum "enum" b
+import enum
+
+class EventState(enum.Enum):
+    PENDING = enum.auto()  # 1
+    DONE = enum.auto()     # 2
+
+print(repr(EventState.DONE))  # <EventState.DONE: 2>
+print(EventState.DONE)        # EventState.DONE
+print(EventState.DONE.value)  # 2
+print(EventState.DONE.name)   # DONE
+print(EventState(2))          # EventState.DONE
+
+class HttpStatus(enum.Enum):
+    OK = (200, "Success")
+    NOT_FOUND = (404, "Not Found")
+    SERVER_ERROR = (500, "Server Error")
+
+    def __init__(self, code: int, description: str):
+        self.code = code
+        self.description = description
+
+print(HttpStatus.OK.value)        # (200, 'Success')
+print(HttpStatus.OK.code)         # OK
+print(HttpStatus.OK.description)  # Success
+endsnippet
+
+snippet enumf "enum flag" b
+import enum
+
+class Perm(enum.Flag):
+    READ = enum.auto()
+    WRITE = enum.auto()
+    DELETE = enum.auto()
+
+# combine
+active_perm = Perm.READ | Perm.WRITE
+print(Perm.READ in active_perm)    # True
+print(Perm.DELETE in active_perm)  # False
+print(list(Perm))  # [<Perm.READ: 1>, <Perm.WRITE: 2>, <Perm.DELETE: 4>]
+print(~(Perm.DELETE | Perm.WRITE))   # Perm.READ
+print(repr(Perm.READ | Perm.WRITE))  # <Perm.READ|WRITE: 3>
+endsnippet
+
+snippet enumi "enum int" b
+import enum
+
+# enum that behaves like an integer
+@enum.unique  # verify no duplicate values exist
+class NagiosExit(enum.IntEnum):
+    OK = 0
+    WARNING = 1
+    CRITICAL = 2
+    UNKNOWN = 3
+
+print(repr(NagiosExit.CRITICAL))  # <NagiosExit.CRITICAL: 2>
+print(NagiosExit.CRITICAL)        # 2 - this would be "NagiosExit.CRITICAL" with Enum instead of IntEnum
+print(NagiosExit.CRITICAL.name)   # CRITICAL
+print(NagiosExit.CRITICAL.value)  # 2
+print(NagiosExit(2).name)         # CRITICAL
+print(list(NagiosExit))  # [<NagiosExit.OK: 0>, <NagiosExit.WARNING: ...]
+endsnippet
+
+
+snippet enums "enum str" b
+import enum
+
+# enum that behaves like a string
+class ColorCode(enum.StrEnum):
+    RED = "\\033[31m"
+    RESET = "\\033[0m"
+
+print(repr(ColorCode.RED))  # <ColorCode.RED: '\\033[31m'>
+print(ColorCode.RED)        # \033[31m
+print(ColorCode.RED.name)   # RED
+print(ColorCode.RED.value)  # \033[31m
+print(ColorCode("\\033[31m").name)  # RED
+print(list(ColorCode))  # [<ColorCode.RED: ...]
+
+# with Enum instead of StrEnum this would not work and just print ColorCode.REDhello
+print(f"{ColorCode.RED}hello")
+endsnippet
+
 
 snippet di "dependency injection" b
 from typing import Callable
