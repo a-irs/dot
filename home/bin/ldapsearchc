@@ -1,39 +1,97 @@
 #!/usr/bin/env python3
 
-import subprocess
-import sys
+import ast
+import base64
+from datetime import datetime, timedelta, timezone
 import json
 import re
-import base64
-import ast
+import subprocess
+import sys
 
-cmd = subprocess.run(("ldapsearch", "-LLL", "-o", "ldif-wrap=no", *sys.argv[1:]), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+cmd = subprocess.run(("ldapsearch", "-LLL", "-o", "ldif-wrap=no", *sys.argv[1:]), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
 
-if cmd.stderr:
+if cmd.stderr and not cmd.stdout:
     print(cmd.stderr, file=sys.stderr)
+
+
+def sid_binary_to_string(b: bytes) -> str:
+    revision, sub_authority_count = b[0], b[1]
+    identifier_authority = int.from_bytes(b[2:8], byteorder="big")
+
+    expected_len = 8 + (sub_authority_count * 4)
+    sub_authorities = [int.from_bytes(b[i : i + 4], byteorder="little") for i in range(8, expected_len, 4)]
+
+    return "S-{}-{}{}".format(revision, identifier_authority, "".join(f"-{sa}" for sa in sub_authorities))
+
 
 results = []
 if cmd.stdout:
     current = {}
     for line in cmd.stdout.splitlines():
+        if line.startswith("#"):
+            print(line, file=sys.stderr)
+            continue
+
         if not line.strip():
             results.append(current)
             current = {}
         else:
-            m = re.match(r"^(?P<key>[\w-]+)(?P<sep>::?) (?P<value>.*)", line).groupdict()
-            key = m["key"]
-            value = m["value"]
-            if m["sep"] == "::" and not (key.lower().endswith("sid") or key.lower().endswith("uid")):
+            key, sep, value = re.match(r"^(?P<key>[\w-]+)(?P<sep>::?) (?P<value>.*)", line).groupdict().values()
+            # print(key, sep, value)
+
+            # "::" decode base64
+            if sep == "::" and not (key.lower().endswith("sid") or key.lower().endswith("uid")):
                 try:
                     value = base64.b64decode(value).decode()
                 except UnicodeDecodeError:
                     pass
+            elif sep == "::" and key.lower().endswith("sid"):
+                value = sid_binary_to_string(base64.b64decode(value))
+            elif sep == "::" and key.lower().endswith("uid"):
+                import uuid
+
+                value = base64.b64decode(value)
+                if len(value) != 16:
+                    raise ValueError(f"Invalid GUID: expected 16 bytes, got {len(value)}")
+
+                value = str(uuid.UUID(bytes_le=value))
 
             try:
                 # FIXME writes SyntaxWarning to stderr, even when caught, for e.g. 4jif ("SyntaxWarning: invalid imaginary literal")
                 value = ast.literal_eval(value)
             except (ValueError, SyntaxError):
-                value = value
+                pass
+
+            try:
+                value = int(value)
+
+                # decode 18-digit int: "100-nanosecond intervals since January 1, 1601 UTC"
+                # between 2006 and 2044
+                if 128_000_000_000_000_000 < value < 140000000000000000:
+                    value = datetime(1601, 1, 1, tzinfo=timezone.utc) + timedelta(microseconds=value / 10)
+                    # interpret as system timezone
+                    value = value.astimezone().isoformat() + " <converted>"
+
+                # https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-ada3/7879be50-7109-41e4-9a44-02f5a007b950?redirectedfrom=MSDN
+                if key.lower() == "samaccounttype":
+                    sam_types = {
+                        # 0x00000000: "SAM_DOMAIN_OBJECT",
+                        0x10000000: "SAM_GROUP_OBJECT",
+                        0x10000001: "SAM_NON_SECURITY_GROUP_OBJECT",
+                        0x20000000: "SAM_ALIAS_OBJECT",
+                        0x20000001: "SAM_NON_SECURITY_ALIAS_OBJECT",
+                        0x30000000: "SAM_USER_OBJECT",
+                        0x30000001: "SAM_MACHINE_ACCOUNT",
+                        0x30000002: "SAM_TRUST_ACCOUNT",
+                        0x40000000: "SAM_APP_BASIC_GROUP",
+                        0x40000001: "SAM_APP_QUERY_GROUP",
+                        # 0x7FFFFFFF: "SAM_ACCOUNT_TYPE_MAX",
+                    }
+                    if value in sam_types:
+                        value = sam_types[value] + " <converted>"
+
+            except ValueError:
+                pass
 
             if key in current:
                 if isinstance(current[key], list):
@@ -43,5 +101,4 @@ if cmd.stdout:
             else:
                 current[key] = value
 
-print(json.dumps(results, indent=2, ensure_ascii=False))
-sys.exit(cmd.returncode)
+print(json.dumps([r for r in results if r], indent=2, ensure_ascii=False))

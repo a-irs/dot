@@ -118,6 +118,7 @@ preview_pkcs() { run3 keytool -v -list -keystore "$path" -storepass '' || run3 k
 preview_pkcs_openssl() { run2 openssl pkcs12 -info -in "$path" -nodes -passin pass: | openssl x509 -noout -text | cleanup_openssl; }
 preview_csr() { run2 openssl req -in "$path" -noout -text | cleanup_openssl; }
 preview_crl() { run2 openssl crl -inform PEM -text -noout -in "$path" 2>/dev/null || openssl crl -inform DER -text -noout -in "$path"; }
+preview_p7s() { run2 openssl cms -cmsout -in "$path" -inform DER -noout -print ; }
 preview_rrd() { run1 rrdinfo "$path"; }
 preview_pkg() { run1 pkgutil -v --payload-files "$path" | grep -vE '^\.$' | sort | highlight_dirs; }
 preview_pgp() {
@@ -185,6 +186,8 @@ show_by_ext() {
     case "$extension" in
         bz|bz2|gz|lz|lzh|lzma|lzo|tar|tbz|tbz2|tgz|tlz|txz|xz|zst)
             preview_tar && shown=1 ;;
+        p7s)
+            preview_p7s && shown=1 ;;
         deb)
             preview_deb && shown=1 ;;
         rar)

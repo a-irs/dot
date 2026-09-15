@@ -35,6 +35,7 @@ ZSHINE_PLUGINS=(
   infra # custom
   fasd  # autocomplete paths
   fasd-fzf  # autocomplete paths
+  emacs
 
   status  # server status on login
   vault  # hashicorp vault
