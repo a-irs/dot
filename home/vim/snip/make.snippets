@@ -1,0 +1,36 @@
+snippet make-single "make docs single" b
+# Makefile
+
+src := docs/*.md
+dest := docs/main.pptx docs/main.html
+
+.PHONY: all
+all: $(dest)
+
+docs/main.pptx: $(src)
+	cat $^ | pandoc -s -o "$@" --slide-level=2
+
+docs/main.html: $(src)
+	cat $^ | pandoc -s -o "$@"
+
+.PHONY: clean
+clean:
+	rm -f $(dest)
+endsnippet
+
+snippet make-separate "make docs separately" b
+# Makefile
+
+MD_FILES := $(wildcard docs/*.md)
+HTML_FILES := $(MD_FILES:.md=.html)
+
+.PHONY: all
+all: $(HTML_FILES)
+
+.PHONY: clean
+clean:
+	rm -rf $(HTML_FILES)
+
+docs/%.html: docs/%.md
+	pandoc -i "$<" -o "$@" -s
+endsnippet
