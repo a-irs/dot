@@ -17,7 +17,7 @@
   "indent-blankline.nvim": { "branch": "master", "commit": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03" },
   "iptables-vim": { "branch": "master", "commit": "0447d4fa319a9228dbcf4d0f512a227be4c0b8ac" },
   "java-syntax.vim": { "branch": "master", "commit": "eb7b01237d0752f98a521f51c8daca760ddf082e" },
-  "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
+  "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },
   "nim.vim": { "branch": "master", "commit": "a15714fea392b0f06ff2b282921a68c7033e39a2" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
   "papercolor-theme": { "branch": "master", "commit": "0cfe64ffb24c21a6101b5f994ca342a74c977aef" },

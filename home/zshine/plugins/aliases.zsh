@@ -567,6 +567,13 @@ man() {
     MANWIDTH=999 vim -c "SuperMan $*"
 }
 
+xrr() {
+    xrandr | grep -E 'connected|\*' | sed -E 's/(.*)\(.*\)(.*)/\1\2/'
+}
+xr() {
+    xrr | grep -v disconnected
+}
+
 [[ "$commands[xrandr]" ]] && xr-scale() {
     # get settings from xrandr
     xrandr=$(LC_ALL=C xrandr)

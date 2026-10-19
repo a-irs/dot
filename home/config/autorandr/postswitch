@@ -4,3 +4,5 @@ notify-send \
     -t 5000 \
     -i /usr/share/icons/Faba/32x32/devices/video-display.svg \
     "autorandr" "Switched to '$AUTORANDR_CURRENT_PROFILE'"
+
+~/.bin/xinitrc/setup-wallpaper

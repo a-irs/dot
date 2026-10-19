@@ -126,7 +126,7 @@ end
 
 def write_initramfs(conf, mount)
   File.write("#{mount}/etc/mkinitcpio.conf", %{
-HOOKS=(base systemd sd-vconsole keyboard block sd-encrypt lvm2 filesystems)
+HOOKS=(base systemd sd-vconsole keyboard block sd-encrypt lvm2 filesystems fsck)
 })
 
   uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")

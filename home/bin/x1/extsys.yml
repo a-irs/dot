@@ -3,12 +3,12 @@ dest:
   # device: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_*-0:0
   filesystem:
     name: btrfs
-    options: noatime,compress=zstd
+    options: noatime,compress-force=zstd
   sizes:
-    boot: 256MB
-    luks: 32GB
+    boot: 512MB
+    luks: 64GB
     # rest of device is filled with an unencrypted exFAT partition
-  kernel: /boot/vmlinuz-linux-zen
+  kernel: /boot/vmlinuz-linux
 
 postcommands:
   # sign kernel image with own keys for UEFI secure boot
@@ -31,27 +31,41 @@ exclude:
   - "**/.cache/*"
   - "**/.fr-*/*"
   - "/home/*/doc/**/*.mp4"
-  - /home/**/nintendo-switch-hacking/sd
-  - /home/**/nintendo-switch-hacking/tmp
   - /home/*/.cargo
+  - /home/*/.rustup
+  - /home/*/.npm/_cacache
+  - /home/*/.ollama
+  - /home/*/.local/cache
+  - /home/*/.config/ES-DE
+  - /home/*/.config/Ryujinx
+  - /home/*/.wine
+  - /home/*/.kube/cache
   - /home/*/.local/share/Steam
+  - /home/*/.local/share/lutris
+  - /home/*/.local/share/flatpak
+  - /home/*/.local/share/umu
   - /home/*/.local/share/yay
   - /home/*/.local/share/Trash/*
+  - /home/*/.local/share/vifm/Trash
   - /home/*/.local/share/thumbnails/*
   - /home/*/.local/share/blur/*
   - /home/*/downloads/*
+  - /home/*/data/backup
+  - /home/*/sync/roms
+  - /home/*/games
   - /home/*/data/ios-backup
   - /home/*/data/splunk
+  - /home/*/data/vm
   - /home/*/photos
   - /home/*/tmp
   - /home/*/videos
-  - /home/*/data/vm
   - /home/*/.ghcup
   - /home/*/.stack
   - /home/*/.cabal/packages
   - /home/*/infra/PKGBUILD/
   - /srv/kube
   - /usr/share/gtk-doc/*
+  - /usr/share/render96ex
   - /usr/share/texmf-dist
   - /var/cache/*
   - /home/*/.local/share/containers
