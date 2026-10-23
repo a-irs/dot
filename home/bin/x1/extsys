@@ -1,5 +1,12 @@
 #!/usr/bin/env ruby
 
+# dependencies (Arch Linux):
+#
+# extra/gptfdisk (sgdisk)
+# extra/parted (partprobe)
+# core/cryptsetup
+# extra/rsync
+
 require 'open3'
 require 'yaml'
 require 'json'
@@ -31,9 +38,6 @@ def prepare(conf)
   # wipes and formats the drive
   #
 
-  cmd("vgchange -a n vg_extsys || true")
-  cmd("pvscan --cache")
-
   # wipe disk
   cmd("sgdisk -Z #{conf.dest.device}")
   cmd("sgdisk -og #{conf.dest.device}")
@@ -48,16 +52,11 @@ def prepare(conf)
 
   # setup LUKS
   cmd("cryptsetup luksFormat --type luks2 -q #{conf.dest.device}-part2", interactive: true)
-  cmd("cryptsetup open #{conf.dest.device}-part2 EXTSYS_CRYPTO", interactive: true)
-
-  # setup LVM
-  cmd("pvcreate /dev/mapper/EXTSYS_CRYPTO")
-  cmd("vgcreate vg_extsys /dev/mapper/EXTSYS_CRYPTO")
-  cmd("lvcreate -l 100%FREE vg_extsys -n lv_extsys")
+  cmd("cryptsetup open #{conf.dest.device}-part2 extsys_crypto", interactive: true)
 
   # format file systems
   cmd("mkfs.fat -F32 -n EXTSYS_EFI #{conf.dest.device}-part1")
-  cmd("mkfs.#{conf.dest.filesystem.name} -L EXTSYS /dev/vg_extsys/lv_extsys")
+  cmd("mkfs.#{conf.dest.filesystem.name} -L EXTSYS /dev/mapper/extsys_crypto")
   cmd("mkfs.exfat -L EXTSYS_DATA #{conf.dest.device}-part3")
 
   cmd("partprobe #{conf.dest.device}; sleep 2")
@@ -69,7 +68,7 @@ def rsync(conf, mount)
   # rsync data to mount point
   #
 
-  rsync_command = "rsync -aHAX -v --delete"
+  rsync_command = "rsync -aHAX -v --delete --delete-excluded"
   conf.exclude.each do |exclude|
     rsync_command = rsync_command + " --exclude '#{exclude}'"
   end
@@ -78,7 +77,7 @@ def rsync(conf, mount)
 
   rsync_command = "#{rsync_command} / #{mount}"
 
-  cmd(rsync_command)
+  cmd(rsync_command, interactive: true)
 end
 
 def mount(conf, mount)
@@ -86,9 +85,8 @@ def mount(conf, mount)
   # mounts partitions
   #
 
-  cmd("cryptsetup open #{conf.dest.device}-part2 EXTSYS_CRYPTO", interactive: true)
+  cmd("cryptsetup open #{conf.dest.device}-part2 extsys_crypto", interactive: true)
   cmd("partprobe #{conf.dest.device}; sleep 2")
-  cmd("lvchange -a y /dev/vg_extsys/lv_extsys")
 
   cmd("mount /dev/disk/by-label/EXTSYS -o #{conf.dest.filesystem.options} #{mount}")
   cmd("mkdir -p #{mount}/efi")
@@ -102,9 +100,7 @@ def umount(conf, mount)
   #
 
   cmd("umount -f --recursive #{mount} || true")
-  cmd("vgchange -a n vg_extsys || true")
-  cmd("cryptsetup close EXTSYS_CRYPTO || true")
-  cmd("pvscan --cache || true")
+  cmd("cryptsetup close extsys_crypto || true")
 end
 
 def write_fstab(conf, mount)
@@ -126,7 +122,7 @@ end
 
 def write_initramfs(conf, mount)
   File.write("#{mount}/etc/mkinitcpio.conf", %{
-HOOKS=(base systemd sd-vconsole keyboard block sd-encrypt lvm2 filesystems fsck)
+HOOKS=(base systemd sd-vconsole keyboard block sd-encrypt filesystems fsck)
 })
 
   uuid = cmd("blkid -c /dev/null -o value -s UUID #{conf.dest.device}-part2")
@@ -137,23 +133,23 @@ rd.luks.name=#{uuid}=EXTSYS_CRYPTO root=/dev/disk/by-label/EXTSYS rw
   # build UEFI executable / unified kernel image (fallback version, with all modules included)
   cmd("mkdir -p #{mount}/efi/EFI/BOOT")
   cmd("mkinitcpio -k #{conf.dest.kernel} --config #{mount}/etc/mkinitcpio.conf --cmdline #{mount}/etc/kernel/cmdline --uki #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
+  cmd("sbctl sign #{mount}/efi/EFI/BOOT/BOOTX64.EFI")
 end
 
 def main()
   conf = JSON.parse(YAML::load(File.open(__dir__ + '/extsys.yml')).to_json, object_class: OpenStruct)
   conf.dest.device = Dir.glob(conf.dest.device)[0]
 
-  if ARGV[0] == "boot" then
-    cmd("qemu-system-x86_64 -drive file=/usr/share/ovmf/x64/OVMF.fd,if=pflash,format=raw,unit=0,readonly=on -net none -m 2G -enable-kvm -cpu host -usb -device usb-tablet -display gtk -vga virtio -drive format=raw,index=0,media=disk,file=#{conf.dest.device}", interactive: true)
+  if ARGV[0] == "qemu" then
+    cmd("qemu-system-x86_64 -drive file=/usr/share/OVMF/x64/OVMF.4m.fd,if=pflash,format=raw,unit=0,readonly=on -net none -m 2G -enable-kvm -cpu host -usb -device usb-tablet -display gtk -vga virtio -drive format=raw,index=0,media=disk,file=#{conf.dest.device}", interactive: true)
     exit
-  end
 
-  Dir.mktmpdir do |mount|
+  elsif ARGV[0] == "prepare" then
+    prepare(conf)
 
-    begin
-      if ARGV[0] == "prepare" then
-        prepare(conf)
-      else
+  elsif ARGV[0] == "sync" then
+    Dir.mktmpdir do |mount|
+      begin
         mount(conf, mount)
         rsync(conf, mount)
         write_fstab(conf, mount)
@@ -163,11 +159,14 @@ def main()
         conf.postcommands.each do |postcommand|
           cmd(postcommand.gsub(/\$MOUNT\$/, mount))
         end
+        end
+      ensure
+        umount(conf, mount)
       end
-    ensure
-      umount(conf, mount)
-    end
 
+  else
+    puts "usage: extsys prepare|sync|qemu"
+    exit(1)
   end
 
 end

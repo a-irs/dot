@@ -1,6 +1,5 @@
 dest:
-  device: /dev/disk/by-id/usb-SanDisk_Ultra_Fit_*-0:0
-  # device: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_*-0:0
+  device: /dev/disk/by-id/usb-USB_SanDisk_3.2Gen1_*-0:0
   filesystem:
     name: btrfs
     options: noatime,compress-force=zstd
@@ -15,10 +14,18 @@ postcommands:
   - sbctl sign $MOUNT$/efi/EFI/BOOT/BOOTX64.EFI
 
   # avoid hardware dependencies
-  - rm -f $MOUNT$/etc/systemd/system/*/tlp.service
-  - rm -f $MOUNT$/etc/systemd/system/*/fstrim.timer
-  - rm -f $MOUNT$/etc/systemd/system/*/usbguard.service
-  - rm -f $MOUNT$/etc/systemd/system/*/usbguard-dbus.service
+  - ln -sf /dev/null $MOUNT$/etc/systemd/system/multi-user.target.wants/tlp.service
+  - ln -sf /dev/null $MOUNT$/etc/systemd/system/basic.target.wants/usbguard.service
+  - ln -sf /dev/null $MOUNT$/etc/systemd/system/multi-user.target.wants/usbguard-dbus.service
+  - ln -sf /dev/null $MOUNT$/etc/systemd/system/timers.target.wants/btrfs-scrub@-.timer
+  - ln -sf /dev/null $MOUNT$/etc/systemd/system/timers.target.wants/fstrim.timer
+
+  - rm -f $MOUNT$/home/*/.config/autostart/*extcloud*
+  - rm -f $MOUNT$/home/*/.config/autostart/*yncthing*
+  - ln -sf /dev/null $MOUNT$/home/*/.config/systemd/user/default.target.wants/*nextcloud*.service
+  - ln -sf /dev/null $MOUNT$/home/*/.config/systemd/user/default.target.wants/*yncthing.service
+  - rm -f $MOUNT$/usr/bin/nextcloud
+  - rm -f $MOUNT$/usr/bin/syncthing
 
   # disable auto-startx
   - rm -f $MOUNT$/etc/systemd/system/*/auto-x11.service
@@ -29,6 +36,8 @@ postcommands:
 
 exclude:
   - "**/.cache/*"
+  - "**/CacheStorage"
+  - "**/component_crx_cache"
   - "**/.fr-*/*"
   - "/home/*/doc/**/*.mp4"
   - /home/*/.cargo
