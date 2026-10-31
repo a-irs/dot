@@ -63,6 +63,7 @@ R /home
 - home/*/.vim/undo
 - home/*/go
 - home/*/sync/roms
+- home/*/.local/share/ktechpit/whatsie
 - home/*/.local/share/Trash/
 - home/*/.local/share/flatpak
 - home/*/.local/share/okular/docdata

@@ -6,7 +6,7 @@ from datetime import datetime
 
 BASES = [
     pathlib.Path("~/doc").expanduser(),
-    pathlib.Path("~/Dropbox/doc").expanduser()
+    pathlib.Path("~/cloud/doc").expanduser()
 ]
 ARCHIVE = BASES[0] / "_archive"
 SUBFOLDER_FORMAT = "%Y"

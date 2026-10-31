@@ -25,3 +25,7 @@ user_pref("browser.xul.error_pages.expert_bad_cert", true);
 // https://jfkimmes.eu/posts/firefox-trackpad-on-wayland/
 user_pref("apz.gtk.pangesture.delta_mode", 2);
 user_pref("apz.gtk.pangesture.pixel_delta_mode_multiplier", "100");
+
+// do not remember last spawn location
+user_pref("browser.sessionstore.restore_windows_to_virtual_desktop", false);
+user_pref("widget.disable-workspace-management", true);
