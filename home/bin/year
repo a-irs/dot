@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+for file in "$@"; do
+    year=$(stat --format %y "$file" | cut -c 1-4)
+    base=$(dirname "$file")
+    mkdir -p "$base/$year/"
+    mv -iv "$file" "$base/$year/"
+done

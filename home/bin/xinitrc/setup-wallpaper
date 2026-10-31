@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+set -x
+
+bg=$(< ~/.config/wallpaper.txt)
+feh --bg-fill "$bg"
