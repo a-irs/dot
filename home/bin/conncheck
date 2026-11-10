@@ -2,21 +2,37 @@
 
 TIMEOUT=2
 
+SYSTEM=$(uname)
+
 ok() { echo "$1: $(tput setaf 2)$2$(tput sgr0)"; }
 die() { echo "$1: $(tput setaf 1)$2$(tput sgr0)"; }
 
-check_ip_set() {
-    local interface is_set is_interface
-    interface=$1
-    is_set=1
-    is_interface=""
+get_domain() {
+    awk '/^search/{print $NF}' /etc/resolv.conf
+}
 
-    output=$(ip addr show dev "$interface" 2>/dev/null | grep -oP 'inet [^\s]+')
-    output_rc=$?
-    if [[ "$output_rc" == 0 ]]; then
-        is_set=0
-        is_interface="$interface"
-        output=$(echo "$output" | cut -d ' ' -f 2)
+check_ip_set() {
+    local interface=$1
+    local is_set=1
+    local is_interface=""
+
+    local output output_rc
+    if [[ "$SYSTEM" == Linux ]]; then
+        output=$(ip addr show dev "$interface" 2>/dev/null | grep -oP 'inet [^\s]+')
+        output_rc=$?
+        if [[ "$output_rc" == 0 ]]; then
+            is_set=0
+            is_interface="$interface"
+            output=$(echo "$output" | cut -d ' ' -f 2)
+        fi
+    elif [[ "$SYSTEM" == Darwin ]]; then
+        output=$(ipconfig getifaddr "$interface" 2>/dev/null)
+        output_rc=$?
+        if [[ "$output_rc" == 0 ]]; then
+            is_set=0
+            is_interface="$interface"
+            output=$(echo "$output")
+        fi
     fi
 
     if [[ "$is_set" -eq 0 ]]; then
@@ -56,8 +72,8 @@ check_dns() {
     fi
     dig_rc=$?
 
-    dig_time=$(echo "$dig_output" | grep -oP 'Query time: \d+' | grep -oP '\d+')
-    dig_server=$(echo "$dig_output" | grep -oP 'SERVER: [\d\.\#]+' | sed 's/SERVER: //')
+    dig_time=$(echo "$dig_output" | grep -oE 'Query time: [0-9]+' | grep -oE '[0-9]+')
+    dig_server=$(echo "$dig_output" | grep -oE 'SERVER: [0-9\.\#]+' | sed 's/SERVER: //')
     if [[ "$dig_rc" != 0 ]]; then
         die "DNS resolve $domain" "FAILED"
     else
@@ -94,38 +110,70 @@ get_ip_whois() {
     echo "$ip (name: $ext_ip_name, whois: $ext_whois)"
 }
 
-if [[ "$1" == speed ]]; then
-    echo "DOWNLOAD"
-    timeout 5 curl -o /dev/null "https://speed.cloudflare.com/__down?bytes=$(python3 -c 'print(10000000000)')"
-    echo ""
-    echo "UPLOAD:"
-    timeout 5 curl -X POST -o /dev/null 'https://speed.cloudflare.com/__up' --data-binary @<(python3 -c 'print("0"*1024*1024*100)')
-    echo ""
-    exit
-fi
 
-echo ""
-# echo "NetworkManager connectivity: $(nmcli --color yes networking connectivity check)"
-# echo ""
-nmcli --color yes device status | grep -v 'unmanaged'
-echo ""
-for device in $(nmcli --terse --fields device,state device status | grep -v :unmanaged | cut -d: -f 1); do
-    check_ip_set $device
-done
-echo ""
-check_ping_gateway
-echo ""
-check_dns example.com &
-check_dns google.com 1.0.0.1 &
-check_dns mozilla.org 8.8.8.8 &
-wait
-echo ""
-check_http http://1.0.0.1 &
-check_http https://8.8.8.8 &
-check_http https://www.example.com/ &
-wait
-echo ""
-check_traceroute 1.0.0.1
-echo ""
-echo "External IP: $(get_ip_whois "$(curl -s icanhazip.com)")"
-echo "External DNS IP: $(get_ip_whois "$(dig +short whoami.akamai.net)")"
+main() {
+    local domain="$(get_domain)"
+    if [[ "$SYSTEM" == Linux ]]; then
+        echo ""
+        # echo "NetworkManager connectivity: $(nmcli --color yes networking connectivity check)"
+        # echo ""
+        nmcli --color yes device status | grep -v 'unmanaged'
+        echo ""
+
+        # IP
+        for device in $(nmcli --terse --fields device,state device status | grep -v :unmanaged | cut -d: -f 1); do
+            check_ip_set "$device"
+        done
+        echo ""
+
+        # ICMP gateway
+        check_ping_gateway
+        echo ""
+
+        # DNS
+        [[ -n "$domain" ]] && check_dns "$domain"
+        check_dns example.com
+        check_dns google.com 1.0.0.1
+        check_dns mozilla.org 8.8.8.8
+        echo ""
+
+        # HTTP
+        check_http http://1.0.0.1
+        check_http https://8.8.8.8
+        check_http https://www.example.com/
+        echo ""
+
+        # traceroute
+        check_traceroute 1.0.0.1
+
+        # ext IPs
+        echo ""
+        echo "External IP: $(get_ip_whois "$(curl -s icanhazip.com)")"
+        echo "External DNS IP: $(get_ip_whois "$(dig +short whoami.akamai.net)")"
+
+    elif [[ "$SYSTEM" == Darwin ]]; then
+        # IP
+        for device in en0; do
+            check_ip_set "$device"
+        done
+        echo ""
+
+        # DNS
+        [[ -n "$domain" ]] && check_dns "$domain"
+        check_dns example.com
+        check_dns mozilla.org
+        echo ""
+
+        # HTTP
+        check_http http://1.0.0.1
+        check_http https://8.8.8.8
+        check_http https://www.example.com/
+
+        # ext IPs
+        # echo ""
+        # echo "External IP: $(curl -s icanhazip.com)"
+        # echo "External DNS IP: $(dig +short whoami.akamai.net)"
+    fi
+}
+
+main "$@"
