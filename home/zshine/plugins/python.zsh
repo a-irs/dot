@@ -12,7 +12,10 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 # [[ "$commands[ipdb]" ]] && export PYTHONBREAKPOINT=ipdb.set_trace
 # [[ "$commands[pudb]" ]] && export PYTHONBREAKPOINT=pudb.set_trace
 
-alias uv="uv --system-certs"  # use system CA store
+# use system CA store
+alias uv="uv --system-certs"
+alias uvx="uvx --system-certs"
+
 venv() {
     if [[ -n "$VIRTUAL_ENV" ]]; then
         deactivate

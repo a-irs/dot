@@ -29,3 +29,6 @@ user_pref("apz.gtk.pangesture.pixel_delta_mode_multiplier", "100");
 // do not remember last spawn location
 user_pref("browser.sessionstore.restore_windows_to_virtual_desktop", false);
 user_pref("widget.disable-workspace-management", true);
+
+// use system CA store
+user_pref("security.enterprise_roots.enabled", true);
